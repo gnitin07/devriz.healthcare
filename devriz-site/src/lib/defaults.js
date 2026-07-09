@@ -9,12 +9,13 @@ export const DEFAULTS = {
     originalPrice: 499,
     bookingLink: "https://devrizhealthcare.com",
     whatsapp: "",
-    email: "care@devrizhealthcare.com",
-    address: "New Delhi, India",
-    facebook: "https://facebook.com",
-    instagram: "https://instagram.com",
-    youtube: "https://youtube.com",
-    linkedin: "https://linkedin.com",
+    email: "info@devrizhealthcare.com",
+    address: "Plot No- 8, Shankar Vihar, Preet Vihar, New Delhi, Delhi, 110092",
+    instagram:
+      "https://www.instagram.com/devrizhealthcare",
+    facebook: "https://www.facebook.com/OfficialDevrizHealthcare/",
+    youtube: "https://www.youtube.com/@devrizhealthcare",
+    linkedin: "https://www.linkedin.com/company/devriz-group/",
     whyDoctorImage: null, // Sanity image; falls back to the bundled photo
     stats: [
       "1M+ happy customers",

@@ -702,7 +702,7 @@ body::-webkit-scrollbar {
     }
 
     .footer-grid {
-      @apply mx-auto max-w-7xl grid md:grid-cols-4 grid-cols-2 md:gap-10 gap-8 md:px-8 px-5 md:pb-16 pb-10;
+      @apply mx-auto max-w-7xl grid md:grid-cols-4 grid-cols-1 md:gap-10 gap-8 md:px-8 px-5 md:pb-16 pb-10;
 
       h4 {
         @apply font-paragraph uppercase font-bold text-sm tracking-widest text-amber mb-4;
@@ -714,8 +714,24 @@ body::-webkit-scrollbar {
       }
     }
 
+    /* centered row of colourful brand buttons */
+    .footer-socials {
+      @apply flex flex-col items-center gap-3 md:pb-14 pb-10;
+
+      .footer-socials-label {
+        @apply font-paragraph uppercase font-bold text-xs tracking-widest text-cream/50;
+      }
+      .footer-socials-row {
+        @apply flex justify-center gap-4;
+      }
+    }
+
     .social-btn {
-      @apply border border-[#f7f4ee33] size-11 flex-center rounded-full hover:bg-[#ffffff1a] transition-colors cursor-pointer font-paragraph text-sm;
+      @apply size-11 flex-center rounded-full text-white cursor-pointer transition-transform duration-200 hover:scale-110 hover:-translate-y-0.5 shadow-[0_8px_20px_rgba(0,0,0,0.25)];
+
+      svg {
+        @apply w-[19px] h-[19px];
+      }
     }
 
     .copyright-box {
