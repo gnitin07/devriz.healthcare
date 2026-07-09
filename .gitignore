@@ -1,0 +1,36 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+build/
+.vite/
+.sanity/
+
+# env & secrets
+.env
+.env.*
+!.env.example
+
+# local tooling / editor
+.claude/settings.local.json
+.vscode/
+.idea/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# customer review screenshots — may contain personal data
+whatsapp reviews/
+
+# third-party reference clone used for inspiration — not part of this project
+Spylt-awward-clone-main/
+
+# raw design source files (heavy) — the optimized versions the site uses
+# already live in devriz-site/public. Kept locally, out of the repo.
+/*.png
+/*.jpeg
+/*.jpg
+/*.mp4
+transformation/

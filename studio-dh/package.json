@@ -1,0 +1,24 @@
+{
+  "name": "studio-dh",
+  "private": true,
+  "version": "1.0.0",
+  "main": "package.json",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "sanity dev",
+    "start": "sanity start",
+    "build": "sanity build",
+    "deploy": "sanity deploy"
+  },
+  "dependencies": {
+    "@sanity/vision": "^4.1.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "sanity": "^4.1.1",
+    "styled-components": "^6.1.18"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "typescript": "^5.8.2"
+  }
+}

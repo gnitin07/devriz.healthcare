@@ -1,0 +1,688 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #f7f4ee;
+  --color-mint: #e3f0ea;
+  --color-teal-dark: #0e3b3a;
+  --color-teal: #17615c;
+  --color-teal-light: #2e8f86;
+  --color-amber: #e8a33d;
+  --color-amber-light: #f6c56b;
+  --color-ink: #1c2422;
+  --color-blush: #f3e2d6;
+  --font-display: "Antonio", sans-serif;
+  --font-paragraph: "Inter", sans-serif;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #f7f4ee;
+  color: #0e3b3a;
+  font-family: "Antonio", sans-serif;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+@utility flex-center {
+  @apply flex justify-center items-center;
+}
+@utility col-center {
+  @apply flex flex-col justify-center items-center;
+}
+@utility abs-center {
+  @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+}
+@utility general-title {
+  @apply 2xl:text-[6.5rem] md:text-7xl text-4xl font-bold uppercase tracking-[-.15vw];
+}
+@utility section-eyebrow {
+  @apply font-paragraph font-semibold uppercase tracking-[.25em] text-xs;
+}
+@utility card-shadow {
+  box-shadow: 0 8px 24px rgba(14, 59, 58, 0.06), 0 2px 6px rgba(14, 59, 58, 0.04);
+}
+
+@layer components {
+  /* ---------- navbar ---------- */
+  .nav-bar {
+    @apply fixed top-0 left-0 right-0 z-50 transition-all duration-300;
+
+    .nav-inner {
+      @apply mx-auto max-w-7xl flex items-center justify-between md:px-8 px-4 md:py-4 py-3;
+    }
+
+    .nav-links {
+      @apply md:flex hidden items-center gap-8 font-paragraph font-medium text-teal-dark text-[15px];
+
+      a {
+        @apply hover:text-teal-light transition-colors capitalize;
+      }
+    }
+
+    .nav-cta {
+      @apply bg-teal-dark text-cream font-paragraph font-semibold rounded-full md:px-6 px-4 md:py-3 py-2 text-sm hover:bg-teal transition-colors cursor-pointer;
+    }
+  }
+
+  .nav-scrolled {
+    @apply backdrop-blur-xl bg-[#f7f4eecc] shadow-[0_1px_30px_rgba(14,59,58,0.08)];
+  }
+
+  /* over a dark slide (and not scrolled): flip logo + links to light */
+  .nav-light {
+    .nav-links a {
+      @apply text-cream;
+    }
+    .nav-links a:hover {
+      @apply text-amber;
+    }
+    .nav-cta {
+      @apply bg-amber text-teal-dark hover:bg-amber-light;
+    }
+  }
+
+  /* ---------- hero carousel ---------- */
+  .hero-container {
+    @apply relative bg-mint w-screen h-dvh overflow-hidden select-none;
+    touch-action: pan-y;
+
+    .hero-slide {
+      @apply absolute inset-0 size-full overflow-hidden;
+    }
+
+    /* ken-burns wrapper */
+    .slide-media {
+      @apply absolute inset-0 size-full overflow-hidden;
+      will-change: transform;
+    }
+
+    .slide-base {
+      @apply absolute inset-0 size-full;
+    }
+
+    /* desktop: fill the whole hero (16:9 banner ≈ 16:9 screen → fills with no
+       bars and nothing cut — headline AND the baked CTA both stay visible) */
+    .slide-photo {
+      @apply absolute inset-0 size-full object-cover;
+      object-position: center;
+    }
+
+    /* mobile: size the hero to the portrait banner's 9:16 ratio (below the
+       fixed nav) so the WHOLE banner shows at any phone width — no crop, no
+       side bars — and the baked headline clears the nav. */
+    @media (max-width: 768px) {
+      & {
+        height: calc(100vw * 16 / 9 + 4.75rem);
+      }
+      .slide-photo {
+        top: 4.75rem;
+        height: calc(100vw * 16 / 9);
+        object-position: center;
+      }
+    }
+
+    /* full-slide click target for image-only banners */
+    .slide-link {
+      @apply absolute inset-0 z-[5];
+    }
+
+    /* demo doctor photo layered on a gradient slide */
+    .hero-demo-photo {
+      @apply absolute bottom-0 z-[2] pointer-events-none md:block hidden;
+
+      img {
+        @apply md:h-[86%] h-[70%] w-auto object-contain object-bottom drop-shadow-[0_20px_50px_rgba(0,0,0,0.25)];
+      }
+    }
+    .hero-demo-right {
+      @apply right-[4vw] h-full flex items-end;
+    }
+    .hero-demo-left {
+      @apply left-[4vw] h-full flex items-end;
+    }
+
+    /* readability scrim behind text */
+    .slide-scrim {
+      @apply absolute inset-0 z-[3];
+    }
+    .scrim-dark.scrim-left {
+      @apply bg-[linear-gradient(90deg,rgba(0,0,0,0.55)_0%,rgba(0,0,0,0.15)_45%,transparent_70%)];
+    }
+    .scrim-dark.scrim-right {
+      @apply bg-[linear-gradient(270deg,rgba(0,0,0,0.55)_0%,rgba(0,0,0,0.15)_45%,transparent_70%)];
+    }
+    .scrim-dark.scrim-center {
+      @apply bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.45)_0%,transparent_65%)];
+    }
+    .scrim-light.scrim-left {
+      @apply bg-[linear-gradient(90deg,rgba(247,244,238,0.7)_0%,rgba(247,244,238,0.2)_45%,transparent_70%)];
+    }
+    .scrim-light.scrim-right {
+      @apply bg-[linear-gradient(270deg,rgba(247,244,238,0.7)_0%,rgba(247,244,238,0.2)_45%,transparent_70%)];
+    }
+    .scrim-light.scrim-center {
+      @apply bg-[radial-gradient(ellipse_at_center,rgba(247,244,238,0.6)_0%,transparent_65%)];
+    }
+
+    /* overlay: text column + visual column */
+    .hero-overlay {
+      @apply absolute inset-0 z-[4] mx-auto max-w-7xl h-full grid md:grid-cols-[7fr_5fr] grid-cols-1 items-center md:px-12 px-6 md:pt-20 pt-20 md:gap-8 gap-2;
+
+      .hero-copy {
+        @apply flex flex-col gap-5 md:order-1 order-2 md:pb-0 pb-6;
+      }
+
+      h1 {
+        @apply font-bold 2xl:text-[4.2rem] md:text-[3.1rem] text-[1.9rem] leading-[1.07] tracking-[-.03em] max-w-2xl;
+      }
+
+      p {
+        @apply font-paragraph md:text-xl text-base font-medium leading-relaxed max-w-lg;
+      }
+
+      .hero-cta {
+        @apply mt-2 inline-flex items-center gap-3 w-fit text-white bg-teal font-paragraph font-semibold md:text-lg text-base rounded-full md:px-10 px-7 md:py-5 py-4 cursor-pointer hover:bg-teal-dark transition-colors shadow-[0_14px_40px_rgba(23,97,92,0.35)];
+      }
+
+      /* right-side visual (your PNG, or the built-in illustration) */
+      .hero-visual {
+        @apply relative flex-center md:order-2 order-1 md:self-center self-end pointer-events-none;
+
+        /* soft studio spotlight: a light core lifts the figure off the dark
+           background so even dark clothing keeps a clean silhouette */
+        .visual-glow {
+          @apply absolute md:size-[34rem] size-60 rounded-full blur-2xl bg-[radial-gradient(circle,rgba(255,255,255,0.20)_0%,rgba(46,143,134,0.24)_40%,transparent_70%)];
+        }
+
+        img,
+        svg {
+          @apply relative w-full md:max-w-[28rem] max-w-[15rem] max-h-[38vh] md:max-h-[52vh] object-contain drop-shadow-[0_26px_55px_rgba(0,0,0,0.5)];
+        }
+      }
+    }
+
+    .hero-al-left .hero-copy {
+      @apply items-start text-left;
+    }
+    .hero-al-center .hero-copy {
+      @apply items-center text-center;
+
+      p {
+        @apply mx-auto;
+      }
+    }
+    .hero-al-right .hero-copy {
+      @apply items-end text-right;
+
+      p {
+        @apply ml-auto;
+      }
+    }
+
+    .theme-dark {
+      h1 {
+        @apply text-teal-dark;
+      }
+      p {
+        @apply text-teal-dark/80;
+      }
+    }
+    .theme-light {
+      h1 {
+        @apply text-white;
+      }
+      p {
+        @apply text-white/85;
+      }
+      .hero-cta {
+        @apply bg-amber text-teal-dark hover:bg-amber-light shadow-[0_14px_40px_rgba(232,163,61,0.4)];
+      }
+    }
+
+    /* controls */
+    .hero-dots {
+      @apply absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2.5;
+
+      button {
+        @apply h-2.5 w-2.5 rounded-full bg-[#0e3b3a40] backdrop-blur transition-all duration-300 cursor-pointer;
+      }
+      button.active {
+        @apply bg-teal-dark w-8;
+      }
+    }
+
+    /* arrows: bottom-right cluster (desktop only — mobile swipes) */
+    .hero-arrows {
+      @apply absolute bottom-8 right-10 z-20 md:flex hidden gap-3;
+    }
+
+    .hero-arrow {
+      @apply size-12 flex-center rounded-full bg-white/70 backdrop-blur-md text-teal-dark text-3xl leading-none pb-1 cursor-pointer hover:bg-white transition-all shadow-[0_6px_20px_rgba(14,59,58,0.15)];
+    }
+
+    .hero-progress {
+      @apply absolute bottom-0 left-0 right-0 z-20 h-1 bg-[#0e3b3a1a];
+
+      .bar {
+        @apply h-full w-full bg-amber origin-left scale-x-0;
+      }
+    }
+  }
+
+  /* ---------- trust stats strip ---------- */
+  .stats-strip {
+    @apply bg-teal-dark text-cream;
+
+    .stats-inner {
+      @apply mx-auto max-w-7xl md:px-8 px-5 md:py-8 py-6 grid md:grid-cols-4 grid-cols-2 md:gap-6 gap-5;
+
+      .stat {
+        @apply col-center gap-1 text-center;
+
+        strong {
+          @apply font-bold md:text-4xl text-2xl tracking-tight text-amber;
+        }
+
+        span {
+          @apply font-paragraph md:text-sm text-xs opacity-80;
+        }
+      }
+    }
+  }
+
+  /* ---------- why consult (pinned clinic scene) ---------- */
+  .why-section {
+    @apply relative overflow-hidden;
+    background:
+      radial-gradient(55% 45% at 82% 90%, rgba(23, 97, 92, 0.12), transparent 60%),
+      radial-gradient(45% 38% at 12% 15%, rgba(232, 163, 61, 0.09), transparent 60%),
+      linear-gradient(180deg, #f4f8f5 0%, #e3f0ea 100%);
+
+    .why-stage {
+      @apply relative h-dvh overflow-hidden;
+    }
+
+    .clinic-glow {
+      @apply absolute md:right-[2vw] -right-24 bottom-0 md:w-[42vw] w-[80vw] aspect-square rounded-full bg-white/50 blur-3xl pointer-events-none;
+    }
+
+    /* doctor standing in the background, right side */
+    .why-doctor {
+      @apply absolute bottom-0 md:right-[4vw] -right-14 z-[1] pointer-events-none md:h-[78%] h-[38%] flex items-end;
+
+      /* aspect matches the cut-out frames (2574×3218) so the stacked,
+         absolutely-positioned poses all register pixel-for-pixel */
+      .why-doctor-fig {
+        @apply relative h-full aspect-[2574/3218];
+        transform-origin: bottom center;
+        will-change: transform;
+      }
+
+      /* every pose fills the figure and is bottom-anchored, so crossfading
+         one into the next only moves what actually changes (her arm) */
+      .why-doctor-img {
+        @apply absolute inset-0 h-full w-full object-contain object-bottom drop-shadow-[0_24px_50px_rgba(14,59,58,0.22)];
+        will-change: opacity;
+      }
+
+      .doctor-shadow {
+        @apply absolute -bottom-3 left-1/2 -translate-x-1/2 w-[70%] h-8 rounded-full bg-[#0e3b3a2b] blur-md;
+      }
+
+      .doctor-badge {
+        @apply absolute md:left-2 left-1 md:bottom-16 bottom-8 bg-white/90 backdrop-blur rounded-2xl card-shadow px-4 py-3 font-paragraph md:block hidden;
+
+        strong {
+          @apply block text-teal-dark font-semibold text-sm;
+        }
+
+        span {
+          @apply text-teal text-xs;
+        }
+      }
+    }
+
+    .why-content {
+      @apply relative z-[2] mx-auto max-w-7xl md:px-8 px-4 h-full flex flex-col justify-center md:gap-0 gap-1 md:pt-20 pt-[4.5rem] md:pb-10 pb-6;
+    }
+
+    .why-heading {
+      h2 {
+        @apply text-teal-dark font-bold 2xl:text-[2.7rem] md:text-[2.4rem] text-[1.4rem] leading-[1.08] tracking-[-.03em] md:mt-2.5 mt-1.5;
+      }
+
+      .why-sub {
+        @apply font-paragraph text-teal-dark/70 md:text-[15px] text-[12.5px] leading-snug md:leading-relaxed mt-2 max-w-lg;
+      }
+    }
+
+    .why-cards {
+      @apply md:grid md:grid-cols-2 flex flex-col md:gap-3.5 gap-2 md:mt-6 mt-3.5 md:max-w-2xl max-w-[88%];
+    }
+
+    .why-card {
+      @apply bg-white/95 backdrop-blur rounded-3xl border border-[#0e3b3a10] card-shadow md:p-[18px] p-3 flex md:gap-3.5 gap-3 items-start;
+      will-change: transform, opacity;
+
+      .why-icon {
+        @apply flex-none md:size-11 size-9 rounded-2xl flex-center bg-mint text-teal;
+
+        svg {
+          @apply md:size-5 size-4.5;
+        }
+      }
+
+      h3 {
+        @apply font-paragraph font-semibold md:text-[16.5px] text-[14.5px] text-teal-dark leading-snug;
+      }
+
+      p {
+        @apply font-paragraph md:text-[13.5px] text-[11.5px] md:leading-snug leading-snug text-ink/70 md:mt-1.5 mt-1;
+      }
+    }
+  }
+
+  /* ---------- process ---------- */
+  .process-section {
+    @apply relative bg-mint overflow-hidden md:py-32 py-20;
+
+    .process-card {
+      @apply relative bg-white rounded-3xl md:p-10 p-7 flex flex-col gap-4 overflow-hidden border border-[#0e3b3a10] card-shadow;
+
+      .step-num {
+        @apply font-paragraph font-bold text-sm tracking-widest uppercase;
+      }
+
+      h3 {
+        @apply font-paragraph font-semibold text-2xl leading-snug text-teal-dark;
+      }
+
+      p {
+        @apply font-paragraph leading-relaxed text-ink/70;
+      }
+    }
+  }
+
+  /* ---------- doctors (fanned deck that rises from below) ---------- */
+  .doctors-section {
+    /* overflow-x-clip stops the tilt causing a scrollbar, but leaves the
+       vertical axis visible so the rising cards are never cut off */
+    @apply relative bg-cream overflow-x-clip md:py-32 py-20;
+
+    .doctors-deck {
+      @apply flex md:flex-row flex-col items-center justify-center max-w-5xl mx-auto;
+    }
+
+    .doctor-card {
+      @apply relative flex-none md:w-[19rem] w-[85%] max-w-sm rounded-[1.7rem] overflow-hidden bg-white border border-[#0e3b3a12];
+      @apply md:-mx-5 md:mt-0 -mt-10 first:mt-0;
+      box-shadow: 0 30px 55px -22px rgba(14, 59, 58, 0.4);
+      transform-origin: bottom center;
+      will-change: transform, opacity;
+    }
+
+    /* photo panel: soft tinted studio backdrop + the doctor cut-out */
+    .dc-photo {
+      @apply relative aspect-[4/4.2] overflow-hidden;
+      background: linear-gradient(165deg, #eef6f1 0%, #d9eae2 100%);
+    }
+    .tint-skin .dc-photo {
+      background:
+        radial-gradient(85% 75% at 26% 18%, rgba(224, 122, 140, 0.20), transparent 60%),
+        linear-gradient(165deg, #f2f0ee 0%, #dbe9e3 100%);
+    }
+    .tint-hair .dc-photo {
+      background:
+        radial-gradient(85% 75% at 26% 18%, rgba(232, 163, 61, 0.22), transparent 60%),
+        linear-gradient(165deg, #f2efe9 0%, #dbe9e3 100%);
+    }
+    .tint-body .dc-photo {
+      background:
+        radial-gradient(85% 75% at 26% 18%, rgba(46, 143, 134, 0.22), transparent 60%),
+        linear-gradient(165deg, #eef6f1 0%, #d6e7df 100%);
+    }
+
+    .dc-cut {
+      @apply absolute inset-0 h-full w-full object-contain object-right-bottom;
+      filter: drop-shadow(0 14px 22px rgba(14, 59, 58, 0.22));
+    }
+
+    .dc-tag {
+      @apply absolute top-4 left-4 z-10 bg-white/85 backdrop-blur text-teal-dark text-xs font-semibold rounded-full px-3 py-1.5 shadow-sm;
+    }
+    .dc-rating {
+      @apply absolute top-4 right-4 z-10 bg-teal-dark/90 text-amber text-xs font-bold rounded-full px-2.5 py-1.5 backdrop-blur;
+    }
+
+    .dc-foot {
+      @apply p-5 flex flex-col gap-0.5;
+
+      h3 {
+        @apply font-paragraph font-semibold text-lg text-teal-dark leading-tight;
+      }
+      .dc-role {
+        @apply font-paragraph text-[13px] font-medium text-teal;
+      }
+      .dc-stats {
+        @apply mt-3 grid grid-cols-2 gap-2;
+      }
+      .dc-stat {
+        @apply rounded-xl bg-mint px-3 py-2 text-center;
+
+        strong {
+          @apply block font-bold text-teal-dark text-lg leading-none;
+        }
+        small {
+          @apply block text-[11px] font-medium text-teal-dark/60 mt-1;
+        }
+      }
+    }
+  }
+
+  /* ---------- transformations (cula-style horizontal) ---------- */
+  .transform-section {
+    @apply relative bg-teal-dark overflow-hidden;
+
+    .transform-viewport {
+      @apply h-dvh flex flex-col justify-center overflow-hidden relative;
+    }
+
+    .transform-header {
+      @apply absolute md:top-24 top-20 left-0 right-0 px-6 text-center z-10;
+
+      h2 {
+        @apply text-cream font-bold 2xl:text-[4rem] md:text-[3.2rem] text-[2rem] leading-none tracking-[-.03em] mt-3 whitespace-nowrap;
+      }
+    }
+
+    .transform-track {
+      @apply flex items-center md:gap-8 gap-5 w-max md:pl-[55vw] pl-6 md:pr-[12vw] pr-6 md:mt-24 mt-16;
+    }
+
+    .transform-card {
+      @apply relative md:w-[26rem] w-[19rem] flex-none rounded-[1.75rem] overflow-hidden bg-white shadow-[0_30px_90px_rgba(0,0,0,0.35)];
+
+      .card-media {
+        @apply relative;
+
+        video {
+          @apply w-full md:h-[24rem] h-[17rem] object-cover bg-teal-dark;
+        }
+
+        .ba-full {
+          @apply relative;
+
+          img {
+            @apply w-full md:h-[24rem] h-[17rem] object-cover bg-teal-dark;
+          }
+
+          .ba-full-label {
+            @apply absolute top-3 left-3 font-paragraph text-[.62rem] font-bold uppercase tracking-widest bg-[#0e3b3ad9] text-cream rounded-full px-3 py-1;
+          }
+
+          /* small "results in X" trust card on the photo */
+          .ba-duration {
+            @apply absolute bottom-3 right-3 font-paragraph text-[.72rem] font-semibold bg-amber text-teal-dark rounded-full px-3 py-1.5 shadow-[0_6px_18px_rgba(0,0,0,0.35)];
+          }
+        }
+
+        .ba-grid {
+          @apply grid grid-cols-2 relative;
+
+          img,
+          .ba-ph {
+            @apply w-full md:h-56 h-40 object-cover;
+          }
+
+          .ba-label {
+            @apply absolute top-3 font-paragraph text-[.62rem] font-bold uppercase tracking-widest bg-[#0e3b3ad9] text-cream rounded-full px-3 py-1;
+          }
+        }
+      }
+
+      .transform-body {
+        @apply md:p-6 p-5 flex flex-col gap-2.5;
+
+        .review-top {
+          @apply flex items-center justify-between;
+
+          .stars {
+            @apply text-amber tracking-[.18em] text-sm;
+          }
+
+          .verified {
+            @apply flex items-center gap-1.5 font-paragraph text-[.68rem] font-semibold text-teal bg-mint rounded-full px-2.5 py-1;
+          }
+        }
+
+        p {
+          @apply font-paragraph text-[15px] leading-relaxed text-ink/80;
+        }
+
+        .who {
+          @apply flex items-center justify-between mt-1;
+
+          h4 {
+            @apply font-paragraph font-semibold text-base text-teal-dark;
+          }
+
+          .concern-tag {
+            @apply font-paragraph text-xs font-semibold text-teal bg-mint rounded-full px-3 py-1;
+          }
+        }
+      }
+    }
+
+    .transform-progress {
+      @apply absolute md:bottom-14 bottom-8 left-1/2 -translate-x-1/2 md:w-64 w-40 h-[3px] bg-[#f7f4ee22] rounded-full overflow-hidden;
+
+      .bar {
+        @apply h-full w-full bg-amber origin-left scale-x-0 rounded-full;
+      }
+    }
+  }
+
+  /* ---------- consult CTA ---------- */
+  .cta-section {
+    @apply relative bg-cream overflow-hidden md:py-36 py-20 flex-center;
+
+    .cta-card {
+      @apply relative bg-teal-dark rounded-[2.5rem] md:p-16 p-8 md:mx-8 mx-5 max-w-3xl w-full text-center col-center gap-4 shadow-[0_40px_120px_rgba(14,59,58,0.35)] overflow-hidden;
+
+      .cta-eyebrow {
+        @apply section-eyebrow text-amber;
+      }
+
+      .cta-price-row {
+        @apply flex items-end justify-center gap-4 md:my-3 my-2;
+
+        .old-price {
+          @apply font-paragraph font-semibold md:text-4xl text-2xl line-through text-cream/35;
+        }
+
+        .new-price {
+          @apply font-bold md:text-[6.5rem] text-[3.6rem] leading-none text-cream;
+        }
+      }
+
+      h3 {
+        @apply font-paragraph font-bold md:text-4xl text-2xl text-cream leading-tight;
+      }
+
+      p {
+        @apply font-paragraph md:text-base text-sm text-cream/70 max-w-md;
+      }
+
+      .cta-button {
+        @apply md:mt-6 mt-4 bg-amber text-teal-dark font-paragraph font-bold md:text-lg text-base rounded-full md:px-14 px-9 md:py-5 py-4 cursor-pointer hover:bg-amber-light transition-colors shadow-[0_10px_40px_rgba(232,163,61,0.35)];
+      }
+    }
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq-section {
+    @apply bg-cream md:pb-32 pb-20;
+
+    .faq-item {
+      @apply border-b border-[#0e3b3a1f] py-5 cursor-pointer;
+
+      .faq-q {
+        @apply flex justify-between items-center gap-6;
+
+        h3 {
+          @apply font-paragraph font-semibold md:text-xl text-base text-teal-dark;
+        }
+
+        .faq-icon {
+          @apply flex-none size-9 flex-center rounded-full bg-mint text-teal-dark text-2xl font-paragraph transition-transform duration-300;
+        }
+      }
+
+      .faq-a {
+        @apply overflow-hidden h-0 opacity-0;
+
+        p {
+          @apply font-paragraph md:text-base text-sm leading-relaxed opacity-75 pt-4 pr-14;
+        }
+      }
+    }
+  }
+
+  /* ---------- footer ---------- */
+  .footer-section {
+    @apply relative bg-teal-dark text-cream overflow-hidden;
+
+    .footer-big {
+      @apply uppercase font-bold text-[13.5vw] leading-[.95] tracking-[-.4vw] text-center text-[#f7f4ee14] select-none;
+    }
+
+    .footer-grid {
+      @apply mx-auto max-w-7xl grid md:grid-cols-4 grid-cols-2 md:gap-10 gap-8 md:px-8 px-5 md:pb-16 pb-10;
+
+      h4 {
+        @apply font-paragraph uppercase font-bold text-sm tracking-widest text-amber mb-4;
+      }
+
+      a,
+      p {
+        @apply font-paragraph text-sm opacity-75 hover:opacity-100 transition-opacity block mb-2.5;
+      }
+    }
+
+    .social-btn {
+      @apply border border-[#f7f4ee33] size-11 flex-center rounded-full hover:bg-[#ffffff1a] transition-colors cursor-pointer font-paragraph text-sm;
+    }
+
+    .copyright-box {
+      @apply w-full md:px-10 px-5 py-6 text-cream opacity-60 text-sm font-paragraph flex gap-4 md:flex-row flex-col-reverse md:justify-between justify-center items-center border-t border-[#f7f4ee1a];
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "devriz-site",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "devriz-site",
+      "port": 5173
+    },
+    {
+      "name": "studio-dh",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "studio-dh",
+      "port": 3333
+    }
+  ]
+}
