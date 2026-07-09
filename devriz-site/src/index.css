@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --color-cream: #f7f4ee;
-  --color-mint: #e3f0ea;
-  --color-teal-dark: #0e3b3a;
-  --color-teal: #17615c;
-  --color-teal-light: #2e8f86;
+  /* warm "yellow" theme — light sections use the yellow palette, the dark
+     anchor (former green) is a warm brown-gold so text stays readable */
+  --color-cream: #fffdf0; /* soft warm off-white (base + light text on dark) */
+  --color-mint: #fdefb2; /* Buttermilk — light yellow section bg */
+  --color-teal-dark: #46390f; /* dark warm brown-gold — dark sections + text */
+  --color-teal: #806313; /* deep goldenrod — accents / eyebrows */
+  --color-teal-light: #b8912a; /* goldenrod — lighter accent */
   --color-amber: #e8a33d;
   --color-amber-light: #f6c56b;
-  --color-ink: #1c2422;
-  --color-blush: #f3e2d6;
+  --color-ink: #3a2f10; /* warm dark text */
+  --color-blush: #fde992; /* Parmesan */
   --font-display: "Antonio", sans-serif;
   --font-paragraph: "Inter", sans-serif;
 }
@@ -19,8 +21,8 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: #f7f4ee;
-  color: #0e3b3a;
+  background-color: #fffdf0;
+  color: #46390f;
   font-family: "Antonio", sans-serif;
   overflow-x: hidden;
   scrollbar-width: none;
@@ -302,9 +304,9 @@ body::-webkit-scrollbar {
   .why-section {
     @apply relative overflow-hidden;
     background:
-      radial-gradient(55% 45% at 82% 90%, rgba(23, 97, 92, 0.12), transparent 60%),
-      radial-gradient(45% 38% at 12% 15%, rgba(232, 163, 61, 0.09), transparent 60%),
-      linear-gradient(180deg, #f4f8f5 0%, #e3f0ea 100%);
+      radial-gradient(55% 45% at 82% 90%, rgba(226, 178, 47, 0.16), transparent 60%),
+      radial-gradient(45% 38% at 12% 15%, rgba(232, 163, 61, 0.1), transparent 60%),
+      linear-gradient(180deg, #fffdf0 0%, #fdefb2 100%);
 
     .why-stage {
       @apply relative h-dvh overflow-hidden;
@@ -474,17 +476,17 @@ body::-webkit-scrollbar {
     .tint-skin .dc-photo {
       background:
         radial-gradient(85% 75% at 26% 18%, rgba(224, 122, 140, 0.20), transparent 60%),
-        linear-gradient(165deg, #f2f0ee 0%, #dbe9e3 100%);
+        linear-gradient(165deg, #fffdf0 0%, #f7edc8 100%);
     }
     .tint-hair .dc-photo {
       background:
-        radial-gradient(85% 75% at 26% 18%, rgba(232, 163, 61, 0.22), transparent 60%),
-        linear-gradient(165deg, #f2efe9 0%, #dbe9e3 100%);
+        radial-gradient(85% 75% at 26% 18%, rgba(232, 163, 61, 0.24), transparent 60%),
+        linear-gradient(165deg, #fffdf0 0%, #f7edc8 100%);
     }
     .tint-body .dc-photo {
       background:
-        radial-gradient(85% 75% at 26% 18%, rgba(46, 143, 134, 0.22), transparent 60%),
-        linear-gradient(165deg, #eef6f1 0%, #d6e7df 100%);
+        radial-gradient(85% 75% at 26% 18%, rgba(184, 145, 42, 0.22), transparent 60%),
+        linear-gradient(165deg, #fffdf0 0%, #f2e6bf 100%);
     }
 
     .dc-cut {
@@ -562,7 +564,7 @@ body::-webkit-scrollbar {
           }
 
           .ba-full-label {
-            @apply absolute top-3 left-3 font-paragraph text-[.62rem] font-bold uppercase tracking-widest bg-[#0e3b3ad9] text-cream rounded-full px-3 py-1;
+            @apply absolute top-3 left-3 font-paragraph text-[.62rem] font-bold uppercase tracking-widest bg-teal-dark/85 text-cream rounded-full px-3 py-1;
           }
 
           /* small "results in X" trust card on the photo */
@@ -580,7 +582,7 @@ body::-webkit-scrollbar {
           }
 
           .ba-label {
-            @apply absolute top-3 font-paragraph text-[.62rem] font-bold uppercase tracking-widest bg-[#0e3b3ad9] text-cream rounded-full px-3 py-1;
+            @apply absolute top-3 font-paragraph text-[.62rem] font-bold uppercase tracking-widest bg-teal-dark/85 text-cream rounded-full px-3 py-1;
           }
         }
       }
@@ -741,7 +743,7 @@ body::-webkit-scrollbar {
 
   /* ---------- consult booking modal ---------- */
   .consult-overlay {
-    @apply fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#0e3b3a80] backdrop-blur-sm;
+    @apply fixed inset-0 z-[100] flex items-center justify-center p-4 bg-teal-dark/60 backdrop-blur-sm;
     animation: consultFade 0.25s ease;
   }
 
@@ -827,7 +829,7 @@ body::-webkit-scrollbar {
       input,
       textarea,
       select {
-        @apply font-normal rounded-xl border border-[#0e3b3a22] bg-white text-teal-dark text-[15px] px-3.5 py-2.5 outline-none focus:border-teal focus:ring-2 focus:ring-[#2e8f8633];
+        @apply font-normal rounded-xl border border-[#0e3b3a22] bg-white text-teal-dark text-[15px] px-3.5 py-2.5 outline-none focus:border-teal focus:ring-2 focus:ring-[#80631333];
       }
       textarea {
         @apply resize-none;

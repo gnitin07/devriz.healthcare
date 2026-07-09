@@ -2,7 +2,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useContent } from "../lib/ContentContext";
 
-const ACCENTS = ["#e8a33d", "#2e8f86", "#c96f4a"];
+const ACCENTS = ["#e8a33d", "#c07a2e", "#c96f4a"];
 
 const ICONS = [
   // 1 — consult (chat bubble)
