@@ -158,8 +158,8 @@ const WhyConsultSection = () => {
           </div>
           <div className="doctor-shadow" />
           <div className="doctor-badge">
-            <strong>Amy Aliya</strong>
-            <span>Senior Cosmetologist · 15+ yrs</span>
+            <strong>Doctor's advice</strong>
+            <span>Great Results & Trusted by millions</span>
           </div>
         </div>
 
