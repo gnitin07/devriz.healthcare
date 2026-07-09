@@ -11,7 +11,7 @@ const TARGETS = {
   concern: "#process",
 };
 
-const NavBar = () => {
+const NavBar = ({ landing = false }) => {
   const { settings } = useContent();
   const { dark } = useHeaderTheme();
   const { openBooking } = useBooking();
@@ -26,12 +26,24 @@ const NavBar = () => {
   }, []);
 
   // light treatment only while over a dark slide AND not scrolled
-  // (once scrolled the navbar gets its cream background, so use dark ink)
-  const light = dark && !scrolled;
+  // (once scrolled the navbar gets its cream background, so use dark ink).
+  // On the landing page the hero sits at the bottom, so its "dark" signal is
+  // wrong for the top of the page — force dark ink there so the logo stays visible.
+  const light = !landing && dark && !scrolled;
 
   const go = (link) => {
     setOpen(false);
     document.querySelector(TARGETS[link])?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // On the landing page the logo links to the real home page I designed;
+  // on the home page it just scrolls back to the top hero.
+  const onLogo = () => {
+    if (landing) {
+      window.location.href = "/";
+    } else {
+      go("home");
+    }
   };
 
   return (
@@ -47,7 +59,7 @@ const NavBar = () => {
           className={`md:h-12 h-9 w-auto cursor-pointer transition-[filter] duration-300 ${
             light ? "brightness-0 invert" : ""
           }`}
-          onClick={() => go("home")}
+          onClick={onLogo}
         />
 
         <div className="nav-links">

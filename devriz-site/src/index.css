@@ -526,6 +526,36 @@ body::-webkit-scrollbar {
     }
   }
 
+  /* ---------- teaser video ---------- */
+  .teaser-section {
+    @apply relative bg-cream overflow-hidden md:py-28 py-16;
+
+    .teaser-inner {
+      @apply mx-auto max-w-5xl md:px-8 px-5 text-center;
+
+      h2 {
+        @apply mb-10;
+      }
+    }
+
+    .teaser-frame {
+      @apply relative mx-auto w-full max-w-4xl aspect-video rounded-[1.75rem] overflow-hidden bg-teal-dark;
+      box-shadow: 0 44px 90px -34px rgba(70, 57, 15, 0.5);
+
+      video {
+        @apply absolute inset-0 size-full object-cover;
+      }
+    }
+
+    .teaser-mute {
+      @apply absolute bottom-4 right-4 z-10 size-11 flex-center rounded-full bg-teal-dark/65 text-cream backdrop-blur hover:bg-teal-dark transition-colors cursor-pointer;
+
+      svg {
+        @apply w-5 h-5;
+      }
+    }
+  }
+
   /* ---------- transformations (cula-style horizontal) ---------- */
   .transform-section {
     @apply relative bg-teal-dark overflow-hidden;
