@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useContent } from "../lib/ContentContext";
 import { useHeaderTheme } from "../lib/HeaderTheme";
+import { useBooking } from "../lib/BookingContext";
 
 const LINKS = ["home", "about", "doctors", "concern"];
 const TARGETS = {
@@ -13,6 +14,7 @@ const TARGETS = {
 const NavBar = () => {
   const { settings } = useContent();
   const { dark } = useHeaderTheme();
+  const { openBooking } = useBooking();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -57,14 +59,9 @@ const NavBar = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <a
-            href={settings.bookingLink}
-            target="_blank"
-            rel="noreferrer"
-            className="nav-cta"
-          >
+          <button type="button" onClick={openBooking} className="nav-cta">
             Consult @ ₹{settings.consultPrice}
-          </a>
+          </button>
           <button
             className="md:hidden flex flex-col gap-1.5 p-2 cursor-pointer"
             onClick={() => setOpen((v) => !v)}

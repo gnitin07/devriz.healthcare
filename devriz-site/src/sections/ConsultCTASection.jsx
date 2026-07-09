@@ -1,9 +1,11 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useContent } from "../lib/ContentContext";
+import { useBooking } from "../lib/BookingContext";
 
 const ConsultCTASection = () => {
   const { settings } = useContent();
+  const { openBooking } = useBooking();
 
   useGSAP(() => {
     // the main card scales into the center as you scroll to it
@@ -39,14 +41,9 @@ const ConsultCTASection = () => {
           Personal consultation · skin-type diagnosis · personalised treatment
           plan · WhatsApp support
         </p>
-        <a
-          href={settings.bookingLink}
-          target="_blank"
-          rel="noreferrer"
-          className="cta-button"
-        >
+        <button type="button" onClick={openBooking} className="cta-button">
           Book my consultation
-        </a>
+        </button>
       </div>
     </section>
   );

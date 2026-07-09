@@ -3,6 +3,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
 import { ContentProvider } from "./lib/ContentContext";
 import { HeaderThemeProvider } from "./lib/HeaderTheme";
+import { BookingProvider } from "./lib/BookingContext";
+import ConsultModal from "./components/ConsultModal";
 import NavBar from "./components/NavBar";
 import StatsStrip from "./components/StatsStrip";
 import HeroSection from "./sections/HeroSection";
@@ -30,18 +32,21 @@ const App = () => {
   return (
     <ContentProvider>
       <HeaderThemeProvider>
-        <main>
-          <NavBar />
-          <HeroSection />
-          <StatsStrip />
-          <WhyConsultSection />
-          <ProcessSection />
-          <DoctorsSection />
-          <TransformationsSection />
-          <ConsultCTASection />
-          <FAQSection />
-          <FooterSection />
-        </main>
+        <BookingProvider>
+          <main>
+            <NavBar />
+            <HeroSection />
+            <StatsStrip />
+            <WhyConsultSection />
+            <ProcessSection />
+            <DoctorsSection />
+            <TransformationsSection />
+            <ConsultCTASection />
+            <FAQSection />
+            <FooterSection />
+          </main>
+          <ConsultModal />
+        </BookingProvider>
       </HeaderThemeProvider>
     </ContentProvider>
   );

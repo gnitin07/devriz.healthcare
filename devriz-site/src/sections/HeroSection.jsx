@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { useMediaQuery } from "react-responsive";
 import { useContent } from "../lib/ContentContext";
 import { useHeaderTheme } from "../lib/HeaderTheme";
+import { useBooking } from "../lib/BookingContext";
 import { urlFor } from "../lib/sanity";
 import SlideVisual from "../components/SlideVisual";
 
@@ -23,6 +24,7 @@ const CHARCOAL = {
 const HeroSection = () => {
   const { heroBanners, settings } = useContent();
   const { setDark } = useHeaderTheme();
+  const { openBooking } = useBooking();
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   // Full designed banners (text baked into the artwork) — rendered as
@@ -214,13 +216,12 @@ const HeroSection = () => {
                 )}
               </div>
 
-              {!hasText && link && (
-                <a
+              {!hasText && (
+                <button
+                  type="button"
                   className="slide-link"
-                  href={link}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={slide.alt || "Open"}
+                  onClick={openBooking}
+                  aria-label={slide.alt || "Book a consultation"}
                 />
               )}
 

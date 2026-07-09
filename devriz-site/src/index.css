@@ -685,4 +685,162 @@ body::-webkit-scrollbar {
       @apply w-full md:px-10 px-5 py-6 text-cream opacity-60 text-sm font-paragraph flex gap-4 md:flex-row flex-col-reverse md:justify-between justify-center items-center border-t border-[#f7f4ee1a];
     }
   }
+
+  /* ---------- consult booking modal ---------- */
+  .consult-overlay {
+    @apply fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#0e3b3a80] backdrop-blur-sm;
+    animation: consultFade 0.25s ease;
+  }
+
+  .consult-modal {
+    @apply relative w-full max-w-[31rem] max-h-[92dvh] overflow-y-auto bg-cream rounded-[1.75rem] md:p-8 p-6 shadow-[0_40px_100px_rgba(14,59,58,0.45)];
+    animation: consultPop 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+    font-family: var(--font-paragraph);
+
+    .consult-close {
+      @apply absolute top-4 right-4 size-9 flex-center rounded-full bg-mint text-teal-dark text-2xl leading-none pb-0.5 cursor-pointer hover:bg-[#d3e6de] transition-colors;
+    }
+
+    .consult-eyebrow {
+      @apply section-eyebrow text-teal;
+    }
+
+    .consult-steps {
+      @apply flex gap-1.5 mt-3;
+
+      .cs-dot {
+        @apply h-1.5 w-6 rounded-full bg-[#0e3b3a1f] transition-all duration-300;
+      }
+      .cs-dot.done {
+        @apply bg-teal;
+      }
+      .cs-dot.active {
+        @apply bg-teal-dark w-10;
+      }
+    }
+
+    .consult-body {
+      @apply mt-5;
+      animation: consultStep 0.28s ease;
+
+      h3 {
+        @apply font-display font-bold text-teal-dark md:text-[1.6rem] text-[1.35rem] leading-tight mb-4;
+      }
+    }
+
+    .concern-grid {
+      @apply grid grid-cols-3 gap-3;
+
+      .concern-card {
+        @apply flex flex-col items-center text-center gap-1 md:p-4 p-3 rounded-2xl border-2 border-[#0e3b3a14] bg-white cursor-pointer transition-all hover:border-teal hover:-translate-y-0.5;
+
+        &.sel {
+          @apply border-teal-dark bg-mint;
+        }
+        .concern-emoji {
+          @apply text-3xl;
+        }
+        strong {
+          @apply font-semibold text-teal-dark text-[15px];
+        }
+        small {
+          @apply text-[11px] text-teal-dark/55 leading-tight;
+        }
+      }
+    }
+
+    .chip-wrap {
+      @apply flex flex-wrap gap-2;
+
+      &.chip-wrap--col {
+        @apply flex-col;
+      }
+    }
+
+    .chip {
+      @apply rounded-full border border-[#0e3b3a1f] bg-white text-teal-dark md:text-sm text-[13px] font-medium px-3.5 py-2 cursor-pointer transition-colors hover:border-teal;
+
+      &.sel {
+        @apply bg-teal-dark text-cream border-teal-dark;
+      }
+      &.chip--wide {
+        @apply w-full text-left px-4 py-3;
+      }
+    }
+
+    .consult-label {
+      @apply flex flex-col gap-1.5 text-[13px] font-semibold text-teal-dark mt-4;
+
+      input,
+      textarea,
+      select {
+        @apply font-normal rounded-xl border border-[#0e3b3a22] bg-white text-teal-dark text-[15px] px-3.5 py-2.5 outline-none focus:border-teal focus:ring-2 focus:ring-[#2e8f8633];
+      }
+      textarea {
+        @apply resize-none;
+      }
+    }
+
+    .field-grid {
+      @apply grid md:grid-cols-2 grid-cols-1 gap-x-3;
+
+      .consult-label {
+        @apply mt-3;
+      }
+    }
+
+    .consult-error {
+      @apply mt-3 text-[13px] font-medium text-[#c0392b];
+    }
+
+    .consult-foot {
+      @apply mt-6 flex items-center justify-between gap-3;
+    }
+
+    .consult-primary {
+      @apply inline-flex items-center justify-center gap-2 bg-teal-dark text-cream font-semibold rounded-full md:px-7 px-5 md:py-3.5 py-3 text-[15px] cursor-pointer transition-all hover:bg-teal disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_12px_30px_rgba(14,59,58,0.28)];
+    }
+
+    .consult-ghost {
+      @apply text-teal-dark/60 font-medium text-sm cursor-pointer hover:text-teal-dark disabled:opacity-40;
+    }
+
+    .consult-secure {
+      @apply mt-3 text-center text-[11px] text-teal-dark/45;
+    }
+
+    .consult-done {
+      @apply text-center py-4;
+      animation: consultStep 0.3s ease;
+
+      .done-check {
+        @apply size-16 mx-auto flex-center rounded-full bg-teal text-cream text-3xl mb-4;
+      }
+      h3 {
+        @apply font-display font-bold text-teal-dark text-2xl mb-2;
+      }
+      p {
+        @apply text-teal-dark/70 text-[15px] leading-relaxed max-w-sm mx-auto;
+      }
+      .done-redirect {
+        @apply text-teal text-sm font-medium mt-3;
+      }
+      .consult-primary {
+        @apply mt-5;
+      }
+    }
+  }
+}
+
+@keyframes consultFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes consultPop {
+  from { opacity: 0; transform: translateY(16px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes consultStep {
+  from { opacity: 0; transform: translateX(14px); }
+  to { opacity: 1; transform: translateX(0); }
 }
