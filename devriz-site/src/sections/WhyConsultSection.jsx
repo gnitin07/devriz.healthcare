@@ -61,66 +61,47 @@ const WhyConsultSection = () => {
         ease: "sine.inOut",
       });
 
-      // pinned scene: cards arrive one by one from the doctor's side while
-      // she leans in ("gestures") for each one, then settles back
+      // no pin — the whole scene reveals in a single scroll: heading, doctor
+      // and all cards glide in together with a quick stagger
       const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: `+=${cards.length * 70}%`,
-          scrub: 1,
-          pin: true,
-          invalidateOnRefresh: true,
-        },
+        scrollTrigger: { trigger: sectionRef.current, start: "top 68%" },
       });
 
       tl.from(
         ".why-head-el",
-        { y: 50, opacity: 0, stagger: 0.12, duration: 0.7, ease: "power3.out" },
+        { y: 40, opacity: 0, stagger: 0.1, duration: 0.6, ease: "power3.out" },
         0
-      );
-      tl.from(
-        ".why-doctor",
-        { x: 120, opacity: 0, duration: 0.9, ease: "power3.out" },
-        0.1
-      );
-
-      cards.forEach((card, i) => {
-        const t = 0.9 + i;
-        tl.fromTo(
-          card,
-          { x: 280, y: 30, opacity: 0, rotate: 5 },
-          { x: 0, y: 0, opacity: 1, rotate: 0, duration: 0.75, ease: "power3.out" },
-          t
+      )
+        .from(
+          ".why-doctor",
+          { x: 120, opacity: 0, duration: 0.8, ease: "power3.out" },
+          0.1
+        )
+        .from(
+          cards,
+          {
+            x: 200,
+            y: 24,
+            opacity: 0,
+            rotate: 4,
+            stagger: 0.12,
+            duration: 0.7,
+            ease: "power3.out",
+          },
+          0.3
         );
-      });
 
-      // doctor gesture: crossfade through her cut-out poses as the visitor
-      // scrolls, so she "raises her hand to present" across the section
+      // doctor "presents": crossfade her poses once, on entrance
       const poses = gsap.utils.toArray(".why-pose");
       if (poses.length > 1) {
-        const span = Math.max(cards.length, 1);
         gsap.set(poses, { opacity: 0 });
         gsap.set(poses[0], { opacity: 1 });
-        // spread the pose changes across the first ~65% of the scroll so she
-        // reaches the "presenting" pose early and holds it through the rest
-        const lastAt = 0.6 + span * 0.62;
         for (let i = 1; i < poses.length; i++) {
-          const at = 0.6 + ((i - 1) / (poses.length - 1)) * (lastAt - 0.6);
-          tl.to(poses[i - 1], { opacity: 0, duration: 0.55, ease: "power1.inOut" }, at);
-          tl.to(poses[i], { opacity: 1, duration: 0.55, ease: "power1.inOut" }, at);
+          const at = 0.5 + (i - 1) * 0.4;
+          tl.to(poses[i - 1], { opacity: 0, duration: 0.4, ease: "power1.inOut" }, at);
+          tl.to(poses[i], { opacity: 1, duration: 0.4, ease: "power1.inOut" }, at);
         }
-        // a whisper of zoom so she feels present, not a flat sticker
-        tl.fromTo(
-          ".why-doctor-fig",
-          { scale: 1 },
-          { scale: 1.035, ease: "none", duration: span },
-          0.9
-        );
       }
-
-      // small hold at the end so the last card breathes before unpin
-      tl.to({}, { duration: 0.5 });
     },
     { dependencies: [whyBanners], revertOnUpdate: true }
   );

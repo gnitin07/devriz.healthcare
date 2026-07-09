@@ -42,7 +42,7 @@ const FooterSection = () => {
 
   return (
     <footer className="footer-section">
-      <h2 className="footer-big md:pt-20 pt-14 md:pb-16 pb-10">Devriz</h2>
+      <h2 className="footer-big md:pt-20 pt-14 md:pb-16 pb-10"></h2>
 
       <div className="footer-grid">
         <div className="md:col-span-2">

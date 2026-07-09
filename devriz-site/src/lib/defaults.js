@@ -60,7 +60,7 @@ export const DEFAULTS = {
     {
       title: "Products as per need & budget",
       description:
-        "No random shopping. You get a personalised routine with products matched to your concern, your skin type and your budget.",
+        "No random shopping. You get a personalised routine with products matched to your concern, your skin/body/hair type and your budget.",
       accent: "#2e8f86",
     },
     {
