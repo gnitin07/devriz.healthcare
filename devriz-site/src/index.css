@@ -394,19 +394,56 @@ body::-webkit-scrollbar {
   .process-section {
     @apply relative bg-mint overflow-hidden md:py-32 py-20;
 
+    /* premium step card: accent bar + tinted icon + outlined step number,
+       each step in its own colour so the three read as a clear sequence */
     .process-card {
-      @apply relative bg-white rounded-3xl md:p-10 p-7 flex flex-col gap-4 overflow-hidden border border-[#0e3b3a10] card-shadow;
+      @apply relative bg-white rounded-[1.75rem] md:p-8 p-7 overflow-hidden border border-[#0e3b3a0f];
+      box-shadow: 0 26px 60px -26px rgba(14, 59, 58, 0.28);
+      /* only box-shadow transitions — a transform transition would fight the
+         GSAP reveal that also drives `transform` on this element */
+      transition: box-shadow 0.3s ease;
 
-      .step-num {
-        @apply font-paragraph font-bold text-sm tracking-widest uppercase;
+      &::before {
+        content: "";
+        @apply absolute top-0 left-0 right-0 h-[5px];
+        background: var(--accent);
+      }
+      &:hover {
+        box-shadow: 0 34px 70px -24px rgba(14, 59, 58, 0.34);
+      }
+
+      .pc-top {
+        @apply flex items-center justify-between mb-6;
+      }
+
+      .pc-icon {
+        @apply size-14 rounded-2xl flex-center;
+        background: color-mix(in srgb, var(--accent) 14%, white);
+        color: var(--accent);
+
+        svg {
+          @apply size-7;
+        }
+      }
+
+      .pc-num {
+        @apply font-display font-bold text-[3.4rem] leading-none;
+        color: transparent;
+        -webkit-text-stroke: 1.6px var(--accent);
+        opacity: 0.55;
+      }
+
+      .pc-tag {
+        @apply block font-paragraph text-[11px] font-bold uppercase tracking-[.22em];
+        color: var(--accent);
       }
 
       h3 {
-        @apply font-paragraph font-semibold text-2xl leading-snug text-teal-dark;
+        @apply font-paragraph font-bold text-teal-dark text-xl leading-snug mt-2;
       }
 
       p {
-        @apply font-paragraph leading-relaxed text-ink/70;
+        @apply font-paragraph text-[15px] leading-relaxed text-ink/65 mt-2.5;
       }
     }
   }
