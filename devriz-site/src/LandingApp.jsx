@@ -5,6 +5,7 @@ import { ContentProvider } from "./lib/ContentContext";
 import { HeaderThemeProvider } from "./lib/HeaderTheme";
 import { BookingProvider } from "./lib/BookingContext";
 import ConsultModal from "./components/ConsultModal";
+import LandingStickyCTA from "./components/LandingStickyCTA";
 import NavBar from "./components/NavBar";
 import StatsStrip from "./components/StatsStrip";
 import HeroSection from "./sections/HeroSection";
@@ -55,6 +56,7 @@ const LandingApp = () => {
             <FooterSection />
           </main>
           <ConsultModal />
+          <LandingStickyCTA />
         </BookingProvider>
       </HeaderThemeProvider>
     </ContentProvider>
