@@ -47,7 +47,7 @@ const FooterSection = () => {
       <div className="footer-grid">
         <div className="md:col-span-2">
           <img
-            src="/images/logo.png"
+            src="/images/logo-r.png"
             alt="Devriz Healthcare"
             className="h-11 w-auto mb-5 brightness-0 invert opacity-90"
           />

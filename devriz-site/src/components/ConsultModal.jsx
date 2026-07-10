@@ -104,7 +104,7 @@ const ConsultModal = () => {
       currency: "INR",
       name: "Devriz Healthcare",
       description: `Consultation – ${category}`,
-      image: "/images/logo.png",
+      image: "/images/logo-r.png",
       prefill: { name: fullName.trim(), contact: mobile.trim() },
       notes: { ticketId, category, concern: issueStr },
       theme: { color: "#0e3b3a" },

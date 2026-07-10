@@ -54,7 +54,7 @@ const NavBar = ({ landing = false }) => {
     >
       <div className="nav-inner">
         <img
-          src="/images/logo.png"
+          src="/images/logo-r.png"
           alt="Devriz Healthcare"
           className={`md:h-12 h-9 w-auto cursor-pointer transition-[filter] duration-300 ${
             light ? "brightness-0 invert" : ""
