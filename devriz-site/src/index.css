@@ -12,8 +12,8 @@
   --color-amber-light: #f6c56b;
   --color-ink: #3a2f10; /* warm dark text */
   --color-blush: #fde992; /* Parmesan */
-  --font-display: "Antonio", sans-serif;
-  --font-paragraph: "Inter", sans-serif;
+  --font-display: "Poppins", sans-serif;
+  --font-paragraph: "Poppins", sans-serif;
 }
 
 html,
@@ -23,7 +23,7 @@ body {
   box-sizing: border-box;
   background-color: #fffdf0;
   color: #46390f;
-  font-family: "Antonio", sans-serif;
+  font-family: "Poppins", sans-serif;
   overflow-x: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;

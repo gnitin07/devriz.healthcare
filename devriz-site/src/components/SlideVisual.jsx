@@ -28,7 +28,7 @@ const Illustrations = {
       <circle cx="332" cy="150" r="7" fill={S.amber} opacity=".7" />
       <circle cx="314" cy="168" r="4" fill={S.amber} opacity=".5" />
       <circle cx="342" cy="128" r="3.5" fill={S.amber} opacity=".6" />
-      <text x="322" y="230" textAnchor="middle" fill={S.dim} fontFamily="Inter, sans-serif" fontSize="15" fontWeight="600">Pigmentation · Acne</text>
+      <text x="322" y="230" textAnchor="middle" fill={S.dim} fontFamily="Poppins, sans-serif" fontSize="15" fontWeight="600">Pigmentation · Acne</text>
     </svg>
   ),
 
@@ -46,7 +46,7 @@ const Illustrations = {
       <circle cx="312" cy="74" r="4" fill={S.amber} />
       <circle cx="328" cy="78" r="4" fill={S.amber} />
       <circle cx="344" cy="82" r="4" fill={S.amber} />
-      <text x="316" y="180" textAnchor="middle" fill={S.dim} fontFamily="Inter, sans-serif" fontSize="15" fontWeight="600">Hair fall · Dandruff</text>
+      <text x="316" y="180" textAnchor="middle" fill={S.dim} fontFamily="Poppins, sans-serif" fontSize="15" fontWeight="600">Hair fall · Dandruff</text>
     </svg>
   ),
 
@@ -62,7 +62,7 @@ const Illustrations = {
       <circle cx="316" cy="180" r="6" fill={S.amber} opacity=".6" />
       <circle cx="300" cy="204" r="5" fill={S.amber} opacity=".7" />
       <circle cx="326" cy="206" r="3.5" fill={S.amber} opacity=".5" />
-      <text x="306" y="270" textAnchor="middle" fill={S.dim} fontFamily="Inter, sans-serif" fontSize="15" fontWeight="600">Body care · Texture</text>
+      <text x="306" y="270" textAnchor="middle" fill={S.dim} fontFamily="Poppins, sans-serif" fontSize="15" fontWeight="600">Body care · Texture</text>
     </svg>
   ),
 
@@ -80,9 +80,9 @@ const Illustrations = {
         <animate attributeName="y2" values="100;250;100" dur="4s" repeatCount="indefinite" />
       </line>
       <rect x="300" y="128" width="88" height="60" rx="12" fill="#0e3b3acc" stroke={S.teal} strokeWidth="2" />
-      <text x="344" y="155" textAnchor="middle" fill={S.line} fontFamily="Inter, sans-serif" fontSize="13" fontWeight="600">Skin score</text>
-      <text x="344" y="178" textAnchor="middle" fill={S.amber} fontFamily="Antonio, sans-serif" fontSize="22" fontWeight="700">82%</text>
-      <text x="190" y="320" textAnchor="middle" fill={S.dim} fontFamily="Inter, sans-serif" fontSize="15" fontWeight="600">Free AI face scan</text>
+      <text x="344" y="155" textAnchor="middle" fill={S.line} fontFamily="Poppins, sans-serif" fontSize="13" fontWeight="600">Skin score</text>
+      <text x="344" y="178" textAnchor="middle" fill={S.amber} fontFamily="Poppins, sans-serif" fontSize="22" fontWeight="700">82%</text>
+      <text x="190" y="320" textAnchor="middle" fill={S.dim} fontFamily="Poppins, sans-serif" fontSize="15" fontWeight="600">Free AI face scan</text>
     </svg>
   ),
 };

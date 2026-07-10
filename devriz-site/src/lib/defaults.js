@@ -36,7 +36,7 @@ export const DEFAULTS = {
     {
       title: "Personalized guidance",
       description:
-        "Every skin type is unique. Your concern, history and lifestyle need individual attention, not a one-size-fits-all solution.",
+        "Every skin type is unique. Your concern, history and lifestyle need individual attention, not a one size fits all solution.",
     },
     {
       title: "Avoid wrong product use",
@@ -44,7 +44,7 @@ export const DEFAULTS = {
         "Using the wrong products can worsen conditions. Consultation ensures you apply only what's right for your concern.",
     },
     {
-      title: "Doctor-led support",
+      title: "Doctor led support",
       description:
         "Our cosmetology experts have 15+ years of experience guiding thousands of patients to visible, lasting improvements.",
     },
@@ -131,7 +131,7 @@ export const DEFAULTS = {
       concern: "Dark circles",
       duration: "6 weeks",
       review:
-        "My under-eye circles had bothered me for years. A targeted routine brightened the whole area and I look far less tired.",
+        "My under eye circles had bothered me for years. A targeted routine brightened the whole area and I look far less tired.",
       rating: 5,
       resultImage: "/transformations/undereye-dark-circles.webp",
     },
@@ -177,7 +177,7 @@ export const DEFAULTS = {
     {
       question: "Why is the consultation just ₹49?",
       answer:
-        "We are consultation-first, not product-first. ₹49 keeps expert guidance accessible so you diagnose before you spend anything on products.",
+        "We are consultation first, not product first. ₹49 keeps expert guidance accessible so you diagnose before you spend anything on products.",
     },
     {
       question: "Is the guidance really personalised?",
