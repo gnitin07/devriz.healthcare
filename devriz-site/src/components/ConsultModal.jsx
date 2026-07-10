@@ -100,7 +100,8 @@ const ConsultModal = () => {
 
     const options = {
       key: RAZORPAY_KEY_ID,
-      amount: CONSULT_AMOUNT * 100,
+      // ⚠️ TEST MODE: charges ₹1 (100 paise). REVERT to `CONSULT_AMOUNT * 100` before going live.
+      amount: 100,
       currency: "INR",
       name: "Devriz Healthcare",
       description: `Consultation – ${category}`,
