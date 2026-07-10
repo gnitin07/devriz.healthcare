@@ -36,7 +36,7 @@ export const DEFAULTS = {
     {
       title: "Personalized guidance",
       description:
-        "Every skin type is unique. Your concern, history and lifestyle need individual attention — not a one-size-fits-all solution.",
+        "Every skin type is unique. Your concern, history and lifestyle need individual attention, not a one-size-fits-all solution.",
     },
     {
       title: "Avoid wrong product use",
@@ -66,34 +66,12 @@ export const DEFAULTS = {
     {
       title: "Dispatched after final consultation",
       description:
-        "Your plan is confirmed on a final consultation call and only then is your kit dispatched — so everything you receive is right for you.",
+        "Your plan is confirmed on a final consultation call and only then is your kit dispatched,so everything you receive is right for you.",
       accent: "#c96f4a",
     },
   ],
 
   doctors: [
-    {
-      name: "Dr. Seema Rao",
-      specialty: "Skin & Acne",
-      experience: "12 yrs",
-      clients: "8,400+",
-      success: "97%",
-      rating: "4.9",
-      tint: "skin",
-      photo: null,
-      localPhoto: "/images/doctor-seema.png",
-    },
-    {
-      name: "Dr. Rachita Sen",
-      specialty: "Hair & Scalp",
-      experience: "10 yrs",
-      clients: "6,900+",
-      success: "95%",
-      rating: "4.8",
-      tint: "hair",
-      photo: null,
-      localPhoto: "/images/doctor-rachita.png",
-    },
     {
       name: "Dr. Amy Aliya",
       specialty: "Body & Wellness",
@@ -104,6 +82,28 @@ export const DEFAULTS = {
       tint: "body",
       photo: null,
       localPhoto: "/images/doctor-amy-cut.png",
+    },
+    {
+      name: "Dr. Seema Magar",
+      specialty: "Skin & Acne",
+      experience: "12 yrs",
+      clients: "8,400+",
+      success: "97%",
+      rating: "4.9",
+      tint: "skin",
+      photo: null,
+      localPhoto: "/images/doctor-seema.png",
+    },
+    {
+      name: "Dr. Rachita Tangri",
+      specialty: "Hair & Scalp",
+      experience: "10 yrs",
+      clients: "6,900+",
+      success: "95%",
+      rating: "4.8",
+      tint: "hair",
+      photo: null,
+      localPhoto: "/images/doctor-rachita.png",
     },
   ],
 

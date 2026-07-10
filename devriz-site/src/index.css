@@ -353,7 +353,7 @@ body::-webkit-scrollbar {
     }
 
     .why-content {
-      @apply relative z-[2] mx-auto max-w-7xl md:px-8 px-4 h-full flex flex-col justify-center md:gap-0 gap-1 md:pt-20 pt-[4.5rem] md:pb-10 pb-6;
+      @apply relative z-[2] mx-auto max-w-7xl md:px-8 px-4 h-full flex flex-col justify-center md:gap-0 gap-1 md:pt-20 pt-8 md:pb-10 pb-6;
     }
 
     .why-heading {
