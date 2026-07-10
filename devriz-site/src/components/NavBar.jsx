@@ -71,9 +71,11 @@ const NavBar = ({ landing = false }) => {
         </div>
 
         <div className="flex items-center gap-3">
-          <button type="button" onClick={openBooking} className="nav-cta">
-            Consult @ ₹{settings.consultPrice}
-          </button>
+          {!landing && (
+            <button type="button" onClick={openBooking} className="nav-cta">
+              Consult @ ₹{settings.consultPrice}
+            </button>
+          )}
           <button
             className="md:hidden flex flex-col gap-1.5 p-2 cursor-pointer"
             onClick={() => setOpen((v) => !v)}

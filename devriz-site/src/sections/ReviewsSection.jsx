@@ -50,13 +50,14 @@ const ReviewsSection = () => {
   return (
     <section
       ref={scope}
-      className="relative bg-mint overflow-hidden md:py-28 py-16"
+      className="relative overflow-hidden pt-32 md:pt-44 pb-16 md:pb-28"
+      style={{
+        background:
+          "linear-gradient(180deg, var(--color-teal-dark) 0, var(--color-mint) 150px)",
+      }}
     >
       <div className="max-w-7xl mx-auto md:px-8 px-5">
-        <p className="font-paragraph font-semibold uppercase tracking-[0.2em] text-teal text-xs md:text-sm text-center">
-          Real stories · Real results
-        </p>
-        <h2 className="font-display md:text-6xl text-4xl font-bold text-teal-dark text-center leading-none mt-3">
+        <h2 className="font-display md:text-6xl text-4xl font-bold text-teal-dark text-center leading-none">
           What our patients say
         </h2>
         <p className="font-paragraph text-ink/70 text-center md:text-lg text-base mt-4 max-w-2xl mx-auto">
