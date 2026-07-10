@@ -5,10 +5,11 @@ export const RAZORPAY_KEY_ID = "rzp_live_StwoxJlDC4IMUs"; // swap to rzp_test_�
 
 // Paste your deployed Apps Script Web App URL (…/exec). Deploy: GAS → Deploy →
 // New deployment → Web app → Execute as "Me", access "Anyone" → copy the /exec URL.
-export const GAS_WEB_APP_URL = ""; // e.g. "https://script.google.com/macros/s/AKfyc.../exec"
+export const GAS_WEB_APP_URL =
+  "https://script.google.com/macros/s/AKfycbyE7zZTIEX9Gks_ldlxXByVbEM93-GG_e3RTPARoLGpS_Hm4McVn1BjkUtI8IrQuYN3zw/exec";
 
 // WhatsApp number to redirect to after payment: country code + number, digits only.
-export const WHATSAPP_NUMBER = ""; // e.g. "919812345678"
+export const WHATSAPP_NUMBER = "917703882098";
 
 export const CONSULT_AMOUNT = 49; // ₹
 // ───────────────────────────────────────────────────────────────────────────────
@@ -20,14 +21,16 @@ export const CONCERNS = [
     emoji: "✨",
     desc: "Acne, pigmentation, dullness…",
     issues: [
-      "Acne & pimples",
-      "Pigmentation & dark spots",
-      "Dullness & uneven tone",
-      "Open pores",
-      "Blackheads",
+      "Acne",
+      "Pigmentation",
+      "Dark Spots",
+      "Melasma",
+      "Under-eye Circles",
+      "Open Pores",
+      "Tanning",
       "Dryness",
-      "Ageing & wrinkles",
-      "Under-eye dark circles",
+      "Dull Skin",
+      "Uneven Tone",
     ],
   },
   {
@@ -35,13 +38,14 @@ export const CONCERNS = [
     emoji: "💆",
     desc: "Hair fall, dandruff, thinning…",
     issues: [
-      "Hair fall",
+      "Hair Fall",
       "Dandruff",
-      "Thinning / low density",
-      "Premature greying",
-      "Scalp itch / irritation",
-      "Bald patches",
-      "Beard growth",
+      "Hair Thinning",
+      "Scalp Itching",
+      "Dry Hair",
+      "Oily Scalp",
+      "Premature Greying",
+      "Hair Growth Concern",
     ],
   },
   {
@@ -49,11 +53,14 @@ export const CONCERNS = [
     emoji: "🧴",
     desc: "Body acne, marks, dryness…",
     issues: [
-      "Body acne",
-      "Stretch marks",
-      "Body pigmentation",
-      "Dry / rough skin",
-      "Tanning",
+      "Body Acne",
+      "Body Tanning",
+      "Stretch Marks",
+      "Dark Neck",
+      "Dark Underarms",
+      "Body Pigmentation",
+      "Rough Skin",
+      "Ingrown Hair",
     ],
   },
 ];
@@ -110,10 +117,11 @@ export async function submitBooking(payload) {
   }
 }
 
-export function whatsappUrl(ticketId, category, issue) {
+export function whatsappUrl(ticketId, category, issue, paymentId) {
   const text =
     `Hi Devriz Healthcare! I just booked a ₹${CONSULT_AMOUNT} consultation.\n` +
     `Booking ID: ${ticketId}\n` +
-    `Concern: ${category}${issue ? " – " + issue : ""}`;
+    `Concern: ${category}${issue ? " – " + issue : ""}` +
+    (paymentId ? `\nPayment ID: ${paymentId}` : "");
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
 }

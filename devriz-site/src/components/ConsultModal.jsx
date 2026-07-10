@@ -3,7 +3,6 @@ import { useBooking } from "../lib/BookingContext";
 import {
   CONCERNS,
   DURATIONS,
-  PREFERRED_TIMES,
   CONSULT_AMOUNT,
   RAZORPAY_KEY_ID,
   loadRazorpay,
@@ -101,7 +100,8 @@ const ConsultModal = () => {
 
     const options = {
       key: RAZORPAY_KEY_ID,
-      amount: CONSULT_AMOUNT * 100,
+      // ⚠️ TEST MODE: charges ₹1 (100 paise). REVERT to `CONSULT_AMOUNT * 100` before going live.
+      amount: 100,
       currency: "INR",
       name: "Devriz Healthcare",
       description: `Consultation – ${category}`,
@@ -125,10 +125,16 @@ const ConsultModal = () => {
           paymentId: resp.razorpay_payment_id,
           sourcePage: window.location.href,
         });
-        setDone({ ticketId, category, issueStr });
+        const paymentId = resp.razorpay_payment_id;
+        setDone({ ticketId, category, issueStr, paymentId });
         if (WHATSAPP_NUMBER) {
           setTimeout(() => {
-            window.location.href = whatsappUrl(ticketId, category, issueStr);
+            window.location.href = whatsappUrl(
+              ticketId,
+              category,
+              issueStr,
+              paymentId
+            );
           }, 1600);
         }
       },
@@ -164,7 +170,12 @@ const ConsultModal = () => {
                 <p className="done-redirect">Opening WhatsApp…</p>
                 <a
                   className="consult-primary"
-                  href={whatsappUrl(done.ticketId, done.category, done.issueStr)}
+                  href={whatsappUrl(
+                    done.ticketId,
+                    done.category,
+                    done.issueStr,
+                    done.paymentId
+                  )}
                 >
                   Continue on WhatsApp
                 </a>
@@ -300,20 +311,6 @@ const ConsultModal = () => {
                         onChange={(e) => setCity(e.target.value)}
                         placeholder="Your city"
                       />
-                    </label>
-                    <label className="consult-label">
-                      Preferred time
-                      <select
-                        value={preferredTime}
-                        onChange={(e) => setPreferredTime(e.target.value)}
-                      >
-                        <option value="">Select…</option>
-                        {PREFERRED_TIMES.map((t) => (
-                          <option key={t} value={t}>
-                            {t}
-                          </option>
-                        ))}
-                      </select>
                     </label>
                   </div>
                   {error && <p className="consult-error">{error}</p>}
