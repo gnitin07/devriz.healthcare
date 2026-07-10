@@ -13,6 +13,7 @@ import ProcessSection from "./sections/ProcessSection";
 import DoctorsSection from "./sections/DoctorsSection";
 import TransformationsSection from "./sections/TransformationsSection";
 import TeaserSection from "./sections/TeaserSection";
+import ReviewsSection from "./sections/ReviewsSection";
 import ConsultCTASection from "./sections/ConsultCTASection";
 import FAQSection from "./sections/FAQSection";
 import FooterSection from "./sections/FooterSection";
@@ -44,6 +45,7 @@ const LandingApp = () => {
             <ConsultCTASection />
             <TeaserSection />
             <TransformationsSection />
+            <ReviewsSection />
             <DoctorsSection />
             <ProcessSection />
             <WhyConsultSection />

@@ -15,6 +15,7 @@ import TransformationsSection from "./sections/TransformationsSection";
 import TeaserSection from "./sections/TeaserSection";
 import ConsultCTASection from "./sections/ConsultCTASection";
 import FAQSection from "./sections/FAQSection";
+import ReviewsSection from "./sections/ReviewsSection";
 import FooterSection from "./sections/FooterSection";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -44,6 +45,7 @@ const App = () => {
             <TransformationsSection />
             <TeaserSection />
             <ConsultCTASection />
+            <ReviewsSection />
             <FAQSection />
             <FooterSection />
           </main>
