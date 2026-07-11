@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useContent } from "../lib/ContentContext";
 import { useHeaderTheme } from "../lib/HeaderTheme";
 import { useBooking } from "../lib/BookingContext";
@@ -16,7 +16,9 @@ const NavBar = ({ landing = false }) => {
   const { dark } = useHeaderTheme();
   const { openBooking } = useBooking();
   const [open, setOpen] = useState(false);
+  const [ctaOpen, setCtaOpen] = useState(false); // mobile "Get Started" dropdown
   const [scrolled, setScrolled] = useState(false);
+  const ctaRef = useRef(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -24,6 +26,20 @@ const NavBar = ({ landing = false }) => {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // close the CTA dropdown when tapping outside it
+  useEffect(() => {
+    if (!ctaOpen) return;
+    const onDoc = (e) => {
+      if (ctaRef.current && !ctaRef.current.contains(e.target)) setCtaOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("touchstart", onDoc);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("touchstart", onDoc);
+    };
+  }, [ctaOpen]);
 
   // light treatment only while over a dark slide AND not scrolled
   // (once scrolled the navbar gets its cream background, so use dark ink).
@@ -33,7 +49,13 @@ const NavBar = ({ landing = false }) => {
 
   const go = (link) => {
     setOpen(false);
-    document.querySelector(TARGETS[link])?.scrollIntoView({ behavior: "smooth" });
+    const el = document.querySelector(TARGETS[link]);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    } else {
+      // on standalone pages (/ai-scan) the section isn't here — go home to it
+      window.location.href = `/${TARGETS[link]}`;
+    }
   };
 
   // On the landing page the logo links to the real home page I designed;
@@ -68,17 +90,62 @@ const NavBar = ({ landing = false }) => {
               {link}
             </a>
           ))}
+          <a href="/ai-scan" className="nav-aiscan">
+            ✨ Free AI Scan
+          </a>
         </div>
 
         <div className="flex items-center gap-3">
+          {/* desktop: keep the Consult button (the AI-scan tab sits in nav-links) */}
           {!landing && (
-            <button type="button" onClick={openBooking} className="nav-cta">
+            <button
+              type="button"
+              onClick={openBooking}
+              className="nav-cta hidden md:inline-flex"
+            >
               Consult @ ₹{settings.consultPrice}
             </button>
           )}
+
+          {/* mobile: one "Get Started" button → dropdown with both choices */}
+          <div className="md:hidden relative" ref={ctaRef}>
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                setCtaOpen((v) => !v);
+              }}
+              className="nav-cta !py-2 !px-4 inline-flex items-center gap-1"
+              aria-haspopup="true"
+              aria-expanded={ctaOpen}
+            >
+              Get Started
+              <span aria-hidden className={`transition-transform ${ctaOpen ? "rotate-180" : ""}`}>
+                ▾
+              </span>
+            </button>
+            {ctaOpen && (
+              <div className="nav-cta-menu">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCtaOpen(false);
+                    openBooking();
+                  }}
+                >
+                  💬 Consult @ ₹{settings.consultPrice}
+                </button>
+                <a href="/ai-scan">✨ Free AI Scan report</a>
+              </div>
+            )}
+          </div>
+
           <button
             className="md:hidden flex flex-col gap-1.5 p-2 cursor-pointer"
-            onClick={() => setOpen((v) => !v)}
+            onClick={() => {
+              setCtaOpen(false);
+              setOpen((v) => !v);
+            }}
             aria-label="Menu"
           >
             <span className={`block w-6 h-0.5 ${light ? "bg-cream" : "bg-teal-dark"}`} />

@@ -72,6 +72,27 @@ body::-webkit-scrollbar {
     .nav-cta {
       @apply bg-teal-dark text-cream font-paragraph font-semibold rounded-full md:px-6 px-4 md:py-3 py-2 text-sm hover:bg-teal transition-colors cursor-pointer;
     }
+
+    .nav-aiscan {
+      @apply cursor-pointer font-semibold text-teal border border-teal/30 rounded-full px-3 py-1.5 text-[13px] hover:bg-mint transition-colors;
+    }
+
+    /* mobile "Get Started" dropdown */
+    .nav-cta-menu {
+      @apply absolute right-0 mt-2 w-56 rounded-2xl overflow-hidden z-50
+        bg-cream border border-[#0e3b3a1f]
+        shadow-[0_16px_40px_rgba(70,57,15,0.18)];
+
+      a,
+      button {
+        @apply block w-full text-left px-4 py-3.5 text-sm font-semibold text-teal-dark
+          cursor-pointer hover:bg-mint transition-colors;
+      }
+      button + a,
+      a + button {
+        @apply border-t border-[#0e3b3a12];
+      }
+    }
   }
 
   .nav-scrolled {
@@ -277,6 +298,20 @@ body::-webkit-scrollbar {
         @apply h-full w-full bg-amber origin-left scale-x-0;
       }
     }
+
+    .hero-aiscan {
+      @apply absolute z-30 left-1/2 -translate-x-1/2 bottom-16 md:bottom-14
+        inline-flex items-center gap-2 rounded-full px-4 py-2.5 md:px-6 md:py-3
+        text-[13px] md:text-sm font-semibold text-teal-dark
+        bg-[#fffdf0ee] backdrop-blur-md shadow-[0_8px_28px_rgba(70,57,15,0.25)]
+        hover:bg-cream transition-colors cursor-pointer whitespace-nowrap;
+      animation: fs-float 2.8s ease-in-out infinite;
+    }
+  }
+
+  @keyframes fs-float {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, -5px); }
   }
 
   /* ---------- trust stats strip ---------- */

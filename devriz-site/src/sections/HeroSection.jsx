@@ -255,6 +255,11 @@ const HeroSection = () => {
           );
         })}
 
+        <a href="/ai-scan" className="hero-aiscan" onPointerDown={(e) => e.stopPropagation()}>
+          ✨ Try our Free AI Skin Scan — instant report
+          <span aria-hidden>→</span>
+        </a>
+
         {count > 1 && (
           <>
             <div className="hero-arrows">

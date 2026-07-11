@@ -14,6 +14,7 @@ import DoctorsSection from "./sections/DoctorsSection";
 import TransformationsSection from "./sections/TransformationsSection";
 import TeaserSection from "./sections/TeaserSection";
 import ConsultCTASection from "./sections/ConsultCTASection";
+import AIScanSection from "./sections/AIScanSection";
 import FAQSection from "./sections/FAQSection";
 import ReviewsSection from "./sections/ReviewsSection";
 import FooterSection from "./sections/FooterSection";
@@ -46,6 +47,7 @@ const App = () => {
             <ReviewsSection />
             <TeaserSection />
             <ConsultCTASection />
+            <AIScanSection />
             <FAQSection />
             <FooterSection />
           </main>

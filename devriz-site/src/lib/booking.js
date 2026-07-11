@@ -117,6 +117,21 @@ export async function submitBooking(payload) {
   }
 }
 
+// Best-effort log of a free AI-scan lead to the same Google Sheet (own action so
+// you can filter these rows). Fire-and-forget; never blocks the report UI.
+export async function submitFaceScanLead(payload) {
+  if (!GAS_WEB_APP_URL) return;
+  try {
+    await fetch(GAS_WEB_APP_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ action: "logFaceScan", ...payload }),
+    });
+  } catch {
+    /* logging is best-effort */
+  }
+}
+
 export function whatsappUrl(ticketId, category, issue, paymentId) {
   const text =
     `Hi Devriz Healthcare! I just booked a ₹${CONSULT_AMOUNT} consultation.\n` +

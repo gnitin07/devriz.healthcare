@@ -16,6 +16,7 @@ import TransformationsSection from "./sections/TransformationsSection";
 import TeaserSection from "./sections/TeaserSection";
 import ReviewsSection from "./sections/ReviewsSection";
 import ConsultCTASection from "./sections/ConsultCTASection";
+import AIScanSection from "./sections/AIScanSection";
 import FAQSection from "./sections/FAQSection";
 import FooterSection from "./sections/FooterSection";
 
@@ -52,6 +53,7 @@ const LandingApp = () => {
             <WhyConsultSection />
             <StatsStrip />
             <HeroSection />
+            <AIScanSection />
             <FAQSection />
             <FooterSection />
           </main>

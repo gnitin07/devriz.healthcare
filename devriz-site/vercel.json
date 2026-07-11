@@ -1,5 +1,8 @@
 {
-  "rewrites": [{ "source": "/consult", "destination": "/index.html" }],
+  "rewrites": [
+    { "source": "/consult", "destination": "/index.html" },
+    { "source": "/ai-scan", "destination": "/index.html" }
+  ],
   "headers": [
     {
       "source": "/models/(.*)",
