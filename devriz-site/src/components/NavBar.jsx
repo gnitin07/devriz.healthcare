@@ -90,13 +90,13 @@ const NavBar = ({ landing = false }) => {
               {link}
             </a>
           ))}
-          <a href="/ai-scan" className="nav-aiscan">
-            ✨ Free AI Scan
-          </a>
         </div>
 
         <div className="flex items-center gap-3">
-          {/* desktop: keep the Consult button (the AI-scan tab sits in nav-links) */}
+          {/* desktop: AI-scan (secondary) + Consult (primary), grouped on the right */}
+          <a href="/ai-scan" className="nav-aiscan hidden md:inline-flex">
+            ✨ Free AI Scan
+          </a>
           {!landing && (
             <button
               type="button"

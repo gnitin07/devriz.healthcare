@@ -74,7 +74,10 @@ body::-webkit-scrollbar {
     }
 
     .nav-aiscan {
-      @apply cursor-pointer font-semibold text-teal border border-teal/30 rounded-full px-3 py-1.5 text-[13px] hover:bg-mint transition-colors;
+      @apply inline-flex items-center cursor-pointer font-paragraph font-semibold
+        text-teal-dark border-[1.5px] border-teal-dark/45 rounded-full
+        md:px-6 px-4 md:py-3 py-2 text-sm hover:bg-mint hover:border-teal-dark
+        transition-colors;
     }
 
     /* mobile "Get Started" dropdown */
@@ -109,6 +112,9 @@ body::-webkit-scrollbar {
     }
     .nav-cta {
       @apply bg-amber text-teal-dark hover:bg-amber-light;
+    }
+    .nav-aiscan {
+      @apply text-cream border-cream/60 hover:bg-[#ffffff1f] hover:border-cream;
     }
   }
 
