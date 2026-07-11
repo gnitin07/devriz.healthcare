@@ -232,7 +232,8 @@ export default function FaceScan() {
 
   const downloadPdf = useCallback(async () => {
     setStatus("Preparing your PDF…");
-    // PNG keeps the logo's transparency (JPEG would render it as a black block).
+    // Original black/gold logo — PNG keeps the transparency so it sits cleanly
+    // on the buttercream header/footer bands.
     const logo = await toDataUrl("/images/logo-r.png", 240, "image/png");
     const origin = window.location.origin;
     const doc = buildReportPdf({

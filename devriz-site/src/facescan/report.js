@@ -7,8 +7,21 @@ const TEAL = [128, 99, 19];
 const AMBER = [232, 163, 61];
 const CREAM = [255, 253, 240];
 const MINT = [253, 239, 178];
+const AMBER_LIGHT = [246, 197, 107];
 const INK = [58, 47, 16];
 const GREY = [120, 110, 90];
+
+// Formal clinic details for the report footer (mirrors src/lib/defaults.js).
+const CLINIC = {
+  name: "Devriz Healthcare",
+  tagline: "Consultation-first skin, hair & body care",
+  address: "Plot No-8, Shankar Vihar, Preet Vihar, New Delhi 110092",
+  email: "info@devrizhealthcare.com",
+  phone: "+91 97739 89550",
+  website: "devrizhealthcare.com",
+  social: "@devrizhealthcare",
+  year: new Date().getFullYear(),
+};
 
 const scoreColor = (s) =>
   s >= 80 ? [46, 139, 87] : s >= 65 ? [90, 140, 40] : s >= 45 ? AMBER : [200, 90, 60];
@@ -16,7 +29,7 @@ const scoreColor = (s) =>
 // Load any same-origin image into a dataURL (+ its dimensions) so jsPDF can embed
 // it. Use "image/png" to PRESERVE TRANSPARENCY (JPEG turns transparent pixels
 // black — that was the all-black logo bug). Returns null on failure.
-export function toDataUrl(src, maxW = 480, type = "image/jpeg", quality = 0.85) {
+export function toDataUrl(src, maxW = 480, type = "image/jpeg", quality = 0.85, filter = null) {
   return new Promise((resolve) => {
     const img = new Image();
     img.crossOrigin = "anonymous";
@@ -26,7 +39,11 @@ export function toDataUrl(src, maxW = 480, type = "image/jpeg", quality = 0.85) 
         const c = document.createElement("canvas");
         c.width = Math.round(img.width * scale);
         c.height = Math.round(img.height * scale);
-        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        const ctx = c.getContext("2d");
+        // e.g. "brightness(0) invert(1)" recolours the dark logo to solid white
+        // (transparency preserved) so it reads on the dark header/footer bands.
+        if (filter) ctx.filter = filter;
+        ctx.drawImage(img, 0, 0, c.width, c.height);
         resolve({ url: c.toDataURL(type, quality), w: c.width, h: c.height });
       } catch {
         resolve(null);
@@ -45,69 +62,91 @@ export function buildReportPdf(payload) {
   const PW = 210;
   let y = 0;
 
-  // ── Header band ──────────────────────────────────────────────────────────────
-  doc.setFillColor(...TEAL_DARK);
+  // ── Header band (buttercream, brand logo in original black/gold) ─────────────
+  doc.setFillColor(...MINT);
   doc.rect(0, 0, PW, 34, "F");
-  // Logo sits on a cream chip so the dark brand logo stays visible on the dark
-  // header, and is drawn as PNG to keep its transparency.
+  // amber accent line under the header
+  doc.setFillColor(...AMBER);
+  doc.rect(0, 33.2, PW, 0.8, "F");
   let textX = 14;
   if (logo?.url) {
     try {
-      const maxH = 15,
-        maxW = 40;
+      const maxH = 14,
+        maxW = 38;
       let w = maxW,
         h = (logo.h / logo.w) * maxW;
       if (h > maxH) {
         h = maxH;
         w = (logo.w / logo.h) * maxH;
       }
-      const pad = 2.5;
-      const chipY = (34 - h) / 2 - pad;
-      doc.setFillColor(...CREAM);
-      doc.roundedRect(12, chipY, w + pad * 2, h + pad * 2, 2, 2, "F");
-      doc.addImage(logo.url, "PNG", 12 + pad, chipY + pad, w, h);
-      textX = 12 + w + pad * 2 + 5;
+      doc.addImage(logo.url, "PNG", 14, (34 - h) / 2, w, h);
+      textX = 14 + w + 6;
+      // subtle divider between logo and title
+      doc.setDrawColor(...TEAL_DARK);
+      doc.setLineWidth(0.3);
+      doc.line(textX - 3, 10, textX - 3, 24);
     } catch {
       /* ignore */
     }
   }
-  doc.setTextColor(...CREAM);
+  doc.setTextColor(...TEAL_DARK);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(16);
-  doc.text("AI Skin Analysis Report", textX, 16);
+  doc.text("AI Skin Analysis Report", textX, 15.5);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
-  doc.setTextColor(...AMBER);
-  doc.text("Devriz Healthcare  ·  Free AI Skin Screening", textX, 23);
-  doc.setTextColor(...CREAM);
+  doc.setTextColor(...TEAL);
+  doc.text("Free AI Skin Screening", textX, 22.5);
+  doc.setTextColor(...TEAL_DARK);
   doc.setFontSize(8);
-  doc.text(`Report ID: ${ticketId}`, PW - 14, 14, { align: "right" });
-  doc.text(date, PW - 14, 20, { align: "right" });
+  doc.text(`Report ID: ${ticketId}`, PW - 14, 13.5, { align: "right" });
+  doc.text(date, PW - 14, 19.5, { align: "right" });
 
-  y = 44;
+  y = 46;
 
-  // ── Patient + photo row ──────────────────────────────────────────────────────
+  // ── Patient details (left) ───────────────────────────────────────────────────
   doc.setTextColor(...INK);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(11);
+  doc.setFontSize(12);
   doc.text(name || "Guest", 14, y);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.setTextColor(...GREY);
   if (mobile) doc.text(`Mobile: ${mobile}`, 14, y + 6);
+  doc.text(`Report date: ${date}`, 14, y + 11);
 
+  // ── Captured photo (top-right, real aspect ratio, sized to clear the cards) ──
+  let photoBottom = y;
   if (photoDataUrl) {
     try {
+      const maxW = 30,
+        maxH = 24;
+      let pw = maxW,
+        ph = maxH;
+      try {
+        const p = doc.getImageProperties(photoDataUrl);
+        pw = maxW;
+        ph = (p.height / p.width) * maxW;
+        if (ph > maxH) {
+          ph = maxH;
+          pw = (p.width / p.height) * maxH;
+        }
+      } catch {
+        /* fall back to the max box */
+      }
+      const px = PW - 14 - pw,
+        py = 40;
       doc.setFillColor(...MINT);
-      doc.roundedRect(PW - 46, y - 8, 32, 32, 2, 2, "F");
-      doc.addImage(photoDataUrl, "JPEG", PW - 45, y - 7, 30, 30);
+      doc.roundedRect(px - 1.5, py - 1.5, pw + 3, ph + 3, 2, 2, "F");
+      doc.addImage(photoDataUrl, "JPEG", px, py, pw, ph);
+      photoBottom = py + ph + 1.5;
     } catch {
       /* ignore */
     }
   }
 
-  // ── Score summary cards ──────────────────────────────────────────────────────
-  y += 16;
+  // ── Score summary cards (start below BOTH the patient text and the photo) ─────
+  y = Math.max(y + 15, photoBottom + 6);
   const cardW = 56,
     cardH = 26,
     gap = 6;
@@ -194,7 +233,7 @@ export function buildReportPdf(payload) {
   if (consultUrl) doc.link(14, y, PW - 28, 22, { url: consultUrl });
   y += 30;
 
-  // ── Disclaimer + footer ──────────────────────────────────────────────────────
+  // ── Disclaimer ───────────────────────────────────────────────────────────────
   doc.setTextColor(...GREY);
   doc.setFont("helvetica", "italic");
   doc.setFontSize(7.5);
@@ -203,18 +242,69 @@ export function buildReportPdf(payload) {
       "diagnosis. Lighting and camera quality affect results. For an accurate evaluation and treatment, please consult a " +
       "qualified dermatologist.",
     14,
-    y,
+    Math.max(Math.min(y, 253), 251), // sit just above the footer band (262)
     { maxWidth: PW - 28 }
   );
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(8);
-  doc.setTextColor(...TEAL);
-  const footer = "devrizhealthcare.com  ·  WhatsApp +91 97739 89550";
-  doc.text(footer, 105, 289, { align: "center" });
-  if (websiteUrl) {
-    const fw = doc.getTextWidth(footer);
-    doc.link(105 - fw / 2, 285, fw, 6, { url: websiteUrl });
+
+  // ── Branded footer band (buttercream, pinned to page bottom) ─────────────────
+  const fy = 262; // band top
+  doc.setFillColor(...MINT);
+  doc.rect(0, fy, PW, 297 - fy, "F");
+  // thin amber accent line on top of the band
+  doc.setFillColor(...AMBER);
+  doc.rect(0, fy, PW, 0.8, "F");
+
+  // brand logo (original colours)
+  if (logo?.url) {
+    try {
+      const lh = 9;
+      const lw = (logo.w / logo.h) * lh;
+      doc.addImage(logo.url, "PNG", 14, fy + 7, lw, lh);
+    } catch {
+      /* ignore */
+    }
   }
+  doc.setTextColor(...TEAL_DARK);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.text(CLINIC.name, 14, fy + 22);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7.5);
+  doc.setTextColor(...TEAL);
+  doc.text(CLINIC.tagline, 14, fy + 27);
+
+  // formal details, right-aligned
+  const rx = PW - 14;
+  doc.setFontSize(8);
+  doc.setTextColor(...TEAL_DARK);
+  doc.setFont("helvetica", "bold");
+  doc.text("Contact", rx, fy + 8, { align: "right" });
+  doc.setFont("helvetica", "normal");
+  doc.text(CLINIC.address, rx, fy + 13, { align: "right" });
+  doc.text(`${CLINIC.email}   ·   ${CLINIC.phone}`, rx, fy + 18, { align: "right" });
+  // website + social (website is a link back to the site)
+  doc.setTextColor(...TEAL);
+  doc.setFont("helvetica", "bold");
+  const wline = `${CLINIC.website}   ·   ${CLINIC.social}`;
+  doc.text(wline, rx, fy + 23, { align: "right" });
+  if (websiteUrl) {
+    const ww = doc.getTextWidth(CLINIC.website);
+    doc.link(rx - doc.getTextWidth(wline), fy + 20, ww, 5, { url: websiteUrl });
+  }
+
+  // bottom copyright strip
+  doc.setDrawColor(...TEAL_DARK);
+  doc.setLineWidth(0.2);
+  doc.line(14, fy + 30, rx, fy + 30);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(6.8);
+  doc.setTextColor(...TEAL);
+  doc.text(
+    `© ${CLINIC.year} ${CLINIC.name}. All rights reserved.  ·  Report ID: ${ticketId}`,
+    105,
+    fy + 33.5,
+    { align: "center" }
+  );
 
   return doc;
 }
