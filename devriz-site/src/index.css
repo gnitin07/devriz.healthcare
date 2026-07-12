@@ -305,19 +305,6 @@ body::-webkit-scrollbar {
       }
     }
 
-    .hero-aiscan {
-      @apply absolute z-30 left-1/2 -translate-x-1/2 bottom-16 md:bottom-14
-        inline-flex items-center gap-2 rounded-full px-4 py-2.5 md:px-6 md:py-3
-        text-[13px] md:text-sm font-semibold text-teal-dark
-        bg-[#fffdf0ee] backdrop-blur-md shadow-[0_8px_28px_rgba(70,57,15,0.25)]
-        hover:bg-cream transition-colors cursor-pointer whitespace-nowrap;
-      animation: fs-float 2.8s ease-in-out infinite;
-    }
-  }
-
-  @keyframes fs-float {
-    0%, 100% { transform: translate(-50%, 0); }
-    50% { transform: translate(-50%, -5px); }
   }
 
   /* ---------- trust stats strip ---------- */
