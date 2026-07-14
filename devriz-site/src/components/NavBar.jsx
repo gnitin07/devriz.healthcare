@@ -10,6 +10,13 @@ const TARGETS = {
   doctors: "#doctors",
   concern: "#process",
 };
+// per-section document titles (SEO-friendly context as the visitor navigates)
+const TITLES = {
+  home: "Devriz Healthcare | Skin, Hair & Body Care Consultation @ ₹49",
+  about: "Why Consultation Matters | Devriz Healthcare",
+  doctors: "Meet Our Expert Doctors | Devriz Healthcare",
+  concern: "How Devriz Works — 3 Step Process | Devriz Healthcare",
+};
 
 const NavBar = ({ landing = false }) => {
   const { settings } = useContent();
@@ -47,11 +54,15 @@ const NavBar = ({ landing = false }) => {
   // wrong for the top of the page — force dark ink there so the logo stays visible.
   const light = !landing && dark && !scrolled;
 
-  const go = (link) => {
+  const go = (link, e) => {
+    e?.preventDefault();
     setOpen(false);
     const el = document.querySelector(TARGETS[link]);
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
+      if (TITLES[link]) document.title = TITLES[link];
+      // reflect the section in the URL (shareable deep link) without a reload
+      window.history.replaceState(null, "", TARGETS[link]);
     } else {
       // on standalone pages (/ai-scan) the section isn't here — go home to it
       window.location.href = `/${TARGETS[link]}`;
@@ -86,7 +97,12 @@ const NavBar = ({ landing = false }) => {
 
         <div className="nav-links">
           {LINKS.map((link) => (
-            <a key={link} onClick={() => go(link)} className="cursor-pointer">
+            <a
+              key={link}
+              href={TARGETS[link]}
+              onClick={(e) => go(link, e)}
+              className="cursor-pointer"
+            >
               {link}
             </a>
           ))}
@@ -157,7 +173,12 @@ const NavBar = ({ landing = false }) => {
       {open && (
         <div className="md:hidden backdrop-blur-xl bg-[#f7f4eeee] border-t border-[#0e3b3a14] px-6 py-4 flex flex-col gap-4 font-paragraph font-medium text-teal-dark">
           {LINKS.map((link) => (
-            <a key={link} onClick={() => go(link)} className="capitalize">
+            <a
+              key={link}
+              href={TARGETS[link]}
+              onClick={(e) => go(link, e)}
+              className="capitalize"
+            >
               {link}
             </a>
           ))}
