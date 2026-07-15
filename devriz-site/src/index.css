@@ -584,28 +584,52 @@ body::-webkit-scrollbar {
     }
   }
 
-  /* ---------- transformations (cula-style horizontal) ---------- */
+  /* ---------- transformations (native horizontal scroll) ---------- */
   .transform-section {
-    @apply relative bg-teal-dark overflow-hidden;
+    @apply relative bg-teal-dark overflow-hidden md:py-28 py-16;
 
-    .transform-viewport {
-      @apply h-dvh flex flex-col justify-center overflow-hidden relative;
+    /* entrance: hidden by CSS (no post-paint flash → no scroll jitter), the
+       IntersectionObserver flips `.is-in` to reveal with a light stagger */
+    .transform-header > *,
+    .transform-card {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    &.is-in {
+      .transform-header > *,
+      .transform-card {
+        opacity: 1;
+        transform: none;
+      }
+      .transform-card:nth-child(2) { transition-delay: 0.06s; }
+      .transform-card:nth-child(3) { transition-delay: 0.12s; }
+      .transform-card:nth-child(4) { transition-delay: 0.18s; }
+      .transform-card:nth-child(n + 5) { transition-delay: 0.24s; }
     }
 
     .transform-header {
-      @apply absolute md:top-24 top-20 left-0 right-0 px-6 text-center z-10;
+      @apply mx-auto max-w-4xl text-center md:px-8 px-5 md:mb-12 mb-9;
 
       h2 {
-        @apply text-cream font-bold 2xl:text-[4rem] md:text-[3.2rem] text-[2rem] leading-none tracking-[-.03em] mt-3 whitespace-nowrap;
+        @apply text-cream font-bold 2xl:text-[4rem] md:text-[3.2rem] text-[1.8rem] leading-[1.06] tracking-[-.03em] mt-3;
       }
     }
 
+    /* swipe / trackpad horizontally; the page still scrolls vertically */
     .transform-track {
-      @apply flex items-center md:gap-8 gap-5 w-max md:pl-[55vw] pl-6 md:pr-[12vw] pr-6 md:mt-24 mt-16;
+      @apply flex md:gap-8 gap-5 overflow-x-auto overscroll-x-contain md:px-8 px-5 pb-4 snap-x;
+      scroll-padding-left: 1.25rem;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
 
     .transform-card {
-      @apply relative md:w-[26rem] w-[19rem] flex-none rounded-[1.75rem] overflow-hidden bg-white shadow-[0_30px_90px_rgba(0,0,0,0.35)];
+      @apply relative md:w-[26rem] w-[19rem] flex-none rounded-[1.75rem] overflow-hidden bg-white shadow-[0_30px_90px_rgba(0,0,0,0.35)] snap-start;
 
       .card-media {
         @apply relative;
@@ -678,11 +702,91 @@ body::-webkit-scrollbar {
       }
     }
 
-    .transform-progress {
-      @apply absolute md:bottom-14 bottom-8 left-1/2 -translate-x-1/2 md:w-64 w-40 h-[3px] bg-[#f7f4ee22] rounded-full overflow-hidden;
+  }
 
-      .bar {
-        @apply h-full w-full bg-amber origin-left scale-x-0 rounded-full;
+  /* ---------- start cards (₹49 consult + AI scan, side by side) ---------- */
+  .start-section {
+    @apply relative bg-cream overflow-hidden md:py-28 py-16;
+
+    .start-inner {
+      @apply mx-auto max-w-4xl md:px-8 px-4;
+    }
+
+    .start-header {
+      @apply text-center md:mb-12 mb-8;
+
+      h2 {
+        @apply font-bold text-teal-dark md:text-5xl text-[1.7rem] leading-tight tracking-[-.02em] mt-3;
+      }
+    }
+
+    /* two columns on EVERY screen */
+    .start-grid {
+      @apply grid grid-cols-2 md:gap-6 gap-3 items-stretch;
+    }
+
+    .start-card {
+      @apply relative flex flex-col items-center text-center rounded-[1.5rem] md:p-8 p-4;
+
+      .sc-badge {
+        @apply inline-block font-paragraph text-[9px] md:text-[11px] font-bold uppercase tracking-wider rounded-full px-2.5 py-1 md:mb-3 mb-2;
+      }
+      .sc-icon {
+        @apply md:text-4xl text-2xl md:mb-2 mb-1;
+      }
+      h3 {
+        @apply font-paragraph font-bold md:text-2xl text-[15px] leading-tight;
+      }
+      .sc-price {
+        @apply flex items-end justify-center gap-2 md:my-3 my-2;
+
+        .old {
+          @apply font-paragraph font-semibold md:text-xl text-xs line-through opacity-40;
+        }
+        .new {
+          @apply font-bold md:text-[3.2rem] text-[1.7rem] leading-none;
+        }
+      }
+      p {
+        @apply font-paragraph md:text-sm text-[11px] leading-snug md:mb-6 mb-4;
+      }
+      .sc-btn {
+        @apply mt-auto inline-flex items-center justify-center w-full rounded-full font-paragraph font-semibold md:text-base text-[12px] md:px-6 px-2 md:py-3.5 py-2.5 cursor-pointer transition-colors;
+      }
+    }
+
+    /* consult = dark, primary */
+    .sc-consult {
+      @apply bg-teal-dark text-cream;
+      box-shadow: 0 30px 70px -28px rgba(70, 57, 15, 0.5);
+
+      .sc-badge {
+        @apply bg-amber text-teal-dark;
+      }
+      .sc-price .old {
+        @apply text-cream/40;
+      }
+      p {
+        @apply text-cream/75;
+      }
+      .sc-btn {
+        @apply bg-amber text-teal-dark hover:bg-amber-light;
+      }
+    }
+
+    /* AI scan = light, secondary */
+    .sc-scan {
+      @apply bg-white text-teal-dark border-2 border-[#46390f14];
+      box-shadow: 0 30px 70px -30px rgba(70, 57, 15, 0.26);
+
+      .sc-badge {
+        @apply bg-mint text-teal-dark;
+      }
+      p {
+        @apply text-ink/70;
+      }
+      .sc-btn {
+        @apply bg-teal-dark text-cream hover:bg-teal;
       }
     }
   }

@@ -1,6 +1,4 @@
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
+import { useEffect, useRef, useState } from "react";
 import { useContent } from "../lib/ContentContext";
 import { urlFor } from "../lib/sanity";
 
@@ -25,117 +23,84 @@ const BAImage = ({ img, label, left }) => (
 
 const TransformationsSection = () => {
   const { transformations } = useContent();
-  const trackRef = useRef(null);
   const sectionRef = useRef(null);
   const videoRefs = useRef([]);
+  const [inView, setInView] = useState(false);
 
-  useGSAP(
-    () => {
-      const track = trackRef.current;
-      if (!track) return;
-
-      const distance = () => track.scrollWidth - window.innerWidth * 0.5;
-
-      // cula.tech-style: pinned viewport, content glides horizontally with
-      // a soft catch-up (scrub 1.5) while the heading drifts slower for depth
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: () => `+=${distance()}`,
-          scrub: 1.5,
-          pin: true,
-          invalidateOnRefresh: true,
-          onEnter: () => videoRefs.current.forEach((v) => v?.play?.().catch(() => {})),
-          onLeave: () => videoRefs.current.forEach((v) => v?.pause?.()),
-          onEnterBack: () => videoRefs.current.forEach((v) => v?.play?.().catch(() => {})),
-          onLeaveBack: () => videoRefs.current.forEach((v) => v?.pause?.()),
-        },
-      });
-
-      tl.to(track, { x: () => -distance(), ease: "none" }, 0)
-        .to(".transform-header h2", { xPercent: -14, ease: "none" }, 0)
-        .to(".transform-progress .bar", { scaleX: 1, ease: "none" }, 0);
-
-      // slight per-card lift as they travel (depth, not gimmick)
-      gsap.utils.toArray(".transform-card").forEach((card, i) => {
-        gsap.from(card, {
-          y: 40 + (i % 2) * 30,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top top",
-            end: () => `+=${distance()}`,
-            scrub: 2,
-          },
-        });
-      });
-    },
-    { dependencies: [transformations], revertOnUpdate: true }
-  );
+  // no pin / no scroll-scrub — the strip is a native horizontal scroller. The
+  // entrance is a pure CSS reveal (hidden state set in CSS, so it never flashes
+  // already-painted content = no scroll jitter); the observer just flips a class.
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "0px 0px -10% 0px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
-    <section ref={sectionRef} className="transform-section">
-      <div className="transform-viewport">
-        <div className="transform-header">
-          <p className="section-eyebrow text-amber">
-            Real people · real results
-          </p>
-          <h2>Transformation journeys</h2>
-        </div>
+    <section
+      ref={sectionRef}
+      className={`transform-section ${inView ? "is-in" : ""}`}
+    >
+      <div className="transform-header">
+        <p className="section-eyebrow text-amber">Real people · real results</p>
+        <h2>Transformation journeys</h2>
+      </div>
 
-        <div ref={trackRef} className="transform-track">
-          {transformations.map((t, i) => (
-            <div key={t._id || i} className="transform-card">
-              <div className="card-media">
-                {t.resultImage ? (
-                  <div className="ba-full">
-                    <img src={t.resultImage} alt={t.concern || t.name} loading="lazy" />
-                    <span className="ba-full-label">Before · After</span>
-                    {t.duration && (
-                      <span className="ba-duration">
-                        ✨ Results in {t.duration}
-                      </span>
-                    )}
+      <div className="transform-track">
+        {transformations.map((t, i) => (
+          <div key={t._id || i} className="transform-card">
+            <div className="card-media">
+              {t.resultImage ? (
+                <div className="ba-full">
+                  <img src={t.resultImage} alt={t.concern || t.name} loading="lazy" />
+                  <span className="ba-full-label">Before · After</span>
+                  {t.duration && (
+                    <span className="ba-duration">✨ Results in {t.duration}</span>
+                  )}
+                </div>
+              ) : t.videoUrl ? (
+                <video
+                  ref={(el) => (videoRefs.current[i] = el)}
+                  src={t.videoUrl}
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
+              ) : (
+                <div className="ba-grid">
+                  <div className="relative">
+                    <BAImage img={t.before} label="Before" left />
                   </div>
-                ) : t.videoUrl ? (
-                  <video
-                    ref={(el) => (videoRefs.current[i] = el)}
-                    src={t.videoUrl}
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                  />
-                ) : (
-                  <div className="ba-grid">
-                    <div className="relative">
-                      <BAImage img={t.before} label="Before" left />
-                    </div>
-                    <div className="relative">
-                      <BAImage img={t.after} label="After" />
-                    </div>
+                  <div className="relative">
+                    <BAImage img={t.after} label="After" />
                   </div>
-                )}
+                </div>
+              )}
+            </div>
+            <div className="transform-body">
+              <div className="review-top">
+                <Stars n={t.rating || 5} />
+                <span className="verified">✓ Verified consultation</span>
               </div>
-              <div className="transform-body">
-                <div className="review-top">
-                  <Stars n={t.rating || 5} />
-                  <span className="verified">✓ Verified consultation</span>
-                </div>
-                <p>“{t.review}”</p>
-                <div className="who">
-                  <h4>{t.name}</h4>
-                  {t.concern && <span className="concern-tag">{t.concern}</span>}
-                </div>
+              <p>“{t.review}”</p>
+              <div className="who">
+                <h4>{t.name}</h4>
+                {t.concern && <span className="concern-tag">{t.concern}</span>}
               </div>
             </div>
-          ))}
-        </div>
-
-        <div className="transform-progress">
-          <div className="bar" />
-        </div>
+          </div>
+        ))}
       </div>
     </section>
   );

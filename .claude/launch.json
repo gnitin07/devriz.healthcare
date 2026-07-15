@@ -21,6 +21,12 @@
       "runtimeArgs": ["run", "dev"],
       "cwd": "studio-dh",
       "port": 3333
+    },
+    {
+      "name": "tritrack",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["--yes", "serve", "C:\\Users\\HP\\Desktop\\tritrack", "-l", "4178"],
+      "port": 4178
     }
   ]
 }

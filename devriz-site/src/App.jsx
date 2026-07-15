@@ -13,8 +13,7 @@ import ProcessSection from "./sections/ProcessSection";
 import DoctorsSection from "./sections/DoctorsSection";
 import TransformationsSection from "./sections/TransformationsSection";
 import TeaserSection from "./sections/TeaserSection";
-import ConsultCTASection from "./sections/ConsultCTASection";
-import AIScanSection from "./sections/AIScanSection";
+import StartCardsSection from "./sections/StartCardsSection";
 import FAQSection from "./sections/FAQSection";
 import ReviewsSection from "./sections/ReviewsSection";
 import FooterSection from "./sections/FooterSection";
@@ -46,8 +45,7 @@ const App = () => {
             <TransformationsSection />
             <ReviewsSection />
             <TeaserSection />
-            <ConsultCTASection />
-            <AIScanSection />
+            <StartCardsSection />
             <FAQSection />
             <FooterSection />
           </main>
