@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect x="2" y="2" width="60" height="60" rx="15" fill="#ffffff" stroke="#ece0bd" stroke-width="2"/>
+  <text x="32" y="43.5" text-anchor="middle"
+        font-family="'Arial Black', Arial, Helvetica, sans-serif"
+        font-weight="900" font-size="30" letter-spacing="-1.5">
+    <tspan fill="#111111">D</tspan><tspan fill="#e8a33d">H</tspan>
+  </text>
+</svg>
