@@ -1,7 +1,8 @@
 {
   "rewrites": [
     { "source": "/consult", "destination": "/index.html" },
-    { "source": "/ai-scan", "destination": "/index.html" }
+    { "source": "/ai-scan", "destination": "/index.html" },
+    { "source": "/privacy-policy", "destination": "/index.html" }
   ],
   "headers": [
     {

@@ -903,6 +903,63 @@ body::-webkit-scrollbar {
     }
   }
 
+  /* ---------- legal / privacy policy page ---------- */
+  .footer-legal-link {
+    @apply underline underline-offset-2 hover:text-amber transition-colors;
+  }
+
+  .legal-page {
+    @apply bg-cream text-teal-dark min-h-dvh font-paragraph;
+    padding-top: 6.5rem;
+  }
+
+  .legal-hero {
+    @apply max-w-3xl mx-auto md:px-8 px-5 pt-6 md:pb-10 pb-6 text-center;
+
+    h1 {
+      @apply font-bold text-teal-dark mt-2;
+      font-size: clamp(2rem, 5vw, 3rem);
+    }
+
+    .legal-dates {
+      @apply text-teal text-sm mt-3;
+    }
+  }
+
+  .legal-body {
+    @apply max-w-3xl mx-auto md:px-8 px-5 md:pb-28 pb-20 leading-relaxed;
+    color: color-mix(in srgb, var(--color-teal-dark) 92%, transparent);
+
+    h2 {
+      @apply font-semibold text-teal-dark mt-10 mb-3;
+      font-size: 1.28rem;
+    }
+
+    h3 {
+      @apply font-semibold text-teal-dark mt-5 mb-2 text-base;
+    }
+
+    p {
+      @apply mb-4;
+    }
+
+    ul {
+      @apply list-disc pl-6 mb-5 space-y-1.5 marker:text-amber;
+    }
+
+    a {
+      @apply text-amber underline underline-offset-2 break-words hover:text-teal-dark transition-colors;
+    }
+
+    strong {
+      @apply font-semibold text-teal-dark;
+    }
+
+    .legal-contact {
+      @apply list-none pl-0 space-y-1;
+    }
+  }
+
   /* ---------- consult booking modal ---------- */
   .consult-overlay {
     @apply fixed inset-0 z-[100] flex items-center justify-center p-4 bg-teal-dark/60 backdrop-blur-sm;

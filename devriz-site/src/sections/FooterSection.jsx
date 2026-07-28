@@ -59,10 +59,10 @@ const FooterSection = () => {
 
         <div>
           <h4>Quick links</h4>
-          <a href="#home">Home</a>
-          <a href="#why">About</a>
-          <a href="#doctors">Doctors</a>
-          <a href="#process">Process</a>
+          <a href="/#home">Home</a>
+          <a href="/#why">About</a>
+          <a href="/#doctors">Doctors</a>
+          <a href="/#process">Process</a>
         </div>
 
         <div>
@@ -103,7 +103,12 @@ const FooterSection = () => {
 
       <div className="copyright-box">
         <p>© {new Date().getFullYear()} Devriz Healthcare. All rights reserved.</p>
-        <p>Privacy Policy · Terms &amp; Conditions</p>
+        <p>
+          <a href="/privacy-policy" className="footer-legal-link">
+            Privacy Policy
+          </a>{" "}
+          · Terms &amp; Conditions
+        </p>
       </div>
     </footer>
   );
