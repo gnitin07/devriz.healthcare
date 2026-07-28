@@ -9,14 +9,14 @@ gsap.registerPlugin(ScrollTrigger);
 // up — scale + rotate into a lightly fanned grid — as the section scrolls into
 // view, echoing the reference clip. Click any card to zoom in and read it.
 const REVIEWS = [
-  { img: "/images/reviews/r1.jpg", tag: "Skin" },
-  { img: "/images/reviews/r2.jpg", tag: "Hair" },
-  { img: "/images/reviews/r3.jpg", tag: "Hair" },
-  { img: "/images/reviews/r4.jpg", tag: "Skin" },
-  { img: "/images/reviews/r5.jpg", tag: "Under-eye" },
-  { img: "/images/reviews/r6.jpg", tag: "Skin" },
-  { img: "/images/reviews/r7.jpg", tag: "Skin" },
-  { img: "/images/reviews/r8.jpg", tag: "Hair" },
+  { img: "/images/reviews/r1.jpg?v=2", tag: "Acne" },
+  { img: "/images/reviews/r2.jpg?v=2", tag: "Hair Fall" },
+  { img: "/images/reviews/r3.jpg?v=2", tag: "Open Pores" },
+  { img: "/images/reviews/r4.jpg?v=2", tag: "Pigmentation" },
+  { img: "/images/reviews/r5.jpg?v=2", tag: "Dark Circles" },
+  { img: "/images/reviews/r6.jpg?v=2", tag: "Bumps" },
+  { img: "/images/reviews/r7.jpg?v=2", tag: "Dark Neck" },
+  { img: "/images/reviews/r8.jpg?v=2", tag: "Dullness" },
 ];
 
 const TILTS = [-6, 5, -4, 6, -5, 4, -3, 5];
