@@ -1,4 +1,28 @@
 {
+  "redirects": [
+    { "source": "/why-acne-keeps-coming-back(/)?", "destination": "/", "permanent": true },
+    { "source": "/how-to-get-rid-of-pimples(/)?", "destination": "/", "permanent": true },
+    { "source": "/how-to-remove-acne-marks(/)?", "destination": "/", "permanent": true },
+    { "source": "/pimples-on-face-reasons(/)?", "destination": "/", "permanent": true },
+    { "source": "/oily-skin-pimples-treatment(/)?", "destination": "/", "permanent": true },
+    { "source": "/what-is-hormonal-acne(/)?", "destination": "/", "permanent": true },
+    { "source": "/teenage-acne-problem(/)?", "destination": "/", "permanent": true },
+    { "source": "/adult-acne-causes(/)?", "destination": "/", "permanent": true },
+    { "source": "/acne-scars-vs-acne-marks(/)?", "destination": "/", "permanent": true },
+    { "source": "/post-acne-marks(/)?", "destination": "/", "permanent": true },
+    { "source": "/what-is-pigmentation(/)?", "destination": "/", "permanent": true },
+    { "source": "/pigmentation-on-face(/)?", "destination": "/", "permanent": true },
+    { "source": "/how-to-reduce-pigmentation(/)?", "destination": "/", "permanent": true },
+    { "source": "/dark-spots-on-face(/)?", "destination": "/", "permanent": true },
+    { "source": "/online-skin-consultation-in-india(/)?", "destination": "/consult", "permanent": true },
+    { "source": "/online-dermatologist-consultation(/)?", "destination": "/consult", "permanent": true },
+    { "source": "/acne-treatment-online-consultation(/)?", "destination": "/consult", "permanent": true },
+    { "source": "/hair-fall-treatment-online-consultation(/)?", "destination": "/consult", "permanent": true },
+    { "source": "/pigmentation-treatment-online-consultation(/)?", "destination": "/consult", "permanent": true },
+    { "source": "/melasma-treatment-online-consultation(/)?", "destination": "/consult", "permanent": true },
+    { "source": "/dark-spots-treatment-online(/)?", "destination": "/consult", "permanent": true },
+    { "source": "/tanning-treatment-online-consultation(/)?", "destination": "/consult", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/consult", "destination": "/index.html" },
     { "source": "/ai-scan", "destination": "/index.html" },
