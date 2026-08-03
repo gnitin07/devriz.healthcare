@@ -109,22 +109,24 @@ export const DEFAULTS = {
 
   transformations: [
     {
-      name: "Meera R.",
-      concern: "Pigmentation",
-      duration: "3 months",
-      review:
-        "My dark patches faded visibly and my tone finally looks even. The routine was simple and the doctor followed up every week.",
-      rating: 5,
-      resultImage: "/transformations/pigmentation.webp",
-    },
-    {
       name: "Ananya P.",
       concern: "Acne & glow",
       duration: "8 weeks",
       review:
         "First time someone diagnosed my skin before selling me anything. Active acne calmed down and my natural glow came back.",
       rating: 5,
-      resultImage: "/transformations/acne-glow.webp",
+      beforeImage: "/transformations/compare/acne-before.webp",
+      afterImage: "/transformations/compare/acne-after.webp",
+    },
+    {
+      name: "Meera R.",
+      concern: "Pigmentation",
+      duration: "3 months",
+      review:
+        "My dark patches faded visibly and my tone finally looks even. The routine was simple and the doctor followed up every week.",
+      rating: 5,
+      beforeImage: "/transformations/compare/pigmentation-before.webp",
+      afterImage: "/transformations/compare/pigmentation-after.webp",
     },
     {
       name: "Pooja S.",
@@ -133,7 +135,8 @@ export const DEFAULTS = {
       review:
         "My under eye circles had bothered me for years. A targeted routine brightened the whole area and I look far less tired.",
       rating: 5,
-      resultImage: "/transformations/undereye-dark-circles.webp",
+      beforeImage: "/transformations/compare/dark-circles-before.webp",
+      afterImage: "/transformations/compare/dark-circles-after.webp",
     },
     {
       name: "Karan V.",
@@ -142,34 +145,28 @@ export const DEFAULTS = {
       review:
         "The consultation told me exactly what was triggering it. Hair fall dropped sharply and I could see new regrowth at the hairline.",
       rating: 5,
-      resultImage: "/transformations/hair-fall.webp",
+      beforeImage: "/transformations/compare/hair-loss-before.webp",
+      afterImage: "/transformations/compare/hair-loss-after.webp",
     },
     {
-      name: "Nisha T.",
-      concern: "Premature greying",
-      duration: "10 weeks",
+      name: "Sana K.",
+      concern: "Pigmented lips",
+      duration: "6 weeks",
       review:
-        "I was greying early and losing confidence. The right plan slowed it right down and my roots look healthier and darker.",
-      rating: 4,
-      resultImage: "/transformations/premature-greying.webp",
-    },
-    {
-      name: "Arjun M.",
-      concern: "Beard growth",
-      duration: "9 weeks",
-      review:
-        "Patchy beard for years. With the doctor's routine the gaps filled in and it finally grows even and full.",
+        "My lips had darkened over the years and nothing worked. The doctor's routine brought back a soft, even pink tone naturally.",
       rating: 5,
-      resultImage: "/transformations/beard-growth.webp",
+      beforeImage: "/transformations/compare/pigmented-lips-before.webp",
+      afterImage: "/transformations/compare/pigmented-lips-after.webp",
     },
     {
-      name: "Rohit D.",
-      concern: "Back & body acne",
-      duration: "8 weeks",
+      name: "Vikram S.",
+      concern: "PRP hair treatment",
+      duration: "4 months",
       review:
-        "Back acne was painful and stubborn. A proper plan cleared it up and the old marks faded steadily week by week.",
+        "After my PRP sessions the thinning crown filled in visibly. The team explained every step and the results speak for themselves.",
       rating: 5,
-      resultImage: "/transformations/body-acne.webp",
+      beforeImage: "/transformations/compare/prp-hair-before.webp",
+      afterImage: "/transformations/compare/prp-hair-after.webp",
     },
   ],
 

@@ -655,6 +655,68 @@ body::-webkit-scrollbar {
           }
         }
 
+        /* draggable before/after comparison — the "after" photo is the base
+           layer, the "before" photo on top is clipped to the handle position.
+           Same frame size as .ba-full so the card doesn't grow. */
+        .ba-slider {
+          @apply relative w-full md:h-[24rem] h-[17rem] overflow-hidden select-none bg-teal-dark;
+          cursor: ew-resize;
+          /* pan-y keeps vertical page scrolling working while we own the drag */
+          touch-action: pan-y;
+
+          &:focus-visible {
+            outline: 2px solid var(--color-amber);
+            outline-offset: -2px;
+          }
+
+          img {
+            @apply absolute inset-0 size-full object-cover pointer-events-none;
+          }
+
+          .ba-before {
+            clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+          }
+
+          .ba-tag {
+            @apply absolute top-3 z-[3] pointer-events-none font-paragraph text-[.62rem] font-bold uppercase tracking-widest bg-teal-dark/85 text-cream rounded-full px-3 py-1;
+          }
+
+          .ba-handle {
+            @apply absolute inset-y-0 z-[4] w-0.5 -ml-px bg-cream pointer-events-none;
+            left: var(--pos);
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+          }
+
+          .ba-grip {
+            @apply abs-center size-9 rounded-full bg-cream shadow-[0_4px_14px_rgba(0,0,0,0.45)];
+
+            /* the two arrowheads, drawn with borders so there's no icon dependency */
+            &::before,
+            &::after {
+              content: "";
+              position: absolute;
+              top: 50%;
+              width: 0;
+              height: 0;
+              border-top: 5px solid transparent;
+              border-bottom: 5px solid transparent;
+              transform: translateY(-50%);
+            }
+            &::before {
+              left: 8px;
+              border-right: 7px solid var(--color-teal-dark);
+            }
+            &::after {
+              right: 8px;
+              border-left: 7px solid var(--color-teal-dark);
+            }
+          }
+
+          .ba-duration {
+            @apply absolute bottom-3 right-3 z-[3] pointer-events-none font-paragraph text-[.72rem] font-semibold bg-amber text-teal-dark rounded-full px-3 py-1.5 shadow-[0_6px_18px_rgba(0,0,0,0.35)];
+          }
+        }
+
         .ba-grid {
           @apply grid grid-cols-2 relative;
 

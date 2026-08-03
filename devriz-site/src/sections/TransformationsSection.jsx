@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useContent } from "../lib/ContentContext";
 import { urlFor } from "../lib/sanity";
+import BeforeAfterSlider from "../components/BeforeAfterSlider";
 
 const Stars = ({ n = 5 }) => (
   <span className="stars">{"★".repeat(n) + "☆".repeat(5 - n)}</span>
@@ -60,7 +61,21 @@ const TransformationsSection = () => {
         {transformations.map((t, i) => (
           <div key={t._id || i} className="transform-card">
             <div className="card-media">
-              {t.resultImage ? (
+              {t.beforeImage && t.afterImage ? (
+                <BeforeAfterSlider
+                  before={t.beforeImage}
+                  after={t.afterImage}
+                  alt={t.concern || t.name}
+                  duration={t.duration}
+                />
+              ) : t.before && t.after ? (
+                <BeforeAfterSlider
+                  before={urlFor(t.before).width(800).auto("format").quality(80).url()}
+                  after={urlFor(t.after).width(800).auto("format").quality(80).url()}
+                  alt={t.concern || t.name}
+                  duration={t.duration}
+                />
+              ) : t.resultImage ? (
                 <div className="ba-full">
                   <img src={t.resultImage} alt={t.concern || t.name} loading="lazy" />
                   <span className="ba-full-label">Before · After</span>
