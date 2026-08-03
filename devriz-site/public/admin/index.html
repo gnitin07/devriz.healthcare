@@ -7,6 +7,10 @@
     <meta name="robots" content="noindex, nofollow" />
     <title>Devriz Healthcare — Blog Editor</title>
     <link rel="icon" type="image/svg+xml" href="/favicon-dh.svg" />
+    <!-- Absolute path, not the default relative lookup: this page is reachable
+         at both /admin and /admin/, and a relative "config.yml" resolves to
+         /config.yml on the first of those and 404s. -->
+    <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
   </head>
   <body>
     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
