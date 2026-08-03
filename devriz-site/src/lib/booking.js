@@ -11,7 +11,7 @@ export const GAS_WEB_APP_URL =
 // WhatsApp number to redirect to after payment: country code + number, digits only.
 export const WHATSAPP_NUMBER = "919773989550";
 
-export const CONSULT_AMOUNT = 49; // ₹
+export const CONSULT_AMOUNT = 1; // ₹
 // ───────────────────────────────────────────────────────────────────────────────
 
 // Pre-defined concerns + their common issues (shown as chips)
