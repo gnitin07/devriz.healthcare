@@ -45,7 +45,7 @@
     { "source": "/author/(.*)", "destination": "/blogs", "permanent": true },
     { "source": "/blog/(.*)", "destination": "/blogs", "permanent": true },
     { "source": "/blogs/", "destination": "/blogs", "permanent": true },
-    { "source": "/blogs/(?<slug>.+)/", "destination": "/blogs/:slug", "permanent": true },
+    { "source": "/blogs/:slug/", "destination": "/blogs/:slug", "permanent": true },
     { "source": "/consult/", "destination": "/consult", "permanent": true },
     { "source": "/privacy-policy/", "destination": "/privacy-policy", "permanent": true },
     { "source": "/ai-scan/", "destination": "/ai-scan", "permanent": true }

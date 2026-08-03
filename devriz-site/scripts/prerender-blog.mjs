@@ -13,10 +13,13 @@
 // Runs automatically after `vite build`.
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { marked } from 'marked'
 import { load as parseYaml } from 'js-yaml'
 
-const ROOT = path.resolve(import.meta.dirname, '..')
+// fileURLToPath rather than import.meta.dirname: the latter is undefined on
+// Node 18 and early 20, which is what the deploy host may still be running.
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const CONTENT = path.join(ROOT, 'content/blog')
 const DIST = path.join(ROOT, 'dist')
 const SITE = 'https://devrizhealthcare.com'
