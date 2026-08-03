@@ -9,6 +9,10 @@ import PrivacyApp from "./PrivacyApp.jsx";
 // SEPARATE chunk — the main site and /consult never download any of it.
 const FaceScanApp = lazy(() => import("./facescan/FaceScanApp.jsx"));
 
+// Blog pages (Sanity-driven) are also a separate chunk — visitors who never
+// open /blogs don't download the portable-text renderer.
+const BlogApp = lazy(() => import("./blog/BlogApp.jsx"));
+
 // Simple path-based switch (no router dependency).
 // /consult → Meta-ads landing page; /ai-scan → AI face-scan; else → main site.
 const path = window.location.pathname.replace(/\/+$/, "");
@@ -18,6 +22,21 @@ if (path === "/consult") {
   root = <LandingApp />;
 } else if (path === "/privacy-policy") {
   root = <PrivacyApp />;
+} else if (path === "/blogs" || path.startsWith("/blogs/")) {
+  root = (
+    <Suspense
+      fallback={
+        <div
+          style={{
+            minHeight: "100dvh",
+            background: "#fffdf0",
+          }}
+        />
+      }
+    >
+      <BlogApp path={path} />
+    </Suspense>
+  );
 } else if (path === "/ai-scan") {
   root = (
     <Suspense

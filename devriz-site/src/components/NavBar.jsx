@@ -3,12 +3,13 @@ import { useContent } from "../lib/ContentContext";
 import { useHeaderTheme } from "../lib/HeaderTheme";
 import { useBooking } from "../lib/BookingContext";
 
-const LINKS = ["home", "about", "doctors", "concern"];
+const LINKS = ["home", "about", "doctors", "concern", "blogs"];
 const TARGETS = {
   home: "#home",
   about: "#why",
   doctors: "#doctors",
   concern: "#process",
+  blogs: "/blogs",
 };
 // per-section document titles (SEO-friendly context as the visitor navigates)
 const TITLES = {
@@ -57,6 +58,11 @@ const NavBar = ({ landing = false }) => {
   const go = (link, e) => {
     e?.preventDefault();
     setOpen(false);
+    // real pages (like /blogs) navigate; hash targets scroll
+    if (TARGETS[link].startsWith("/")) {
+      window.location.href = TARGETS[link];
+      return;
+    }
     const el = document.querySelector(TARGETS[link]);
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });

@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
+# the blog editor is a private tool, not a page for search results
+Disallow: /admin
+
 Sitemap: https://devrizhealthcare.com/sitemap.xml

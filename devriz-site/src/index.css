@@ -766,6 +766,190 @@ body::-webkit-scrollbar {
 
   }
 
+  /* ---------- blog (/blogs list + /blogs/:slug article) ---------- */
+  .blog-section {
+    @apply bg-cream md:pt-36 pt-28 md:pb-28 pb-16;
+
+    .blog-inner {
+      @apply mx-auto max-w-6xl md:px-8 px-5;
+    }
+
+    .blog-header {
+      @apply text-center md:mb-14 mb-9;
+
+      h1 {
+        @apply font-bold text-teal-dark md:text-5xl text-3xl leading-tight tracking-[-.02em] mt-3;
+      }
+
+      .blog-sub {
+        @apply font-paragraph text-ink/70 md:text-lg text-[15px] mt-4 max-w-xl mx-auto;
+      }
+    }
+
+    .blog-empty {
+      @apply text-center font-paragraph text-ink/60 md:py-20 py-12;
+    }
+
+    .blog-grid {
+      @apply grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 md:gap-8 gap-5;
+    }
+
+    .blog-card {
+      @apply flex flex-col rounded-[1.5rem] overflow-hidden bg-white card-shadow transition-transform duration-300 hover:-translate-y-1;
+
+      img,
+      .blog-card-ph {
+        @apply w-full aspect-[5/3] object-cover bg-mint;
+      }
+
+      .blog-card-body {
+        @apply flex flex-col gap-2.5 md:p-6 p-5;
+
+        h2 {
+          @apply font-paragraph font-bold text-teal-dark text-lg leading-snug;
+        }
+
+        p {
+          @apply font-paragraph text-[14px] leading-relaxed text-ink/70 line-clamp-3;
+        }
+      }
+    }
+
+    .blog-tags {
+      @apply flex flex-wrap gap-1.5;
+
+      span {
+        @apply font-paragraph text-[11px] font-semibold text-teal bg-mint rounded-full px-2.5 py-0.5 capitalize;
+      }
+    }
+
+    .blog-meta {
+      @apply flex items-center justify-between font-paragraph text-xs text-ink/55 mt-auto pt-2;
+    }
+
+    .blog-back {
+      @apply inline-block font-paragraph font-semibold text-sm text-teal hover:text-teal-dark transition-colors md:mb-8 mb-6;
+    }
+
+    .blog-notfound {
+      @apply text-center md:py-20 py-12;
+
+      h1 {
+        @apply font-bold text-teal-dark md:text-4xl text-2xl;
+      }
+      p {
+        @apply font-paragraph text-ink/70 mt-3 mb-6;
+      }
+    }
+
+    /* single article */
+    .blog-article {
+      @apply mx-auto max-w-3xl md:px-8 px-5;
+
+      .blog-article-head {
+        @apply md:mb-8 mb-6;
+
+        h1 {
+          @apply font-bold text-teal-dark md:text-[2.6rem] text-[1.7rem] leading-[1.15] tracking-[-.02em] mt-3;
+        }
+
+        .blog-meta {
+          @apply justify-start gap-4 mt-4;
+        }
+      }
+
+      .blog-hero-img {
+        @apply w-full rounded-[1.5rem] object-cover md:mb-10 mb-7;
+      }
+
+      .blog-body {
+        @apply font-paragraph text-ink/85 md:text-[17px] text-[15.5px] leading-[1.75];
+
+        h2 {
+          @apply font-bold text-teal-dark md:text-3xl text-xl mt-10 mb-3 leading-snug;
+        }
+        h3 {
+          @apply font-bold text-teal-dark md:text-xl text-lg mt-8 mb-2;
+        }
+        p {
+          @apply mb-5;
+        }
+        a {
+          @apply text-teal underline underline-offset-2 hover:text-teal-dark;
+        }
+        ul,
+        ol {
+          @apply mb-5 pl-6;
+        }
+        ul {
+          @apply list-disc;
+        }
+        ol {
+          @apply list-decimal;
+        }
+        li {
+          @apply mb-1.5;
+        }
+        blockquote {
+          @apply border-l-4 border-amber bg-mint/60 rounded-r-xl px-5 py-3 my-6 italic text-teal-dark;
+        }
+        strong {
+          @apply text-teal-dark;
+        }
+      }
+
+      .blog-body-img {
+        @apply my-7;
+
+        img {
+          @apply w-full rounded-2xl;
+        }
+        figcaption {
+          @apply font-paragraph text-xs text-ink/55 text-center mt-2;
+        }
+      }
+
+      .blog-cta {
+        @apply mt-12 rounded-[1.5rem] bg-teal-dark text-center md:p-10 p-6;
+
+        h3 {
+          @apply font-paragraph font-bold text-cream md:text-2xl text-xl;
+        }
+        p {
+          @apply font-paragraph text-cream/80 text-[15px] mt-2 mb-5;
+        }
+        button {
+          @apply bg-amber text-teal-dark font-paragraph font-bold rounded-full md:px-8 px-6 py-3 text-sm hover:bg-amber-light transition-colors cursor-pointer;
+        }
+      }
+
+      /* internal links between articles — keeps readers on site and spreads
+         link equity across the blog */
+      .blog-more {
+        @apply mt-12 pt-8 border-t border-teal-dark/12;
+
+        h3 {
+          @apply font-paragraph font-bold text-teal-dark text-lg mb-4;
+        }
+
+        .blog-more-grid {
+          @apply grid sm:grid-cols-2 grid-cols-1 gap-4;
+
+          a {
+            @apply flex flex-col gap-1.5 rounded-2xl bg-white card-shadow p-5 transition-transform duration-300 hover:-translate-y-1;
+
+            span {
+              @apply font-paragraph font-semibold text-teal-dark text-[15px] leading-snug;
+            }
+            em {
+              @apply font-paragraph not-italic text-xs text-ink/55;
+            }
+          }
+        }
+      }
+    }
+  }
+
   /* ---------- start cards (₹49 consult + AI scan, side by side) ---------- */
   .start-section {
     @apply relative bg-cream overflow-hidden md:py-28 py-16;

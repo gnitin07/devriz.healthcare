@@ -1,0 +1,100 @@
+---
+title: What Is Skin Pigmentation? Causes and Care Guide
+date: 2026-07-31T09:00:00.000Z
+excerpt: Dark patches, uneven tone and stubborn spots explained — the four
+  common types of pigmentation in Indian skin, what triggers each one, and what
+  genuinely helps.
+image: /blog-images/even-skin-tone-pigmentation.jpg
+imageAlt: Close-up of even, healthy skin tone on a face
+tags:
+  - pigmentation
+  - dark spots
+  - skin care
+author: Devriz Healthcare Team
+---
+
+Pigmentation is the most common concern we hear about, and also the most
+misunderstood. People arrive having tried six creams that promised to make
+"dark spots vanish", frustrated that nothing held.
+
+The reason is almost always the same: pigmentation is not one condition. It is
+a category. Treating the wrong type is why the creams did not work.
+
+## What pigmentation actually is
+
+Your skin contains cells that produce melanin, the pigment that gives skin its
+colour. When those cells are triggered — by sunlight, inflammation, hormones or
+injury — they produce extra melanin in that area.
+
+The result is a patch that is darker than the skin around it. That is all
+pigmentation is: melanin that has been overproduced somewhere specific.
+
+Indian and South Asian skin produces melanin readily. That is genuine
+protection against sun damage, but it also means our skin marks more easily and
+holds those marks longer.
+
+## The four types you are most likely to have
+
+**Sun tan.** The most common and the most reversible. Sunlight triggers melanin
+as a defence. It usually affects the face, neck, forearms and any area
+regularly exposed, and it fades over time once exposure is controlled.
+
+**Post-inflammatory hyperpigmentation.** The dark mark left behind after a
+pimple, cut, insect bite or rash heals. This is not a scar — the skin texture is
+normal, only the colour is off. It fades, but slowly, and picking at the
+original spot makes it darker and longer-lasting.
+
+**Melasma.** Symmetrical brown or greyish patches, usually across the cheeks,
+upper lip, forehead or bridge of the nose. It is strongly linked to hormones —
+pregnancy, oral contraceptives, thyroid changes — and made worse by sun and
+heat. Melasma is the type most likely to be mistaken for ordinary tanning and
+treated far too aggressively as a result.
+
+**Age and sun spots.** Small, well-defined dark spots on areas with years of
+accumulated sun exposure. They tend to appear from the thirties onward.
+
+## What makes pigmentation worse
+
+- **Sun, every single day.** This is the largest factor by a wide margin, and it
+  applies on cloudy days, indoors near windows, and in winter.
+- **Heat.** Cooking over a stove, long commutes and hot environments can worsen
+  melasma even without direct sunlight.
+- **Inflammation.** Every pimple you pick, every harsh scrub, every irritating
+  product leaves the door open for a new dark mark.
+- **Hormonal changes.** Pregnancy, contraceptives and thyroid conditions can all
+  trigger melasma.
+- **Aggressive DIY treatments.** Lemon juice, baking soda and undiluted
+  essential oils are widely recommended online and reliably make pigmentation
+  worse by irritating the skin.
+
+## What genuinely helps
+
+**Daily sun protection.** Nothing else on this list works properly without it.
+Applying sunscreen every morning and reapplying through the day is the single
+highest-impact habit for any type of pigmentation. Treating pigmentation
+without sun protection is filling a bucket with a hole in it.
+
+**Identifying the type before treating.** Melasma and post-inflammatory marks
+respond to different approaches. Strong treatments that suit sun spots can
+aggravate melasma badly.
+
+**Consistency over intensity.** Gentle, correct ingredients applied daily for
+months outperform strong ones used in bursts.
+
+**Patience with a realistic timeline.** Surface tanning may improve in weeks.
+Post-inflammatory marks often take two to three months. Melasma is managed
+rather than cured, and needs ongoing care.
+
+**Protecting your skin barrier.** Irritated skin pigments more. A calm routine
+is a treatment in itself.
+
+## When to get it looked at
+
+Pigmentation is worth having identified properly if the patches are
+symmetrical across both cheeks, if they appeared during pregnancy or after
+starting a new medication, if they have not moved at all after two to three
+months of consistent care, or if they are getting darker despite treatment.
+
+Knowing which of the four types you have changes what you should be using
+entirely. It is the step most people skip, and it is the one that decides
+whether the next six months of effort pay off.
