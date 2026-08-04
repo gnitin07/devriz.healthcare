@@ -1,4 +1,4 @@
-﻿import { useContent } from "../lib/ContentContext";
+import { useContent } from "../lib/ContentContext";
 
 const ICONS = {
   instagram: (
@@ -102,12 +102,12 @@ const FooterSection = () => {
       </div>
 
       <div className="copyright-box">
-        <p>Â© {new Date().getFullYear()} Devriz Healthcare. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Devriz Healthcare. All rights reserved.</p>
         <p>
           <a href="/privacy-policy" className="footer-legal-link">
             Privacy Policy
           </a>{" "}
-          Â· Terms &amp; Conditions
+          · Terms &amp; Conditions
         </p>
       </div>
     </footer>

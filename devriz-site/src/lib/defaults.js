@@ -1,5 +1,5 @@
-﻿/**
- * Fallback content â€” the site renders instantly with this, then swaps in
+/**
+ * Fallback content — the site renders instantly with this, then swaps in
  * whatever exists in Sanity. Any section with no Sanity documents keeps
  * these defaults, so the page never looks empty.
  */
@@ -21,7 +21,7 @@ export const DEFAULTS = {
       "1M+ happy customers",
       "15+ years experience",
       "93% visible results",
-      "4.8 â˜… average rating",
+      "4.8 ★ average rating",
     ],
   },
 
@@ -54,7 +54,7 @@ export const DEFAULTS = {
     {
       title: "Consult",
       description:
-        "Book a personal consultation at just â‚¹49. Share your skin, hair or body concern with our expert and get a proper diagnosis first.",
+        "Book a personal consultation at just ₹49. Share your skin, hair or body concern with our expert and get a proper diagnosis first.",
       accent: "#e8a33d",
     },
     {
@@ -172,14 +172,14 @@ export const DEFAULTS = {
 
   faqs: [
     {
-      question: "Why is the consultation just â‚¹49?",
+      question: "Why is the consultation just ₹49?",
       answer:
-        "We are consultation first, not product first. â‚¹49 keeps expert guidance accessible so you diagnose before you spend anything on products.",
+        "We are consultation first, not product first. ₹49 keeps expert guidance accessible so you diagnose before you spend anything on products.",
     },
     {
       question: "Is the guidance really personalised?",
       answer:
-        "Yes. Your consultant reviews your concern, skin/hair type, lifestyle and budget before recommending anything â€” no generic routines.",
+        "Yes. Your consultant reviews your concern, skin/hair type, lifestyle and budget before recommending anything — no generic routines.",
     },
     {
       question: "What concerns do you cover?",
