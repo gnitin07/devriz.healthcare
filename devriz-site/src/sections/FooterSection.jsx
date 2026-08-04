@@ -52,8 +52,7 @@ const FooterSection = () => {
             className="h-11 w-auto mb-5 brightness-0 invert opacity-90"
           />
           <p>
-            Consultation first skin, hair &amp; body care. Diagnosis before
-            products, always.
+            Consultation First. Diagnosis Before Products. Results That Matter. 
           </p>
         </div>
 
