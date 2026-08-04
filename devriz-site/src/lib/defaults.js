@@ -158,16 +158,6 @@ export const DEFAULTS = {
       beforeImage: "/transformations/compare/pigmented-lips-before.webp",
       afterImage: "/transformations/compare/pigmented-lips-after.webp",
     },
-    {
-      name: "Vikram S.",
-      concern: "PRP hair treatment",
-      duration: "4 months",
-      review:
-        "After my PRP sessions the thinning crown filled in visibly. The team explained every step and the results speak for themselves.",
-      rating: 5,
-      beforeImage: "/transformations/compare/prp-hair-before.webp",
-      afterImage: "/transformations/compare/prp-hair-after.webp",
-    },
   ],
 
   faqs: [
