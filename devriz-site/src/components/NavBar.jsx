@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { useContent } from "../lib/ContentContext";
 import { useHeaderTheme } from "../lib/HeaderTheme";
 import { useBooking } from "../lib/BookingContext";
@@ -13,10 +13,10 @@ const TARGETS = {
 };
 // per-section document titles (SEO-friendly context as the visitor navigates)
 const TITLES = {
-  home: "Devriz Healthcare | Skin, Hair & Body Care Consultation @ ₹49",
+  home: "Devriz Healthcare | Skin, Hair & Body Care Consultation @ â‚¹49",
   about: "Why Consultation Matters | Devriz Healthcare",
   doctors: "Meet Our Expert Doctors | Devriz Healthcare",
-  concern: "How Devriz Works — 3 Step Process | Devriz Healthcare",
+  concern: "How Devriz Works â€” 3 Step Process | Devriz Healthcare",
 };
 
 const NavBar = ({ landing = false }) => {
@@ -52,7 +52,7 @@ const NavBar = ({ landing = false }) => {
   // light treatment only while over a dark slide AND not scrolled
   // (once scrolled the navbar gets its cream background, so use dark ink).
   // On the landing page the hero sits at the bottom, so its "dark" signal is
-  // wrong for the top of the page — force dark ink there so the logo stays visible.
+  // wrong for the top of the page â€” force dark ink there so the logo stays visible.
   const light = !landing && dark && !scrolled;
 
   const go = (link, e) => {
@@ -70,7 +70,7 @@ const NavBar = ({ landing = false }) => {
       // reflect the section in the URL (shareable deep link) without a reload
       window.history.replaceState(null, "", TARGETS[link]);
     } else {
-      // on standalone pages (/ai-scan) the section isn't here — go home to it
+      // on standalone pages (/ai-scan) the section isn't here â€” go home to it
       window.location.href = `/${TARGETS[link]}`;
     }
   };
@@ -93,7 +93,7 @@ const NavBar = ({ landing = false }) => {
     >
       <div className="nav-inner">
         <img
-          src="/images/logo-r.png"
+          src="/images/logo-r.webp"
           alt="Devriz Healthcare"
           className={`md:h-12 h-9 w-auto cursor-pointer transition-[filter] duration-300 ${
             light ? "brightness-0 invert" : ""
@@ -117,7 +117,7 @@ const NavBar = ({ landing = false }) => {
         <div className="flex items-center gap-3">
           {/* desktop: AI-scan (secondary) + Consult (primary), grouped on the right */}
           <a href="/ai-scan" className="nav-aiscan hidden md:inline-flex">
-            ✨ Free AI Scan
+            âœ¨ Free AI Scan
           </a>
           {!landing && (
             <button
@@ -125,11 +125,11 @@ const NavBar = ({ landing = false }) => {
               onClick={openBooking}
               className="nav-cta hidden md:inline-flex"
             >
-              Consult @ ₹{settings.consultPrice}
+              Consult @ â‚¹{settings.consultPrice}
             </button>
           )}
 
-          {/* mobile: one "Get Started" button → dropdown with both choices */}
+          {/* mobile: one "Get Started" button â†’ dropdown with both choices */}
           <div className="md:hidden relative" ref={ctaRef}>
             <button
               type="button"
@@ -143,7 +143,7 @@ const NavBar = ({ landing = false }) => {
             >
               Get Started
               <span aria-hidden className={`transition-transform ${ctaOpen ? "rotate-180" : ""}`}>
-                ▾
+                â–¾
               </span>
             </button>
             {ctaOpen && (
@@ -155,9 +155,9 @@ const NavBar = ({ landing = false }) => {
                     openBooking();
                   }}
                 >
-                  💬 Consult @ ₹{settings.consultPrice}
+                  ðŸ’¬ Consult @ â‚¹{settings.consultPrice}
                 </button>
-                <a href="/ai-scan">✨ Free AI Scan report</a>
+                <a href="/ai-scan">âœ¨ Free AI Scan report</a>
               </div>
             )}
           </div>

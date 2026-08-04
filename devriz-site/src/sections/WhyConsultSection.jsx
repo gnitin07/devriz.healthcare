@@ -32,11 +32,14 @@ const ICONS = [
 
 // gesture frames cut from the clip (hands down → raising → presenting).
 // these crossfade as the visitor scrolls the pinned scene.
-const DOCTOR_FRAMES = [
-  "/images/doctor-1.png",
-  "/images/doctor-2.png",
-  "/images/doctor-3.png",
-];
+//
+// The figure paints into a ~560px-wide slot on desktop and ~240px on mobile,
+// so each frame ships as a 900w/480w WebP pair (35 KB / 16 KB) instead of the
+// 2574x3218 PNG masters (~2 MB each) that used to load here on every visit.
+const DOCTOR_FRAMES = ["doctor-1", "doctor-2", "doctor-3"];
+
+// tells the browser which variant to pull before layout is known
+const DOCTOR_SIZES = "(max-width: 767px) 240px, 560px";
 
 const WhyConsultSection = () => {
   const { whyBanners, settings } = useContent();
@@ -44,7 +47,7 @@ const WhyConsultSection = () => {
 
   const doctorSrc = settings.whyDoctorImage
     ? urlFor(settings.whyDoctorImage).width(900).auto("format").quality(82).url()
-    : "/images/doctor-1.png";
+    : "/images/doctor-1-900.webp";
 
   useGSAP(
     () => {
@@ -125,13 +128,19 @@ const WhyConsultSection = () => {
                 draggable={false}
               />
             ) : (
-              DOCTOR_FRAMES.map((src, i) => (
+              DOCTOR_FRAMES.map((name, i) => (
                 <img
-                  key={src}
+                  key={name}
                   className="why-doctor-img why-pose"
-                  src={src}
+                  src={`/images/${name}-900.webp`}
+                  srcSet={`/images/${name}-480.webp 480w, /images/${name}-900.webp 900w`}
+                  sizes={DOCTOR_SIZES}
+                  width={900}
+                  height={1125}
                   alt={i === 0 ? "Devriz senior consultant" : ""}
                   aria-hidden={i === 0 ? undefined : true}
+                  loading="lazy"
+                  decoding="async"
                   draggable={false}
                 />
               ))

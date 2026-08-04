@@ -2,7 +2,7 @@ import { useState } from "react";
 
 /**
  * Right-side visual for a hero slide. Tries the drop-in PNG first
- * (/images/hero-visual-<key>.png); if missing, renders a built-in
+ * (/images/hero-visual-<key>.webp); if missing, renders a built-in
  * medical line-art illustration so the slide always communicates.
  */
 
@@ -96,10 +96,12 @@ const SlideVisual = ({ visual }) => {
       <div className="visual-glow" />
       {!imgFailed ? (
         <img
-          src={`/images/hero-visual-${visual}.png`}
+          src={`/images/hero-visual-${visual}.webp`}
           alt=""
           aria-hidden
           draggable={false}
+          loading="lazy"
+          decoding="async"
           onError={() => setImgFailed(true)}
         />
       ) : (

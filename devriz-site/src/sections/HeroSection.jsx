@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+﻿import { useEffect, useRef, useState, useCallback } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useMediaQuery } from "react-responsive";
@@ -8,7 +8,7 @@ import { useBooking } from "../lib/BookingContext";
 import { urlFor } from "../lib/sanity";
 import SlideVisual from "../components/SlideVisual";
 
-const SLIDE_MS = 7000; // dwell per slide — calm, not fast
+const SLIDE_MS = 7000; // dwell per slide â€” calm, not fast
 const FADE_S = 1.2; // crossfade duration
 
 const isDarkSlide = (s) => s.dark ?? s.textTheme === "light";
@@ -27,33 +27,33 @@ const HeroSection = () => {
   const { openBooking } = useBooking();
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
-  // Full designed banners (text baked into the artwork) — rendered as
+  // Full designed banners (text baked into the artwork) â€” rendered as
   // image-only slides. Separate desktop (landscape) + mobile (portrait) files.
   const demoSlides = [
     {
       _key: "skin",
       dark: true,
       gradient: CHARCOAL.skin,
-      bgImage: "/images/hero-skin-desktop-v2.jpg",
-      bgImageMobile: "/images/hero-skin-mobile-v2.jpg",
-      alt: "Not every skin problem needs Google — get an expert skin diagnosis",
+      bgImage: "/images/hero-skin-desktop-v2.webp",
+      bgImageMobile: "/images/hero-skin-mobile-v2.webp",
+      alt: "Not every skin problem needs Google â€” get an expert skin diagnosis",
       link: settings.bookingLink,
     },
     {
       _key: "hair",
       dark: true,
       gradient: CHARCOAL.hair,
-      bgImage: "/images/hero-hair-desktop.jpg",
-      bgImageMobile: "/images/hero-hair-mobile.jpg",
-      alt: "Hair fall isn't random — get a hair diagnosis",
+      bgImage: "/images/hero-hair-desktop.webp",
+      bgImageMobile: "/images/hero-hair-mobile.webp",
+      alt: "Hair fall isn't random â€” get a hair diagnosis",
       link: settings.bookingLink,
     },
     {
       _key: "body",
       dark: true,
       gradient: CHARCOAL.body,
-      bgImage: "/images/hero-body-desktop.jpg",
-      bgImageMobile: "/images/hero-body-mobile.jpg",
+      bgImage: "/images/hero-body-desktop.webp",
+      bgImageMobile: "/images/hero-body-mobile.webp",
       alt: "Body care guided by real experts",
       link: settings.bookingLink,
     },
@@ -96,7 +96,7 @@ const HeroSection = () => {
         el.style.zIndex = i === n ? 2 : 1;
       });
 
-      // no ken-burns zoom on the banners — any zoom would crop the baked text
+      // no ken-burns zoom on the banners â€” any zoom would crop the baked text
       mediaRefs.current.forEach((el) => {
         if (!el) return;
         gsap.killTweensOf(el);
@@ -244,7 +244,7 @@ const HeroSection = () => {
                     {slide.subheading && <p>{slide.subheading}</p>}
                     {slide.ctaLabel && (
                       <a href={link} target="_blank" rel="noreferrer" className="hero-cta">
-                        {slide.ctaLabel} <span aria-hidden>→</span>
+                        {slide.ctaLabel} <span aria-hidden>â†’</span>
                       </a>
                     )}
                   </div>
@@ -259,10 +259,10 @@ const HeroSection = () => {
           <>
             <div className="hero-arrows">
               <button className="hero-arrow" onClick={() => go(index - 1)} aria-label="Previous slide">
-                ‹
+                â€¹
               </button>
               <button className="hero-arrow" onClick={() => go(index + 1)} aria-label="Next slide">
-                ›
+                â€º
               </button>
             </div>
 

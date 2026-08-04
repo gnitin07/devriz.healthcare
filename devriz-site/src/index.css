@@ -570,9 +570,32 @@ body::-webkit-scrollbar {
       @apply relative mx-auto w-full max-w-4xl aspect-video rounded-[1.75rem] overflow-hidden bg-teal-dark;
       box-shadow: 0 44px 90px -34px rgba(70, 57, 15, 0.5);
 
-      video {
+      video,
+      iframe {
+        @apply absolute inset-0 size-full object-cover;
+        border: 0;
+      }
+    }
+
+    /* click-to-play poster: the YouTube player iframe (and its ~1 MB of
+       scripts) only loads once the visitor actually asks for the video */
+    .teaser-facade {
+      @apply absolute inset-0 size-full cursor-pointer;
+
+      img {
         @apply absolute inset-0 size-full object-cover;
       }
+    }
+
+    .teaser-play {
+      @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-20 flex-center rounded-full bg-teal-dark/70 text-cream backdrop-blur transition-colors;
+
+      svg {
+        @apply w-9 h-9 ml-1;
+      }
+    }
+    .teaser-facade:hover .teaser-play {
+      @apply bg-teal-dark;
     }
 
     .teaser-mute {

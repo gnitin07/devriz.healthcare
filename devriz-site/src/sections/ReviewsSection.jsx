@@ -8,15 +8,18 @@ gsap.registerPlugin(ScrollTrigger);
 // Real WhatsApp reviews (screenshots in /public/images/reviews). The cards pop
 // up — scale + rotate into a lightly fanned grid — as the section scrolls into
 // view, echoing the reference clip. Click any card to zoom in and read it.
+// Two sizes per screenshot: a 500w thumb for the grid (~19 KB) and the 1000w
+// original only when someone actually taps to read the chat (~59 KB). Before
+// this split every visitor pulled all eight full-size JPEGs — about 1 MB.
 const REVIEWS = [
-  { img: "/images/reviews/r1.jpg?v=2", tag: "Acne" },
-  { img: "/images/reviews/r2.jpg?v=2", tag: "Hair Fall" },
-  { img: "/images/reviews/r3.jpg?v=2", tag: "Open Pores" },
-  { img: "/images/reviews/r4.jpg?v=2", tag: "Pigmentation" },
-  { img: "/images/reviews/r5.jpg?v=2", tag: "Dark Circles" },
-  { img: "/images/reviews/r6.jpg?v=2", tag: "Bumps" },
-  { img: "/images/reviews/r7.jpg?v=2", tag: "Dark Neck" },
-  { img: "/images/reviews/r8.jpg?v=2", tag: "Dullness" },
+  { id: "r1", tag: "Acne" },
+  { id: "r2", tag: "Hair Fall" },
+  { id: "r3", tag: "Open Pores" },
+  { id: "r4", tag: "Pigmentation" },
+  { id: "r5", tag: "Dark Circles" },
+  { id: "r6", tag: "Bumps" },
+  { id: "r7", tag: "Dark Neck" },
+  { id: "r8", tag: "Dullness" },
 ];
 
 const TILTS = [-6, 5, -4, 6, -5, 4, -3, 5];
@@ -68,15 +71,18 @@ const ReviewsSection = () => {
         <div className="reviews-grid grid grid-cols-2 md:grid-cols-4 md:gap-6 gap-4 md:mt-16 mt-10">
           {REVIEWS.map((r, i) => (
             <button
-              key={r.img}
+              key={r.id}
               type="button"
-              onClick={() => setZoom(r.img)}
+              onClick={() => setZoom(`/images/reviews/${r.id}-full.webp`)}
               className="review-card group relative block rounded-2xl overflow-hidden bg-white shadow-[0_20px_50px_rgba(70,57,15,0.18)] ring-1 ring-black/5 cursor-zoom-in"
             >
               <img
-                src={r.img}
+                src={`/images/reviews/${r.id}.webp`}
                 alt="WhatsApp review from a Devriz Healthcare patient"
                 loading="lazy"
+                decoding="async"
+                width={500}
+                height={625}
                 className="w-full aspect-[4/5] object-cover object-top"
               />
               <span className="absolute top-2.5 left-2.5 inline-flex items-center gap-1 bg-teal-dark/85 text-cream text-[0.6rem] font-bold uppercase tracking-widest rounded-full px-2.5 py-1 backdrop-blur">

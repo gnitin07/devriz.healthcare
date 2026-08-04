@@ -16,6 +16,13 @@
       "port": 5183
     },
     {
+      "name": "devriz-dist",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "preview", "--", "--port", "4173", "--strictPort"],
+      "cwd": "devriz-site",
+      "port": 4173
+    },
+    {
       "name": "studio-dh",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
