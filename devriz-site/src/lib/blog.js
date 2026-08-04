@@ -1,5 +1,6 @@
 import { marked } from "marked";
 import { load as parseYaml } from "js-yaml";
+import { resolveImage, rewriteBodyImages } from "./blog-images.js";
 
 /**
  * Blog content lives as markdown files in /content/blog, written through the
@@ -41,6 +42,10 @@ function parse(path, raw) {
     title: data.title || slug,
     excerpt: data.excerpt || "",
     image: data.image || null,
+    // Compressed variants of data.image. Null when the post has no header
+    // image; falls back to the original path for anything the optimizer has
+    // not processed, including an external CDN URL pasted into the CMS.
+    img: resolveImage(data.image),
     imageAlt: data.imageAlt || data.title || "",
     author: data.author || "Devriz Healthcare Team",
     date: data.date ? new Date(data.date).toISOString() : null,
@@ -48,7 +53,7 @@ function parse(path, raw) {
     seoTitle: data.seoTitle || null,
     draft: data.draft === true,
     readingTime: readingTime(body),
-    html: marked.parse(body),
+    html: rewriteBodyImages(marked.parse(body)),
   };
 }
 

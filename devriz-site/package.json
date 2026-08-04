@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "vite",
     "optimize:images": "node scripts/optimize-images.mjs",
+    "optimize:blog-images": "node scripts/optimize-blog-images.mjs",
     "preflight": "node scripts/preflight-assets.mjs",
-    "build": "vite build && node scripts/prerender-blog.mjs",
+    "build": "node scripts/optimize-blog-images.mjs && vite build && node scripts/optimize-blog-images.mjs --prune-dist && node scripts/prerender-blog.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

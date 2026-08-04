@@ -820,9 +820,12 @@ body::-webkit-scrollbar {
     .blog-card {
       @apply flex flex-col rounded-[1.5rem] overflow-hidden bg-white card-shadow transition-transform duration-300 hover:-translate-y-1;
 
+      /* Same 16/9 as the article header, for the same reason: the card reuses
+         the header image, and a different ratio here would crop pixels the
+         visitor already paid to download. */
       img,
       .blog-card-ph {
-        @apply w-full aspect-[5/3] object-cover bg-mint;
+        @apply w-full aspect-[16/9] object-cover bg-mint;
       }
 
       .blog-card-body {
@@ -881,8 +884,15 @@ body::-webkit-scrollbar {
         }
       }
 
+      /* Writers upload whatever their phone shot, which is usually portrait. A
+         fixed banner ratio keeps the article looking the same whatever arrives
+         and stops a tall photo from filling the screen before the first line of
+         text. 16/9 exactly, because optimize-blog-images.mjs pre-crops header
+         images to that shape — any disagreement here means the visitor
+         downloads pixels that CSS then throws away. object-top is a safety net
+         for an image the optimizer has not processed yet. */
       .blog-hero-img {
-        @apply w-full rounded-[1.5rem] object-cover md:mb-10 mb-7;
+        @apply w-full aspect-[16/9] object-cover object-top rounded-[1.5rem] md:mb-10 mb-7;
       }
 
       .blog-body {
@@ -918,6 +928,13 @@ body::-webkit-scrollbar {
         }
         strong {
           @apply text-teal-dark;
+        }
+        /* Images dropped mid-article from the CMS toolbar. Kept at their own
+           proportions — unlike the header, these are often diagrams or
+           before/after shots where cropping would lose the point — but capped
+           so a portrait photo cannot push the next paragraph off the screen. */
+        img {
+          @apply block mx-auto max-w-full w-auto h-auto max-h-[32rem] rounded-2xl my-7;
         }
       }
 

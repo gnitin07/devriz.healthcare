@@ -64,9 +64,12 @@ collections:
         name: image
         widget: image
         required: false
+        choose_url: true
         hint: >-
           Landscape photo shown at the top of the article and on the blog list.
           This is also the picture that appears in WhatsApp link previews.
+          Upload it at any size — the site automatically shrinks every photo
+          before publishing, so a big camera picture costs visitors nothing.
 
       - label: Header image description
         name: imageAlt

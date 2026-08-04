@@ -103,6 +103,34 @@ directly without the review step.
 Open the post in /admin, switch **Hide this post** ON, and publish. It
 disappears from the website on the next deploy.
 
+### What happens to uploaded images
+
+Nothing you have to think about — upload photos straight off a camera or phone.
+Every build runs `scripts/optimize-blog-images.mjs`, which turns each upload
+into three WebP sizes (640 / 960 / 1400 px wide) plus a 1200x630 JPEG for
+WhatsApp and Facebook link previews. The page then serves whichever size the
+visitor's screen actually needs, and the original is deleted from the deploy so
+it can never be downloaded.
+
+In practice an 8 MB camera photo becomes roughly 85 KB on a phone. This matters
+because Vercel's free plan allows 100 GB of transfer per month — one
+uncompressed header image would eat that in about 12,000 page views.
+
+Two things to know:
+
+- Images are cached in the visitor's browser for a year, so a returning reader
+  downloads nothing. If you ever need to *change* a picture, upload it under a
+  new filename rather than replacing the old one.
+- The header image field also accepts a full `https://` link if you would rather
+  host a picture elsewhere (a CDN, for example). Pasted links are used exactly
+  as given — they are not resized, so make sure they are already small.
+
+To compress newly uploaded images without a full build:
+
+```bash
+npm run optimize:blog-images
+```
+
 ---
 
 ## Troubleshooting
@@ -130,4 +158,5 @@ That is correct and intended. Writers submit; only the owner merges.
 | Published articles | devrizhealthcare.com/blogs |
 | Article files | `devriz-site/content/blog/*.md` |
 | Uploaded images | `devriz-site/public/blog-images/` |
+| Image compressor | `devriz-site/scripts/optimize-blog-images.mjs` |
 | Editor settings | `devriz-site/public/admin/config.yml` |

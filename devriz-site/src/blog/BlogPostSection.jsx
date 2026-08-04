@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useBooking } from "../lib/BookingContext";
 import { useContent } from "../lib/ContentContext";
 import { getPost, getPosts, formatDate, setSeo } from "../lib/blog";
+import { HERO_SIZES } from "../lib/blog-images";
 
 const BlogPostSection = ({ slug }) => {
   const post = getPost(slug);
@@ -54,8 +55,20 @@ const BlogPostSection = ({ slug }) => {
           </div>
         </header>
 
-        {post.image && (
-          <img className="blog-hero-img" src={post.image} alt={post.imageAlt} />
+        {post.img && (
+          <img
+            className="blog-hero-img"
+            src={post.img.src}
+            srcSet={post.img.srcset || undefined}
+            sizes={post.img.srcset ? HERO_SIZES : undefined}
+            width={post.img.width || undefined}
+            height={post.img.height || undefined}
+            alt={post.imageAlt}
+            // Above the fold on every article: fetched eagerly, but at the one
+            // width this screen actually needs.
+            fetchPriority="high"
+            decoding="async"
+          />
         )}
 
         {/* Markdown authored in the CMS and reviewed by an owner before merge. */}

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { getPosts, formatDate, setSeo } from "../lib/blog";
+import { CARD_SIZES } from "../lib/blog-images";
 
 const BlogListSection = () => {
   const posts = getPosts();
@@ -34,8 +35,17 @@ const BlogListSection = () => {
           <div className="blog-grid">
             {posts.map((p) => (
               <a key={p.slug} href={`/blogs/${p.slug}`} className="blog-card">
-                {p.image ? (
-                  <img src={p.image} alt={p.imageAlt} loading="lazy" />
+                {p.img ? (
+                  <img
+                    src={p.img.src}
+                    srcSet={p.img.srcset || undefined}
+                    sizes={p.img.srcset ? CARD_SIZES : undefined}
+                    width={p.img.width || undefined}
+                    height={p.img.height || undefined}
+                    alt={p.imageAlt}
+                    loading="lazy"
+                    decoding="async"
+                  />
                 ) : (
                   <div className="blog-card-ph" />
                 )}

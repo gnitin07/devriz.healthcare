@@ -16,6 +16,15 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { marked } from 'marked'
 import { load as parseYaml } from 'js-yaml'
+// Shared with the React components so the crawler's HTML and the browser's
+// HTML request the exact same compressed image variants.
+import {
+  resolveImage,
+  resolveOgImage,
+  rewriteBodyImages,
+  HERO_SIZES,
+  CARD_SIZES,
+} from '../src/lib/blog-images.js'
 
 // fileURLToPath rather than import.meta.dirname: the latter is undefined on
 // Node 18 and early 20, which is what the deploy host may still be running.
@@ -52,6 +61,7 @@ function loadPosts() {
         title: data.title || file,
         excerpt: data.excerpt || '',
         image: data.image || null,
+        img: resolveImage(data.image),
         imageAlt: data.imageAlt || data.title || '',
         author: data.author || 'Devriz Healthcare Team',
         date: data.date ? new Date(data.date).toISOString() : null,
@@ -59,7 +69,7 @@ function loadPosts() {
         seoTitle: data.seoTitle || null,
         draft: data.draft === true,
         readingTime: Math.max(1, Math.round(body.trim().split(/\s+/).length / 200)),
-        html: marked.parse(body),
+        html: rewriteBodyImages(marked.parse(body)),
       }
     })
     .filter((p) => p && !p.draft)
@@ -109,13 +119,23 @@ const fmtDate = (iso) => {
   return new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
+/** Mirrors the <img> the React components render, attribute for attribute. */
+const imgTag = (img, alt, { cls, sizes, eager }) => {
+  if (!img) return ''
+  return `<img${cls ? ` class="${cls}"` : ''} src="${esc(img.src)}"${
+    img.srcset ? ` srcset="${esc(img.srcset)}" sizes="${esc(sizes)}"` : ''
+  }${img.width ? ` width="${img.width}"` : ''}${
+    img.height ? ` height="${img.height}"` : ''
+  } alt="${esc(alt)}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" />`
+}
+
 function postMarkup(post) {
   return `<section class="blog-section"><article class="blog-article">
 <a href="/blogs" class="blog-back">← All articles</a>
 <header class="blog-article-head">${tagChips(post.tags)}<h1>${esc(post.title)}</h1>
 <div class="blog-meta"><span>${esc(post.author)}</span><span>${fmtDate(post.date)}</span><span>${post.readingTime} min read</span></div>
 </header>
-${post.image ? `<img class="blog-hero-img" src="${esc(post.image)}" alt="${esc(post.imageAlt)}" />` : ''}
+${imgTag(post.img, post.imageAlt, { cls: 'blog-hero-img', sizes: HERO_SIZES, eager: true })}
 <div class="blog-body">${post.html}</div>
 </article></section>`
 }
@@ -124,7 +144,7 @@ function listMarkup(posts) {
   const cards = posts
     .map(
       (p) => `<a href="/blogs/${esc(p.slug)}" class="blog-card">
-${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.imageAlt)}" />` : '<div class="blog-card-ph"></div>'}
+${p.img ? imgTag(p.img, p.imageAlt, { sizes: CARD_SIZES }) : '<div class="blog-card-ph"></div>'}
 <div class="blog-card-body">${tagChips(p.tags.slice(0, 3))}<h2>${esc(p.title)}</h2><p>${esc(p.excerpt)}</p>
 <div class="blog-meta"><span>${fmtDate(p.date)}</span><span>${p.readingTime} min read</span></div></div></a>`
     )
@@ -176,7 +196,9 @@ const write = (dir, html) => {
 for (const post of posts) {
   const title = `${post.seoTitle || post.title} | Devriz Healthcare`
   const url = `${SITE}/blogs/${post.slug}`
-  const image = post.image ? `${SITE}${post.image}` : null
+  // A 1200x630 JPEG, not the multi-MB upload: every WhatsApp share re-fetches
+  // this, and the crawlers do not cache it the way a browser does.
+  const image = resolveOgImage(post.image, SITE)
 
   let html = dropFaqSchema(template)
   html = setTitle(html, title)
@@ -190,8 +212,14 @@ for (const post of posts) {
   if (image) {
     html = setMeta(html, 'property', 'og:image', image)
     html = setMeta(html, 'name', 'twitter:image', image)
-    // the homepage hero is 1920x1080; a post image is not, so drop the lie
+    // The template inherits the homepage hero's 1920x1080. Our generated
+    // preview is exactly 1200x630; anything else has unknown dimensions, and a
+    // wrong value is worse than none.
     html = html.replace(/<meta property="og:image:(width|height)"[^>]*>/gi, '')
+    if (/-og\.jpg$/.test(image)) {
+      html = setMeta(html, 'property', 'og:image:width', '1200')
+      html = setMeta(html, 'property', 'og:image:height', '630')
+    }
   }
   html = setCanonical(html, url)
   html = addJsonLd(html, {
