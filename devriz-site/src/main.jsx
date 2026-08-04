@@ -1,5 +1,9 @@
 import { StrictMode, Suspense, lazy } from "react";
 import { createRoot } from "react-dom/client";
+// NOTE: the /react entrypoints, not /next — this is a Vite SPA, and the /next
+// builds expect Next.js's router to be present.
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import "./index.css";
 import App from "./App.jsx";
 import LandingApp from "./LandingApp.jsx";
@@ -62,6 +66,12 @@ if (path === "/consult") {
   root = <App />;
 }
 
+// Mounted here rather than inside App/LandingApp so every route — home,
+// /consult, /blogs, /ai-scan, /privacy-policy — is measured from one place.
 createRoot(document.getElementById("root")).render(
-  <StrictMode>{root}</StrictMode>
+  <StrictMode>
+    {root}
+    <Analytics />
+    <SpeedInsights />
+  </StrictMode>
 );

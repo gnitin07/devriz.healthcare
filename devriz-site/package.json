@@ -15,6 +15,8 @@
     "@sanity/client": "^7.4.0",
     "@sanity/image-url": "^1.1.0",
     "@tailwindcss/vite": "^4.1.8",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "@vladmandic/face-api": "^1.7.15",
     "gsap": "^3.13.0",
     "js-yaml": "^5.2.3",
