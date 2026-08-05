@@ -1,5 +1,8 @@
 {
   "redirects": [
+    { "source": "/write(/)?", "destination": "/admin/#/collections/blog/new", "permanent": false },
+    { "source": "/edit(/)?", "destination": "/admin/#/collections/blog", "permanent": false },
+    { "source": "/posts(/)?", "destination": "/admin/#/collections/blog", "permanent": false },
     { "source": "/online-skin-consultation-in-india(/)?", "destination": "/consult", "permanent": true },
     { "source": "/online-dermatologist-consultation(/)?", "destination": "/consult", "permanent": true },
     { "source": "/acne-treatment-online-consultation(/)?", "destination": "/consult", "permanent": true },

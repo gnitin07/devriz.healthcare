@@ -207,3 +207,22 @@ That is correct and intended. Writers submit; only the owner merges.
 | Uploaded images | `devriz-site/public/blog-images/` |
 | Image compressor | `devriz-site/scripts/optimize-blog-images.mjs` |
 | Editor settings | `devriz-site/public/admin/config.yml` |
+
+---
+
+## Short links for writers
+
+Send these instead of explaining where to click. All three require logging in
+first; the login screen appears automatically and then takes you where you were
+going.
+
+| Link | Opens |
+|---|---|
+| devrizhealthcare.com/write | Straight into a blank new article |
+| devrizhealthcare.com/posts | The list of all articles, to open and edit one |
+| devrizhealthcare.com/admin | The editor home page |
+
+These are 302 redirects, not permanent ones, deliberately: they point at the
+CMS's internal `#/collections/blog` addresses, which belong to Decap and could
+change on a future version. A permanent redirect would be cached in every
+writer's browser for good and could not be corrected.
