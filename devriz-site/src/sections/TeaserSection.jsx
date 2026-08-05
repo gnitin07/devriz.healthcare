@@ -8,7 +8,10 @@ import { useState } from "react";
 //
 // Leave it as "" and the whole section disappears from the page.
 // ─────────────────────────────────────────────────────────────────────────────
-const YOUTUBE_ID = "";
+const YOUTUBE_ID = "vOGE-ArTzHU";
+
+// "Pigmentation Explained by Dermatologist | Causes, Treatment & Skincare Tips"
+const VIDEO_TITLE = "Pigmentation explained by a dermatologist";
 
 // Previously this section streamed /videos/teaser.mp4 (12.4 MB) straight from
 // Vercel — at ~11 MB per play it was the single most expensive request on the
@@ -32,7 +35,7 @@ const TeaserSection = () => {
           {playing ? (
             <iframe
               src={`https://www.youtube-nocookie.com/embed/${YOUTUBE_ID}?autoplay=1&rel=0&playsinline=1`}
-              title="See the Devriz difference"
+              title={VIDEO_TITLE}
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               loading="lazy"
@@ -42,10 +45,19 @@ const TeaserSection = () => {
               type="button"
               className="teaser-facade"
               onClick={() => setPlaying(true)}
-              aria-label="Play video"
+              aria-label={`Play video: ${VIDEO_TITLE}`}
             >
+              {/* maxresdefault is 1280x720, matching this 16:9 frame — the
+                  hqdefault YouTube hands out by default is 480x360 and gets
+                  cropped and upscaled. Both come from YouTube's CDN, so the
+                  poster costs Vercel nothing either way; the srcset is so a
+                  phone pulls 6 KB instead of 65 KB. */}
               <img
-                src={`https://i.ytimg.com/vi/${YOUTUBE_ID}/hqdefault.jpg`}
+                src={`https://i.ytimg.com/vi/${YOUTUBE_ID}/maxresdefault.jpg`}
+                srcSet={`https://i.ytimg.com/vi/${YOUTUBE_ID}/mqdefault.jpg 320w, https://i.ytimg.com/vi/${YOUTUBE_ID}/maxresdefault.jpg 1280w`}
+                sizes="(max-width: 896px) 100vw, 896px"
+                width="1280"
+                height="720"
                 alt=""
                 aria-hidden
                 loading="lazy"
