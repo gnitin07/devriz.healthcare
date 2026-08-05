@@ -14,5 +14,10 @@
   </head>
   <body>
     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <!-- Registers the live article preview. Must come after decap-cms.js: it
+         uses the window.CMS / window.h / window.createClass globals that file
+         defines. Plain script, not a module — it is served straight from
+         public/ and never goes through Vite. -->
+    <script src="/admin/preview.js"></script>
   </body>
 </html>

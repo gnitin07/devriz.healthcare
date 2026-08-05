@@ -41,7 +41,11 @@ collections:
     slug: "{{slug}}"
     preview_path: blogs/{{slug}}
     editor:
-      preview: false
+      # Custom template in public/admin/preview.js — the built-in preview looks
+      # nothing like the site. Empty fields render as labelled dashed boxes, so
+      # a writer who has never seen the article template gets a wireframe of it
+      # before typing anything.
+      preview: true
     fields:
       - label: Title
         name: title
