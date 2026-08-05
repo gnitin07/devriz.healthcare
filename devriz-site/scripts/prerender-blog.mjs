@@ -252,6 +252,37 @@ for (const post of posts) {
   write(path.join(DIST, 'blogs', post.slug), injectBody(html, postMarkup(post)))
 }
 
+/* ---------- alt text audit ----------
+ * The CMS makes the header image's description mandatory, but images dropped
+ * into the body come through the markdown toolbar, which inserts ![](path)
+ * with the brackets empty. Missing alt text costs image search traffic and
+ * makes the article unusable with a screen reader, so every build says so
+ * loudly. A warning rather than a failure: a merged post going live without
+ * alt text is bad, a post that cannot deploy at all is worse. */
+{
+  const offenders = []
+  for (const post of posts) {
+    for (const [, tag] of post.html.matchAll(/<img\b([^>]*)>/gi)) {
+      const alt = tag.match(/\balt="([^"]*)"/i)
+      if (!alt || !alt[1].trim()) {
+        const src = (tag.match(/\bsrc="([^"]*)"/i) || [, '(unknown)'])[1]
+        offenders.push(`${post.slug} → ${src}`)
+      }
+    }
+    if (post.img && !post.imageAlt.trim()) offenders.push(`${post.slug} → header image`)
+  }
+  if (offenders.length) {
+    console.warn(
+      `\n  !! ${offenders.length} image(s) have no alt text — bad for Google Images and unreadable to screen readers:`
+    )
+    for (const o of offenders) console.warn(`   - ${o}`)
+    console.warn(
+      '   Fix: open the post in /admin, switch the Article box to Markdown view,\n' +
+        '   and put a description in the square brackets: ![a description](image.jpg)\n'
+    )
+  }
+}
+
 // sitemap — static pages plus every article, so Google finds new posts fast
 const urls = [
   { loc: `${SITE}/`, changefreq: 'weekly', priority: '1.0' },

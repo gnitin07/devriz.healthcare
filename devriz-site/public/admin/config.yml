@@ -12,8 +12,12 @@ backend:
   branch: main
   base_url: https://devrizhealthcare.com
   auth_endpoint: api/auth
+  # MUST be nested here, not at the top level. Decap reads it as
+  # `config.backend.open_authoring`; a root-level key is silently ignored,
+  # open authoring stays off, and every writer who is not a collaborator is
+  # rejected with "Your GitHub user account does not have access to this repo."
+  open_authoring: true
 
-open_authoring: true
 publish_mode: editorial_workflow
 
 media_folder: devriz-site/public/blog-images
@@ -60,10 +64,13 @@ collections:
           WhatsApp. Aim for about 150 characters.
         pattern: ["^.{40,200}$", "Please write between 40 and 200 characters."]
 
+      # Required, both of them: this image is what WhatsApp and Facebook show
+      # when the article is shared, which is where most of this blog's readers
+      # come from. A post without one shares as a bare grey link.
       - label: Header image
         name: image
         widget: image
-        required: false
+        required: true
         choose_url: true
         hint: >-
           Landscape photo shown at the top of the article and on the blog list.
@@ -71,13 +78,17 @@ collections:
           Upload it at any size — the site automatically shrinks every photo
           before publishing, so a big camera picture costs visitors nothing.
 
-      - label: Header image description
+      - label: Header image description (alt text)
         name: imageAlt
         widget: string
-        required: false
+        required: true
+        pattern:
+          ["^.{10,125}$", "Describe the photo in 10–125 characters."]
         hint: >-
-          Describe the photo in a few words, e.g. "close-up of clear skin".
-          Google reads this, and it shows if the image fails to load.
+          Say what is actually in the photo, e.g. "close-up of dark patches on
+          a woman's cheek" — not "pigmentation image". Google reads this to
+          understand the picture, screen readers read it aloud to blind
+          visitors, and it is the text shown if the image fails to load.
 
       - label: Tags
         name: tags
@@ -97,7 +108,11 @@ collections:
         widget: markdown
         hint: >-
           Use "Heading 2" for each main section — Google uses these to
-          understand the article. Add images anywhere with the image button.
+          understand the article. Add images anywhere with the image button;
+          after inserting one, switch to Markdown view (the icon at the top
+          right of this box) and type a description inside the square brackets
+          — ![like this](image.jpg) — so it has alt text too. The build warns
+          about any picture that is missing one.
 
       - label: Custom Google title
         name: seoTitle

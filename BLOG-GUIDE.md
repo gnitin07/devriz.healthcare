@@ -35,8 +35,8 @@ That's the whole setup. Nothing to install, nothing to download.
    | **Title** | The headline. This also becomes the web address, so put the words people actually search for near the start. |
    | **Publish date** | Leave as today unless you have a reason to change it. |
    | **Short summary** | 1–2 sentences, about 150 characters. This is the grey text under your headline in Google, and the text shown when the link is sent on WhatsApp. |
-   | **Header image** | Click, then upload a landscape photo. This is the picture that shows in WhatsApp previews. |
-   | **Header image description** | A few words describing the photo, e.g. "close-up of clear skin". Google reads this. |
+   | **Header image** | Required. Click, then upload a landscape photo. This is the picture that shows in WhatsApp previews. |
+   | **Header image description (alt text)** | Required, 10–125 characters. Say what is actually in the photo — "close-up of dark patches on a woman's cheek", not "pigmentation image". Google reads it to understand the picture, and screen readers read it aloud to blind visitors. |
    | **Tags** | One topic per tag: acne, pigmentation, hair fall. |
    | **Author** | Leave as is, or put the doctor's name. |
    | **Article** | The actual article. |
@@ -51,7 +51,24 @@ That's the whole setup. Nothing to install, nothing to download.
 ### Adding images inside the article
 
 In the **Article** box, click the image button in the toolbar and upload.
-Add a short description for every image.
+
+**Then add a description to it.** The toolbar inserts the picture with an empty
+description, and unlike the header image nothing forces you to fill it in. To
+add one, click the **Markdown** icon at the top-right of the Article box to
+switch out of the visual editor. You will see your image written like this:
+
+```
+![](/blog-images/your-photo.jpg)
+```
+
+Type the description inside the square brackets:
+
+```
+![dark patches across the cheekbone](/blog-images/your-photo.jpg)
+```
+
+Switch back and carry on writing. If you forget, the build prints a warning
+naming the post and the picture, so Nitin will see it before it goes live.
 
 ### Editing or deleting a post
 
@@ -77,6 +94,36 @@ the website on its own.
 ---
 
 ## Part 2 — For the owner (Nitin)
+
+### Adding a new writer
+
+**There is nothing to grant.** Do not add them as a collaborator on GitHub and
+do not share any password. Send them two things:
+
+1. The link <https://devrizhealthcare.com/admin>
+2. This guide.
+
+They create their own free GitHub account, click **Login with GitHub**, and
+start writing. This works because the repository is public and the editor runs
+in *open authoring* mode: GitHub silently makes them their own copy (a "fork"),
+their drafts are saved there, and pressing **Ready** opens a pull request here
+for you to merge. They never hold write access to this repository, so there is
+no way for them to change the live site — even by accident.
+
+The flip side of that setup: **anyone** with a GitHub account who finds
+/admin can log in and submit an article. They still cannot publish — nothing
+reaches the site until you merge the pull request — so the worst case is an
+unwanted pull request you close. That is the same thing any stranger could do
+on a public repository anyway.
+
+One thing to watch the first time a new writer submits: Vercel does not always
+build a preview for a pull request opened from someone else's fork. If the
+preview link is missing from the pull request, either read the changed file
+directly on GitHub, or add that writer as a repository collaborator and set
+`open_authoring: false` in `devriz-site/public/admin/config.yml` — that puts
+their drafts on branches in this repository, where previews always build. Only
+do that for staff you trust with write access, and turn on branch protection
+for `main` first.
 
 ### Reviewing an article
 
