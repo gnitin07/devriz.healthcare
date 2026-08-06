@@ -84,6 +84,27 @@
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
+    },
+    {
+      "//": "This directory was the gap: 1.6 MB across 22 files — the largest uncached group on the site — so every returning visitor re-downloaded all of it. Same stable-filename rule as the others: to change a transformation photo, give it a new filename rather than overwriting it.",
+      "source": "/transformations/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "//": "Root-level icons and the manifest. Small, but they were refetched on every visit. A week, not a year, since these are not content-hashed and do get replaced in place.",
+      "source": "/(favicon-dh-32.png|favicon-dh-48.png|favicon-dh-180.png|favicon-dh-192.png|favicon-dh-512.png|favicon-dh.svg|site.webmanifest)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }
+      ]
+    },
+    {
+      "//": "Global, and deliberately sets no Cache-Control: a rule matching the same path with the same key would fight the immutable rules above. HTML keeps Vercel's default so a deploy goes live immediately.",
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
     }
   ]
 }
