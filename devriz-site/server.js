@@ -64,6 +64,23 @@ for (const rule of config.redirects ?? []) {
 // Convert each vercel.json header `source` into a RegExp so the Cache-Control
 // policy is identical on both platforms — including the /transformations/ rule
 // that was the whole point of the earlier fix.
+//
+// vercel.json's own header objects used to carry a "//" comment key explaining
+// each rule; Vercel's schema validator rejects any unrecognised property there
+// (`headers[n] should NOT have additional property "//"`), which silently
+// failed every deploy until it was caught. JSON has no real comment syntax, so
+// that documentation lives here instead, next to the code that actually reads
+// vercel.json:
+//   /transformations/(.*)  — 1.6 MB across 22 files, the largest uncached
+//     group on the site, so every returning visitor re-downloaded all of it.
+//     Same stable-filename rule as the others: to change a transformation
+//     photo, give it a new filename rather than overwriting it.
+//   favicon-dh-*/site.webmanifest — small, but were refetched on every visit.
+//     A week, not a year, since these are not content-hashed and do get
+//     replaced in place.
+//   /(.*) — global, and deliberately sets no Cache-Control: a rule matching
+//     the same path with the same key would fight the immutable rules above.
+//     HTML keeps Vercel's default so a deploy goes live immediately.
 const headerRules = (config.headers ?? []).map((rule) => ({
   test: new RegExp("^" + rule.source.replace(/\(\.\*\)/g, ".*") + "$"),
   headers: rule.headers,
