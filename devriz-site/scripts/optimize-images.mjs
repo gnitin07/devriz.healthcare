@@ -49,6 +49,10 @@ const JOBS = [
     "hero-body-desktop", "hero-body-mobile",
   ].map((n) => ({ src: `images/${n}.jpg`, out: `images/${n}.webp`, width: null, alpha: false, q: 72 })),
 
+  ...[
+    "hero-independence-desktop", "hero-independence-mobile"
+  ].map((n) => ({ src: `images/${n}.png`, out: `images/${n}.webp`, width: null, alpha: false, q: 72 })),
+
   // ── WhatsApp review screenshots: a small one for the grid, a full-size one
   //    fetched only when the visitor taps to zoom.
   ...Array.from({ length: 8 }, (_, i) => i + 1).flatMap((n) => [
