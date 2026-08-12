@@ -208,6 +208,14 @@ export default function FaceScan() {
         skinAge: analysis?.skinAge,
         concerns: analysis?.concerns?.map((c) => c.label).join(", "),
       });
+
+      // Post lead to Google Sheet via Apps Script Web App
+      fetch("https://script.google.com/macros/s/AKfycbwYNcwqNGK2NZrQbHOKwmLgps2s6IJtQZGejvet9iJWPIDSRgEeAjly_xTPqtwApIrF/exec", {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ name, mobile }),
+      }).catch(err => console.error("Sheet push failed:", err));
+
       setPhase("analyzing");
       setAnalyzePct(0);
     },
