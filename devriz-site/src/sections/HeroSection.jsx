@@ -31,15 +31,6 @@ const HeroSection = () => {
   // image-only slides. Separate desktop (landscape) + mobile (portrait) files.
   const demoSlides = [
     {
-      _key: "independence",
-      dark: true,
-      gradient: CHARCOAL.skin,
-      bgImage: "/images/hero-independence-desktop.webp",
-      bgImageMobile: "/images/hero-independence-mobile.webp",
-      alt: "Happy Independence Day - Freedom to Understand Your Skin Better",
-      link: settings.bookingLink,
-    },
-    {
       _key: "skin",
       dark: true,
       gradient: CHARCOAL.skin,
