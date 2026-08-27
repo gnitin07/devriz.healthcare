@@ -56,5 +56,7 @@ export const api = {
   upload: (payload) => request("POST", "/media", payload),
   deleteMedia: (name) => request("DELETE", `/media/${encodeURIComponent(name)}`),
 
+  repairPreview: () => request("GET", "/repair"),
+  repair: () => request("POST", "/repair"),
   republish: () => request("POST", "/republish"),
 };

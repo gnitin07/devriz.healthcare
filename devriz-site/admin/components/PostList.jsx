@@ -14,6 +14,75 @@ const fmt = (iso) => {
   }
 };
 
+/**
+ * Posts written in the old editor had their pasted markdown escaped, so they
+ * render with no headings and with every wrapped line as its own paragraph.
+ * This offers the fix in the panel, because SSH is switched off on this host
+ * and enabling it to run a one-line script is a worse answer than a button.
+ *
+ * Shows nothing at all once there is nothing left to repair, which is the
+ * normal state — it is a one-time notice, not a permanent fixture.
+ */
+function RepairNotice({ onToast, onDone }) {
+  const [pending, setPending] = useState([]);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    api
+      .repairPreview()
+      .then((d) => setPending(d.posts))
+      .catch(() => setPending([]));
+  }, []);
+
+  if (!pending.length) return null;
+
+  const gained = pending.reduce((n, p) => n + (p.after.headings - p.before.headings), 0);
+
+  const run = async () => {
+    setBusy(true);
+    try {
+      const { repaired } = await api.repair();
+      onToast(`Repaired ${repaired.length} article(s). The website is updated.`);
+      setPending([]);
+      onDone();
+    } catch (e) {
+      onToast(e.message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="notice">
+      <div>
+        <strong>
+          {pending.length} article{pending.length === 1 ? "" : "s"} from the old editor
+          {" "}
+          {pending.length === 1 ? "needs" : "need"} a one-time fix.
+        </strong>
+        <p>
+          The old editor turned pasted headings into plain text and split
+          sentences across several paragraphs. Fixing{" "}
+          {pending.length === 1 ? "it" : "them"} restores {gained} heading
+          {gained === 1 ? "" : "s"} and rejoins the paragraphs. Nothing else in
+          the {pending.length === 1 ? "article" : "articles"} changes.
+        </p>
+        <ul>
+          {pending.map((p) => (
+            <li key={p.slug}>
+              {p.title} — headings {p.before.headings} → {p.after.headings}, paragraphs{" "}
+              {p.before.paragraphs} → {p.after.paragraphs}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <button className="btn-primary" disabled={busy} onClick={run}>
+        {busy ? "Fixing…" : "Fix them"}
+      </button>
+    </div>
+  );
+}
+
 export default function PostList({ onEdit, onToast }) {
   const [state, setState] = useState({ loading: true, posts: [], trash: 0 });
   const [error, setError] = useState(null);
@@ -75,6 +144,8 @@ export default function PostList({ onEdit, onToast }) {
       </header>
 
       {error && <p className="error">{error}</p>}
+
+      <RepairNotice onToast={onToast} onDone={load} />
 
       <div className="list-controls">
         <div className="tabs">

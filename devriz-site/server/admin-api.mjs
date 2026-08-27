@@ -16,6 +16,7 @@ import { ZipArchive } from 'archiver'
 import * as store from './store.mjs'
 import * as auth from './auth.mjs'
 import { renderAll, present } from './prerender.mjs'
+import { inspect, repair } from './repair.mjs'
 import { registerImages } from '../src/lib/blog-images.js'
 
 /** Widths blog-images.js builds a srcset from. The browser produces these. */
@@ -326,6 +327,31 @@ export default function adminApi({ distDir }) {
     zip.directory(store.POSTS_DIR, 'blog')
     zip.directory(store.IMAGES_DIR, 'blog-images')
     zip.finalize()
+  })
+
+  /* ---------- one-off repair of old-editor posts ---------- */
+
+  /**
+   * Offered in the panel rather than as a shell command: SSH is off on this
+   * host, and asking someone to enable it to run a one-line fix is a worse
+   * answer than a button. Safe to call at any time — posts already converted
+   * are skipped, so it cannot run twice on the same article.
+   */
+  router.get('/repair', (req, res) => {
+    res.json({
+      posts: inspect().map(({ slug, title, before, after }) => ({
+        slug,
+        title,
+        before,
+        after,
+      })),
+    })
+  })
+
+  router.post('/repair', (req, res) => {
+    const repaired = repair()
+    if (repaired.length) publish()
+    res.json({ repaired })
   })
 
   /** Manual "rebuild the pages" — for after a deploy replaces dist/. */

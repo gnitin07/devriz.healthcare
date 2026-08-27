@@ -927,3 +927,31 @@ textarea {
   cursor: pointer;
   line-height: 1;
 }
+
+/* One-time notices, e.g. the old-editor repair offer. Amber rather than red:
+   it is something worth doing, not something broken. */
+.notice {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  background: var(--accent-soft);
+  border: 1px solid #e6d79b;
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+.notice p {
+  margin: 0.35rem 0 0;
+}
+.notice ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.1rem;
+  color: var(--muted);
+  font-size: 0.79rem;
+}
+.notice .btn-primary {
+  margin-left: auto;
+  flex-shrink: 0;
+}
