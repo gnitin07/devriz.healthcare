@@ -14,78 +14,63 @@ under `dist/blogs` the moment someone presses Publish. That needs a server that
 stays running. Everything else — including all Sanity content, which the browser
 fetches straight from `apicdn.sanity.io` — would work as static files.
 
-## Where the articles live
+## How a deploy actually works
 
-Not in the repository, and **not inside the application root**.
+hPanel → **Deployments** is connected to `gnitin07/devriz.healthcare`, branch
+`main`, root directory `devriz-site`. Pushing to `main` is the deploy: Hostinger
+clones the repo, runs `npm install` and `npm run build` (Node 22), then restarts
+the app. Nothing is uploaded by hand and `dist/` is built on the server, which
+is why it stays gitignored.
 
-Posts and uploaded pictures are written at runtime to `devriz-content/`, a
-folder one level ABOVE the app:
+`sharp` and `vite` install fine there, so the install must NOT use `--omit=dev`
+— the build needs both.
+
+## Where the articles live — read this before changing it
+
+Deploys are **atomic and versioned**. Each one is cloned into a brand new
+directory and a symlink is flipped:
 
 ```
-<hosting root>/
-├── devriz-content/          ← articles + pictures. Never deploy over this.
-│   ├── blog/                  one .md file per post
-│   ├── blog-images/           uploads and their compressed variants
-│   ├── trash/                 deleted posts, restorable from /admin
-│   └── images.json            variant metadata for the srcsets
-└── devriz-site/             ← the application root: what you upload
-    ├── server.js
-    ├── dist/
-    └── …
+~/hbuilds/
+├── current  →  versions/<uuid>      the live one
+└── versions/
+    ├── <uuid-a>/devriz-site/        previous deploy
+    └── <uuid-b>/devriz-site/        this deploy
 ```
 
-Deploying means uploading the app folder. If content lived inside it, every
-deploy would overwrite — or silently revert — everything written since the last
-one. Keeping it outside makes that impossible.
+So **nothing written inside the app folder, or beside it, survives a deploy** —
+the next deploy is a different directory entirely. Content stored there would
+live exactly one deploy and then vanish, silently, along with every article
+written in the meantime.
 
-The folder is created and seeded from `devriz-site/content/blog` on first boot,
-so there is nothing to set up by hand. Override the location with
-`BLOG_DATA_DIR` if the host's layout requires it.
+Articles and pictures therefore live in the account's home directory, outside
+the versioned tree:
 
-Deploying is still safe with respect to `dist/`: a freshly built `dist/` only
-contains the articles that existed when it was built, and the server rebuilds
-every blog page from `devriz-content/` at boot.
-
-## Deploy
-
-### 1. Build locally, not on the server
-
-```bash
-cd devriz-site
-npm ci
-npm run build
+```
+/home/u984942287/devriz-content/
+├── blog/            one .md file per post
+├── blog-images/     uploads and their compressed variants
+├── trash/           deleted posts, restorable from /admin
+└── images.json      variant metadata for the srcsets
 ```
 
-`npm run build` needs `sharp`, whose native binaries are unreliable to install on
-shared hosting. Building here sidesteps that entirely: the server needs only
-`express` and `archiver`, both plain dependencies with no native code.
+**Set `BLOG_DATA_DIR` to that path** (next section). `server/store.mjs` also
+detects the `hbuilds/versions/` layout and falls back to `~/devriz-content` on
+its own, but that is a safety net, not the configuration — set the variable.
+
+If content ever does end up somewhere a deploy will replace, the app prints
+`ARTICLES WILL BE LOST ON THE NEXT DEPLOY` to the runtime log at boot. Treat
+that as an outage.
+
+Building on the server is safe with respect to content: a fresh `dist/` contains
+only the articles that existed in the repo at build time, and `server.js`
+re-renders every blog page from `BLOG_DATA_DIR` at boot.
 
 Pictures uploaded through `/admin` are resized and compressed **in the writer's
-browser** before upload, for the same reason — the server never needs an image
-library.
+browser**, so the running server never needs an image library — only `express`,
+`archiver`, `js-yaml` and `marked`, all plain JavaScript.
 
-`server.js` exits immediately if `dist/` is missing, so the build must exist
-before the app starts.
-
-### 2. Create the app
-
-hPanel → **Web Apps** → new Node.js application:
-
-| Field | Value |
-|---|---|
-| Node version | 20 or newer |
-| Application root | the folder containing `server.js` (`devriz-site`) |
-| Startup file | `server.js` |
-| Install command | `npm install --omit=dev` |
-
-`--omit=dev` skips `sharp`, `vite` and TipTap, which are only needed for the
-build you already ran. Do not set `PORT` — Hostinger supplies it and `server.js`
-reads it.
-
-Upload the locally built `dist/` into the application root alongside
-`server.js`, `vercel.json`, `server/` and `package.json`.
-
-### 3. Environment variables
+## Environment variables
 
 In the app's settings:
 
@@ -93,7 +78,7 @@ In the app's settings:
 |---|---|---|
 | `ADMIN_PASSWORD` | **yes** | The one password that signs a writer in to `/admin`. Make it long. |
 | `ADMIN_PASSWORD_HASH` | no | Use instead of the above to keep the plain password out of hPanel. Generate with `node server/auth.mjs "the password"`. |
-| `BLOG_DATA_DIR` | no | Absolute path to the content folder, if the default sibling location does not suit. |
+| `BLOG_DATA_DIR` | **yes, on Hostinger** | `/home/u984942287/devriz-content` — outside the versioned deploy tree. See the section above for why this is not optional here. |
 | `SITE_URL` | no | Defaults to `https://devrizhealthcare.com`. Used for canonical URLs and og: tags. |
 
 Without a password the site serves normally, `/admin` loads and explains what is
@@ -102,7 +87,7 @@ missing, and the boot log says so loudly. Nobody can sign in.
 The session cookie is signed with a key derived from the password, so **changing
 the password signs everyone out immediately**.
 
-### 4. Repair the pre-existing post (once)
+## Repair the pre-existing post (once)
 
 The old Decap editor escaped pasted markdown, so the pigmentation article was
 published with literal `\## …` headings and every wrapped line as its own

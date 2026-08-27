@@ -1,22 +1,32 @@
 /**
  * The blog's content store: reading and writing the articles themselves.
  *
- * WHERE THE FILES LIVE, and why it is not `devriz-site/content/`
- * -------------------------------------------------------------
- * Posts are now written by the running server, not by a build. That makes the
- * repository the wrong home for them: deploying means uploading the app folder
- * to Hostinger, and an upload that contains `content/` would overwrite — or
- * silently revert — every article written since the last deploy. Losing a
- * colleague's week of work to a routine deploy is the kind of failure that only
- * shows up once, expensively.
+ * WHERE THE FILES LIVE, and why it is not inside the app
+ * -----------------------------------------------------
+ * Posts are written by the running server, not by a build, so the deployed
+ * folder is the wrong home for them. Hostinger deploys this repository
+ * atomically: each deploy is cloned into a BRAND NEW directory,
  *
- * So content lives one level ABOVE the application root, in a sibling folder
- * (`devriz-content/`) that no deploy ever touches. On first boot the folder is
- * created and seeded from the repository's `content/blog` and
- * `public/blog-images`, so nothing has to be moved by hand and the existing
- * post survives the switch.
+ *     ~/hbuilds/versions/<uuid>/devriz-site
  *
- * Override with BLOG_DATA_DIR if the host's layout needs it.
+ * and a `current` symlink is flipped to point at it. Nothing written inside
+ * that directory survives the next deploy — the next deploy is a different
+ * directory. Content kept anywhere under the app root, or beside it, would
+ * therefore live exactly one deploy and then silently disappear, taking however
+ * many articles had been written with it.
+ *
+ * So the content folder has to sit outside the versioned tree entirely, in the
+ * account's home directory:
+ *
+ *     ~/devriz-content
+ *
+ * Set BLOG_DATA_DIR to say so explicitly — that is the supported way, and what
+ * HOSTING.md instructs. The detection below is a safety net for when someone
+ * forgets, not a substitute for setting it.
+ *
+ * On first boot the folder is created and seeded from the repository's
+ * `content/blog` and `public/blog-images`, so nothing has to be moved by hand
+ * and the existing post survives the switch.
  *
  * FILE FORMAT
  * -----------
@@ -38,14 +48,44 @@ import {
   statSync,
 } from 'node:fs'
 import path from 'node:path'
+import { homedir } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { load as parseYaml, dump as toYaml } from 'js-yaml'
 import { marked } from 'marked'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
-export const DATA_DIR =
-  process.env.BLOG_DATA_DIR || path.resolve(ROOT, '..', 'devriz-content')
+/**
+ * Paths that a deploy replaces wholesale. `hbuilds/versions/<uuid>/` is
+ * Hostinger's atomic-deploy layout; `current` is the symlink that points at
+ * whichever version is live, so it moves for the same reason.
+ *
+ * Anything written under one of these is gone at the next deploy.
+ */
+const EPHEMERAL = /[/\\]hbuilds[/\\](versions|current)([/\\]|$)/i
+
+/** True when `dir` is inside a directory the next deploy will replace. */
+export const isEphemeral = (dir) => EPHEMERAL.test(dir)
+
+function resolveDataDir() {
+  // Explicit wins, always. This is what the host should be configured with.
+  if (process.env.BLOG_DATA_DIR) return path.resolve(process.env.BLOG_DATA_DIR)
+
+  // Beside the app: correct for a local checkout and for hosts that deploy by
+  // uploading into a fixed folder.
+  const sibling = path.resolve(ROOT, '..', 'devriz-content')
+  if (!isEphemeral(sibling)) return sibling
+
+  // On an atomic-deploy host the sibling is inside the throwaway version
+  // directory. Fall back to the account's home, which survives deploys.
+  const home = homedir()
+  if (home) return path.join(home, 'devriz-content')
+
+  // Nothing better available. ensureDataDir() warns loudly about this.
+  return sibling
+}
+
+export const DATA_DIR = resolveDataDir()
 
 export const POSTS_DIR = path.join(DATA_DIR, 'blog')
 export const IMAGES_DIR = path.join(DATA_DIR, 'blog-images')
@@ -91,7 +131,10 @@ export function ensureDataDir() {
     IMAGES_DIR,
     (f) => !/-(\d+\.webp|og\.jpg)$/i.test(f)
   )
-  return { posts, images, dir: DATA_DIR }
+  // If this is ever true in production, every article written since the last
+  // deploy is one deploy away from being lost. Reported so it is visible in the
+  // host's runtime log rather than discovered from an empty blog.
+  return { posts, images, dir: DATA_DIR, ephemeral: isEphemeral(DATA_DIR) }
 }
 
 /* ---------- HTML safety ---------- */

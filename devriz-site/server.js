@@ -200,8 +200,20 @@ const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log(`devriz-healthcare listening on ${port}`);
   console.log(`  ${config.redirects?.length ?? 0} redirects, ${headerRules.length} header rules from vercel.json`);
+  console.log(`  content: ${seeded.dir}`);
   if (seeded.posts || seeded.images) {
     console.log(`  seeded ${seeded.posts} post(s) and ${seeded.images} image(s) into ${seeded.dir}`);
+  }
+  // Hostinger clones each deploy into a new hbuilds/versions/<uuid> directory,
+  // so anything stored in there lasts exactly until the next deploy. Getting
+  // this wrong loses articles silently, which is the worst way to lose them.
+  if (seeded.ephemeral) {
+    console.error(
+      "  !! ARTICLES WILL BE LOST ON THE NEXT DEPLOY.\n" +
+        `     Content is at ${seeded.dir}, inside the folder each deploy replaces.\n` +
+        "     Fix: set BLOG_DATA_DIR to a path in the account's home directory\n" +
+        "     (hPanel -> Environment variables), then restart the app."
+    );
   }
   // Said loudly, because the symptom otherwise is a colleague staring at a
   // login box that rejects every password they try.
