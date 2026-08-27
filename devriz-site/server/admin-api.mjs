@@ -87,11 +87,20 @@ export default function adminApi({ distDir }) {
     res.json({ ok: true })
   })
 
+  /**
+   * Deliberately unauthenticated — the login screen calls it before anyone has
+   * signed in, to decide between the password box and "no password is set on
+   * this server". So it must say as little as possible.
+   *
+   * It used to return the content directory too, which on this host is
+   * /home/<account>/devriz-content: that published the hosting account name —
+   * the same string as the SSH username — to anyone who asked for it. The boot
+   * log is the right place for that; a public endpoint is not.
+   */
   router.get('/me', (req, res) => {
     res.json({
       configured: auth.configured(),
       signedIn: Boolean(auth.session(req)),
-      dataDir: store.DATA_DIR,
     })
   })
 
