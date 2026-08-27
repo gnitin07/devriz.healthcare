@@ -20,6 +20,7 @@
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "@vladmandic/face-api": "^1.7.15",
+    "archiver": "^8.0.0",
     "express": "^4.22.2",
     "gsap": "^3.13.0",
     "js-yaml": "^5.2.3",
@@ -31,6 +32,14 @@
     "tailwindcss": "^4.1.8"
   },
   "devDependencies": {
+    "@tiptap/extension-image": "^3.30.5",
+    "@tiptap/extension-link": "^3.30.5",
+    "@tiptap/extension-placeholder": "^3.30.5",
+    "@tiptap/extension-text-align": "^3.30.5",
+    "@tiptap/extension-underline": "^3.30.5",
+    "@tiptap/pm": "^3.30.5",
+    "@tiptap/react": "^3.30.5",
+    "@tiptap/starter-kit": "^3.30.5",
     "@vitejs/plugin-react": "^4.4.1",
     "sharp": "^0.35.3",
     "vite": "^6.3.5"

@@ -12,8 +12,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import authHandler from "./api/auth.js";
-import callbackHandler from "./api/callback.js";
+import * as store from "./server/store.mjs";
+import * as adminAuth from "./server/auth.mjs";
+import adminApi from "./server/admin-api.mjs";
+import { registerImages } from "./src/lib/blog-images.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(__dirname, "dist");
@@ -24,6 +26,15 @@ if (!fs.existsSync(DIST)) {
   process.exit(1);
 }
 
+// Articles live OUTSIDE this folder so a deploy cannot overwrite them; see the
+// comment at the top of server/store.mjs. First boot creates that folder and
+// seeds it from the repository's content/blog, so there is nothing to move by
+// hand when this version goes up.
+const seeded = store.ensureDataDir();
+// Photos uploaded through /admin were not present when the build generated
+// blog-image-manifest.js. Without this they would be served at full size.
+registerImages(store.readImageIndex());
+
 const app = express();
 app.disable("x-powered-by");
 // Without this, Express treats /consult and /consult/ as the same route, so the
@@ -32,12 +43,38 @@ app.disable("x-powered-by");
 // how Vercel matches them.
 app.set("strict routing", true);
 
-// ---- API routes -------------------------------------------------------------
-// The handlers are written to Vercel's (req, res) signature, which is a
-// superset of Node's: setHeader/writeHead/end come from http.ServerResponse,
-// and status().send() plus req.query are Express's own. So they run unmodified.
-app.get("/api/auth", (req, res) => authHandler(req, res));
-app.get("/api/callback", (req, res) => callbackHandler(req, res));
+// ---- blog admin -------------------------------------------------------------
+// Replaces Decap CMS and its GitHub OAuth (api/auth.js, api/callback.js), which
+// needed a GitHub account per writer, a pull request per article and a local
+// rebuild per merge — and on Hostinger never worked at all, because the OAuth
+// credentials were never set here. Now: one password, and Publish writes the
+// live pages itself.
+const admin = adminApi({ distDir: DIST });
+app.use("/api/admin", admin.router);
+app.get("/api/posts.json", admin.publicPosts);
+
+// Regenerate dist/blogs from the content folder at boot. This is what makes a
+// deploy safe: uploading a freshly built dist/ brings only the articles that
+// existed when it was built, and this immediately puts back everything written
+// since. Without it, deploying would look exactly like losing posts.
+try {
+  const posts = admin.publish();
+  console.log(`  blog: ${posts.length} live post(s) rendered from ${store.DATA_DIR}`);
+} catch (err) {
+  // A broken blog must not stop the rest of the site from serving.
+  console.error(`  blog: could not render pages — ${err.message}`);
+}
+
+// Uploads are written to the content folder, so they are served from there
+// rather than from dist/. Ahead of express.static for that reason.
+app.use(
+  "/blog-images",
+  express.static(store.IMAGES_DIR, {
+    // Filenames carry their width (-960.webp), so a changed image is a new
+    // name. Anything under this path is safe to cache hard.
+    setHeaders: (res) => res.setHeader("Cache-Control", "public, max-age=31536000, immutable"),
+  })
+);
 
 // ---- redirects --------------------------------------------------------------
 // Vercel `source` strings are path-to-regexp, the same dialect Express 4 parses,
@@ -131,6 +168,24 @@ app.get("*", (req, res, next) => {
   next();
 });
 
+// An article URL with no prerendered page behind it: deleted, unpublished, or
+// never existed. The /blogs/(.*) rewrite below would answer 200 with the app
+// shell, which renders "Article not found" to a human but tells Google the page
+// is alive — a soft 404, and the URL stays indexed indefinitely.
+//
+// That was survivable when removing a post meant a pull request and a rebuild.
+// Now it is one click in /admin, so it has to return the right status. The app
+// shell is still what gets sent, so the visitor sees the site's own not-found
+// screen rather than a bare server error.
+app.get("/blogs/:slug", (req, res, next) => {
+  // Only trustworthy once the prerenderer has actually run. If rendering failed
+  // at boot, dist/blogs is missing entirely and every article would 404 —
+  // better to fall through and let the SPA try.
+  if (!fs.existsSync(path.join(DIST, "blogs", "index.html"))) return next();
+  res.status(404);
+  sendShell(res, "index.html");
+});
+
 for (const rule of config.rewrites ?? []) {
   const file = rule.destination.replace(/^\//, "");
   app.get(toExpressPath(rule.source), (req, res) => sendShell(res, file));
@@ -145,4 +200,15 @@ const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log(`devriz-healthcare listening on ${port}`);
   console.log(`  ${config.redirects?.length ?? 0} redirects, ${headerRules.length} header rules from vercel.json`);
+  if (seeded.posts || seeded.images) {
+    console.log(`  seeded ${seeded.posts} post(s) and ${seeded.images} image(s) into ${seeded.dir}`);
+  }
+  // Said loudly, because the symptom otherwise is a colleague staring at a
+  // login box that rejects every password they try.
+  if (!adminAuth.configured()) {
+    console.warn(
+      "  !! /admin is UNUSABLE: no ADMIN_PASSWORD set.\n" +
+        "     hPanel -> the app -> Environment variables -> ADMIN_PASSWORD=<a long password>, then restart."
+    );
+  }
 });

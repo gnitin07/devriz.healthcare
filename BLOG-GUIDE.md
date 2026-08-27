@@ -1,228 +1,209 @@
-# Devriz Healthcare — Blog Guide
+# Writing on the Devriz blog
 
-Everything about writing and publishing articles on devrizhealthcare.com/blogs.
+The editor lives at **https://devrizhealthcare.com/admin**.
 
-There are two roles:
-
-- **Writer** — writes articles. Cannot put anything on the website.
-- **Owner (Nitin)** — approves articles. Only the owner can make a post live.
-
----
-
-## Part 1 — For the writer
-
-### One-time setup (5 minutes)
-
-1. Create a free GitHub account at <https://github.com/signup>. Any email
-   works. Remember the username and password.
-2. Open <https://devrizhealthcare.com/admin>
-3. Click **Login with GitHub**, sign in, and click **Authorize** when GitHub
-   asks for permission.
-
-That's the whole setup. Nothing to install, nothing to download.
-
-> You do NOT get access to the website itself. GitHub makes you a private
-> personal copy to work in. Nothing you do can change or break the live site.
-
-### Writing an article
-
-1. Go to <https://devrizhealthcare.com/admin> and log in.
-2. Click **New Blog Post**.
-3. Fill in the fields:
-
-   | Field | What to write |
-   |---|---|
-   | **Title** | The headline. This also becomes the web address, so put the words people actually search for near the start. |
-   | **Publish date** | Leave as today unless you have a reason to change it. |
-   | **Short summary** | 1–2 sentences, about 150 characters. This is the grey text under your headline in Google, and the text shown when the link is sent on WhatsApp. |
-   | **Header image** | Required. Click, then upload a landscape photo. This is the picture that shows in WhatsApp previews. |
-   | **Header image description (alt text)** | Required, 10–125 characters. Say what is actually in the photo — "close-up of dark patches on a woman's cheek", not "pigmentation image". Google reads it to understand the picture, and screen readers read it aloud to blind visitors. |
-   | **Tags** | One topic per tag: acne, pigmentation, hair fall. |
-   | **Author** | Leave as is, or put the doctor's name. |
-   | **Article** | The actual article. |
-   | **Custom Google title** | Leave empty almost always. |
-   | **Hide this post** | Leave OFF. |
-
-4. Click **Save** any time. Saving does not publish — it just keeps your work.
-5. When the article is finished, change the status from **Draft** to
-   **Ready**. That sends it to Nitin for review.
-6. Message Nitin to tell him it's ready.
-
-### Adding images inside the article
-
-In the **Article** box, click the image button in the toolbar and upload.
-
-**Then add a description to it.** The toolbar inserts the picture with an empty
-description, and unlike the header image nothing forces you to fill it in. To
-add one, click the **Markdown** icon at the top-right of the Article box to
-switch out of the visual editor. You will see your image written like this:
-
-```
-![](/blog-images/your-photo.jpg)
-```
-
-Type the description inside the square brackets:
-
-```
-![dark patches across the cheekbone](/blog-images/your-photo.jpg)
-```
-
-Switch back and carry on writing. If you forget, the build prints a warning
-naming the post and the picture, so Nitin will see it before it goes live.
-
-### Editing or deleting a post
-
-Open the post from the list, make the change or click **Delete**, and set it to
-**Ready** again. Deleting also needs Nitin's approval — nothing disappears from
-the website on its own.
-
-### Writing rules that help us rank on Google
-
-- Put the phrase people search for in the **Title**, near the start.
-  Good: "Why Does Acne Keep Coming Back?"
-  Weak: "Some Thoughts On Skin"
-- Break the article into sections using **Heading 2**. Google uses these to
-  understand what the article covers. Aim for 4–7 sections.
-- Write 700 words or more. Short articles rarely rank.
-- Answer the question directly in the first paragraph.
-- Write like you are explaining to a patient, not advertising to a customer.
-- Never promise a cure, a guaranteed result, or a timeline we cannot stand
-  behind. Say "often", "usually", "in most cases".
-- Never copy text from another website. Google penalises it and it is a legal
-  risk.
+Sign in with the password Nitin gave you. That is all — no GitHub account, no
+pull request, no approval step. When you press **Publish**, the article is on
+the website by the time the button finishes.
 
 ---
 
-## Part 2 — For the owner (Nitin)
+## The short version
 
-### Adding a new writer
+1. Go to `/admin`, sign in.
+2. **+ New post**.
+3. Type the headline.
+4. Write the article, or paste it in from ChatGPT.
+5. Add a header image and describe it.
+6. Write the short summary.
+7. **Publish**.
 
-**There is nothing to grant.** Do not add them as a collaborator on GitHub and
-do not share any password. Send them two things:
+You stay signed in on that device for 30 days.
 
-1. The link <https://devrizhealthcare.com/admin>
-2. This guide.
+---
 
-They create their own free GitHub account, click **Login with GitHub**, and
-start writing. This works because the repository is public and the editor runs
-in *open authoring* mode: GitHub silently makes them their own copy (a "fork"),
-their drafts are saved there, and pressing **Ready** opens a pull request here
-for you to merge. They never hold write access to this repository, so there is
-no way for them to change the live site — even by accident.
+## Pasting from ChatGPT
 
-The flip side of that setup: **anyone** with a GitHub account who finds
-/admin can log in and submit an article. They still cannot publish — nothing
-reaches the site until you merge the pull request — so the worst case is an
-unwanted pull request you close. That is the same thing any stranger could do
-on a public repository anyway.
+Copy from ChatGPT and paste straight into the article box. Headings stay
+headings, bold stays bold, lists stay lists, and the text picks up the website's
+own font and sizes automatically.
 
-One thing to watch the first time a new writer submits: Vercel does not always
-build a preview for a pull request opened from someone else's fork. If the
-preview link is missing from the pull request, either read the changed file
-directly on GitHub, or add that writer as a repository collaborator and set
-`open_authoring: false` in `devriz-site/public/admin/config.yml` — that puts
-their drafts on branches in this repository, where previews always build. Only
-do that for staff you trust with write access, and turn on branch protection
-for `main` first.
+You do not need to reformat anything afterwards, and you should not paste into
+Word first — that adds invisible formatting the website then has to strip back
+out.
 
-### Reviewing an article
+---
 
-1. When the writer says a post is ready, open
-   <https://github.com/gnitin07/devriz.healthcare/pulls>
-2. Open the pull request. It is named after the article.
-3. Vercel automatically adds a **preview link** in the comments. Click it to
-   read the finished article on a real page, exactly as visitors will see it.
-4. If something needs changing, tell the writer — they edit and it updates
-   automatically.
-5. When you are happy, click **Merge pull request**.
+## The toolbar
 
-The article is live at devrizhealthcare.com/blogs about 30–60 seconds later.
-The sitemap updates itself, so Google gets told about the new post
-automatically.
+| Button | What it does |
+|---|---|
+| **Text style** dropdown | Normal text, or Heading 2 / 3 / 4 |
+| **B** / *I* / U | Bold, italic, underline |
+| •• / 1. | Bulleted and numbered lists |
+| ❝ | A pull quote |
+| 🔗 | Turn the selected words into a link |
+| 🖼 | Drop a picture in at the cursor |
+| ▭ | Drop a **button** in — usually the ₹49 consultation link |
+| — | A divider line |
+| ⌫ᶠ | Strip formatting off the selected text |
+| ↶ ↷ | Undo, redo |
 
-### Publishing something yourself
+**Headings.** Use *Heading 2* for each main section — that is what Google reads
+to work out what the article covers. *Heading 3* for a sub-point inside a
+section. The post title is already the page's main heading, so the editor warns
+you if you use Heading 1 inside the article; take the warning.
 
-Because you own the repository, when *you* log into /admin you can publish
-directly without the review step.
+**Links.** Select the words first, then press 🔗. A link to another page on this
+site starts with a slash — `/consult`, or
+`/blogs/what-is-skin-pigmentation-causes-and-care-guide`. Anything elsewhere
+needs the full `https://…`.
 
-### Taking a post down fast
+**Buttons.** Press ▭ anywhere in the article. Put one where the argument for
+booking actually lands, not only at the end — the fixed ₹49 block at the foot of
+every article is already there.
 
-Open the post in /admin, switch **Hide this post** ON, and publish. It
-disappears from the website on the next deploy.
+---
 
-### What happens to uploaded images
+## Pictures
 
-Nothing you have to think about — upload photos straight off a camera or phone.
-Every build runs `scripts/optimize-blog-images.mjs`, which turns each upload
-into three WebP sizes (640 / 960 / 1400 px wide) plus a 1200x630 JPEG for
-WhatsApp and Facebook link previews. The page then serves whichever size the
-visitor's screen actually needs, and the original is deleted from the deploy so
-it can never be downloaded.
+Press 🖼 and choose a file. Upload it at whatever size your phone or camera
+produced — it is shrunk and compressed inside your browser before it is even
+sent, so a 6 MB photo becomes about 10 KB and the visitor never downloads the
+big one.
 
-In practice an 8 MB camera photo becomes roughly 85 KB on a phone. This matters
-because Vercel's free plan allows 100 GB of transfer per month — one
-uncompressed header image would eat that in about 12,000 page views.
+**Every picture needs a description.** After inserting one, a panel opens under
+the article with an *Image description* box. Write what is actually in the
+photo:
 
-Two things to know:
+- ✅ "close-up of dark patches on a woman's cheek"
+- ❌ "pigmentation image"
 
-- Images are cached in the visitor's browser for a year, so a returning reader
-  downloads nothing. If you ever need to *change* a picture, upload it under a
-  new filename rather than replacing the old one.
-- The header image field also accepts a full `https://` link if you would rather
-  host a picture elsewhere (a CDN, for example). Pasted links are used exactly
-  as given — they are not resized, so make sure they are already small.
+That text is what Google Images reads, what a blind visitor's screen reader
+reads aloud, and what is shown if the picture fails to load. **A post will not
+publish while any picture is missing one.** Click a picture at any time to edit
+its description.
 
-To compress newly uploaded images without a full build:
+The **header image** is separate, in the right-hand column. It appears at the
+top of the article, on the blog list, and — most importantly — as the picture in
+the WhatsApp preview when the link is shared. Without it, the link shares as a
+bare grey box.
+
+---
+
+## Short summary
+
+One or two sentences, around 150 characters. This is the grey text under your
+headline in Google, and the text under the link on WhatsApp.
+
+Leave it out and Google picks a sentence from the article itself — usually not
+the one you would have chosen.
+
+---
+
+## The web address
+
+Under the headline you will see:
+
+```
+devrizhealthcare.com/blogs/  why-does-acne-keep-coming-back
+```
+
+It fills itself in from the headline. You can edit it — keep it short, and keep
+the words people would actually search for.
+
+**Do not change it once a post is live.** Every link already shared on WhatsApp,
+and Google's record of the page, points at the old address; changing it breaks
+all of them. The editor warns you when you are about to.
+
+---
+
+## Search & sharing panel
+
+At the bottom of the right-hand column. It shows what the article will look like
+in a Google result, updating as you type.
+
+Both boxes are optional — leave them empty and the post title and short summary
+are used. Fill them in only when the Google version should read differently from
+the version on the page.
+
+The counters turn amber as you approach the length Google cuts off, and red past
+it.
+
+---
+
+## Draft, Preview, Publish
+
+- **Save draft** — keeps your work on the server. Not on the website.
+- **Preview** — shows the finished article exactly as a reader will see it.
+  Switch between Desktop and Phone at the top.
+- **Publish** — puts it live. Immediately.
+
+Publish stays greyed out until the post has everything it needs; hover over it
+and it tells you what is missing.
+
+Editing a live post works the same way — the button reads **Update**, and the
+change is live as soon as you press it.
+
+---
+
+## Deleting
+
+**Delete** takes the post off the website straight away and moves it to
+**Trash**. Nothing is lost.
+
+From Trash you can **Restore** it — it comes back as a draft, so it never
+reappears on the website by surprise — or delete it for ever, which really is
+for ever.
+
+---
+
+## Backups
+
+**Download a backup** in the left-hand menu gives you a zip of every article and
+every picture: plain files, openable on any computer.
+
+There is no automatic version history behind this editor. That is the trade for
+being able to publish without waiting for anyone. Press the button now and
+then — especially before deleting something.
+
+---
+
+## If something looks wrong
+
+**"That password is not right."** — check with Nitin. After eight wrong tries it
+locks you out for fifteen minutes.
+
+**"Your session expired."** — sign in again; the 30 days ran out.
+
+**A published post is not showing** — press **Rebuild the pages** in the
+left-hand menu, then reload. If it still does not appear, the app needs a
+restart from hPanel.
+
+**Publish is greyed out** — hover over it, or read the amber box at the bottom
+of the right-hand column. It lists exactly what is missing.
+
+---
+
+## For Nitin — setting it up
+
+The editor needs one environment variable on the server:
+
+```
+ADMIN_PASSWORD=<a long password you share with the writer>
+```
+
+hPanel → the app → **Environment variables** → add it → **restart the app**.
+Until it is set, `/admin` shows a message saying so and nobody can sign in.
+Changing the password signs everyone out immediately.
+
+If you would rather the plain password not sit in hPanel, generate a hash and
+set `ADMIN_PASSWORD_HASH` instead:
 
 ```bash
-npm run optimize:blog-images
+node server/auth.mjs "the password"
 ```
 
----
-
-## Troubleshooting
-
-**"Login with GitHub" does nothing, or shows an error**
-The environment variables `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` must be
-set in Vercel for Production, and the GitHub OAuth App's callback URL must be
-exactly `https://devrizhealthcare.com/api/callback`. After changing them,
-redeploy.
-
-**"Error loading the CMS configuration"**
-The config file could not be fetched. Check
-<https://devrizhealthcare.com/admin/config.yml> loads.
-
-**Writer says they cannot publish**
-That is correct and intended. Writers submit; only the owner merges.
-
----
-
-## Where things live
-
-| What | Where |
-|---|---|
-| Blog editor | devrizhealthcare.com/admin |
-| Published articles | devrizhealthcare.com/blogs |
-| Article files | `devriz-site/content/blog/*.md` |
-| Uploaded images | `devriz-site/public/blog-images/` |
-| Image compressor | `devriz-site/scripts/optimize-blog-images.mjs` |
-| Editor settings | `devriz-site/public/admin/config.yml` |
-
----
-
-## Short links for writers
-
-Send these instead of explaining where to click. All three require logging in
-first; the login screen appears automatically and then takes you where you were
-going.
-
-| Link | Opens |
-|---|---|
-| devrizhealthcare.com/write | Straight into a blank new article |
-| devrizhealthcare.com/posts | The list of all articles, to open and edit one |
-| devrizhealthcare.com/admin | The editor home page |
-
-These are 302 redirects, not permanent ones, deliberately: they point at the
-CMS's internal `#/collections/blog` addresses, which belong to Decap and could
-change on a future version. A permanent redirect would be cached in every
-writer's browser for good and could not be corrected.
+Articles and pictures are stored in `devriz-content/`, a folder one level ABOVE
+the application root, so that uploading a new build can never overwrite them.
+Full deployment details are in [HOSTING.md](HOSTING.md).

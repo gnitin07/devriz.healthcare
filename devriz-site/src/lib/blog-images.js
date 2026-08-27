@@ -31,6 +31,22 @@ const variant = (src, width) =>
   `${src.replace(/\.[^./]+$/, "")}-${width}.webp`;
 
 /**
+ * Images uploaded through /admin while the server is running were not present
+ * when blog-image-manifest.js was generated, so the server merges their variant
+ * metadata in at boot and after every upload. Without this a freshly uploaded
+ * photo would fall through to the "unknown path" branch below and be served at
+ * full size — the exact thing the compression pipeline exists to prevent.
+ *
+ * Build-time entries win: if the optimizer has already processed an image, its
+ * numbers came from the file itself and are the ones to trust.
+ */
+export function registerImages(entries) {
+  for (const [url, entry] of Object.entries(entries || {})) {
+    if (!MANIFEST[url]) MANIFEST[url] = entry;
+  }
+}
+
+/**
  * @returns {null | {src, srcset: string|null, width: number|null,
  *                   height: number|null, og: string}}
  */

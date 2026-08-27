@@ -1,9 +1,11 @@
 import { useEffect } from "react";
-import { getPosts, formatDate, setSeo } from "../lib/blog";
+import { usePosts, formatDate, setSeo } from "../lib/blog";
 import { CARD_SIZES } from "../lib/blog-images";
 
 const BlogListSection = () => {
-  const posts = getPosts();
+  // Prerendered pages carry the list with them, so this is already populated on
+  // first render; `loading` only matters on client-side navigation.
+  const { posts, loading } = usePosts();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -29,7 +31,9 @@ const BlogListSection = () => {
 
         {posts.length === 0 ? (
           <p className="blog-empty">
-            First articles are on their way — check back soon.
+            {loading
+              ? "Loading articles…"
+              : "First articles are on their way — check back soon."}
           </p>
         ) : (
           <div className="blog-grid">

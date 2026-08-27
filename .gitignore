@@ -35,3 +35,8 @@ Spylt-awward-clone-main/
 /*.jpg
 /*.mp4
 transformation/
+
+# Blog content written at runtime by the /admin editor. Deliberately outside
+# devriz-site/ so a deploy cannot overwrite it (see HOSTING.md). On the server
+# this sits beside the app; locally that resolves to the repo root.
+devriz-content/

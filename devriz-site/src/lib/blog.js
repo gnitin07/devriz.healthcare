@@ -1,69 +1,93 @@
-import { marked } from "marked";
-import { load as parseYaml } from "js-yaml";
-import { resolveImage, rewriteBodyImages } from "./blog-images.js";
+import { useEffect, useState } from "react";
 
 /**
- * Blog content lives as markdown files in /content/blog, written through the
- * Decap CMS admin panel and merged by an owner via pull request. Reading them
- * at BUILD time (not from an API at runtime) is what lets scripts/prerender.mjs
- * emit real static HTML per post — the thing Google and the WhatsApp/Facebook
- * link-preview crawlers need, since those crawlers never run JavaScript.
+ * Where blog content comes from, on the browser side.
+ *
+ * It used to be `import.meta.glob("/content/blog/*.md")` — the posts were baked
+ * into the JavaScript bundle at build time. That is no longer possible: posts
+ * are written through /admin while the server is running, and a bundle built
+ * last Tuesday cannot contain an article published this morning.
+ *
+ * So there are two sources, in this order:
+ *
+ *   1. The <script id="__BLOG__"> tag that server/prerender.mjs embeds in every
+ *      /blogs page. It is read synchronously on the first render, so an article
+ *      opened directly — or by a crawler — paints immediately with no fetch and
+ *      no empty flash, matching the static HTML already in the document.
+ *
+ *   2. /api/posts.json, fetched afterwards. This is what serves client-side
+ *      navigation between articles, and it quietly refreshes stale data if the
+ *      page was left open while something was republished.
+ *
+ * Both deliver posts in exactly the same shape — the server resolves image
+ * variants and rewrites body images before sending — so nothing downstream has
+ * to know which one it got.
  */
-const files = import.meta.glob("/content/blog/*.md", {
-  query: "?raw",
-  import: "default",
-  eager: true,
-});
 
-marked.setOptions({ gfm: true, breaks: false });
-
-const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/;
-
-/** ~200 words per minute, rounded up, minimum 1. */
-const readingTime = (text) =>
-  Math.max(1, Math.round(text.trim().split(/\s+/).length / 200));
-
-function parse(path, raw) {
-  const slug = path.split("/").pop().replace(/\.md$/, "");
-  const match = raw.match(FRONTMATTER);
-  if (!match) return null;
-
-  let data;
+const readEmbedded = () => {
+  if (typeof document === "undefined") return null;
+  const tag = document.getElementById("__BLOG__");
+  if (!tag) return null;
   try {
-    data = parseYaml(match[1]) || {};
+    return JSON.parse(tag.textContent);
   } catch {
-    // A malformed post must not take the whole blog down.
     return null;
   }
+};
 
-  const body = match[2] || "";
-  return {
-    slug,
-    title: data.title || slug,
-    excerpt: data.excerpt || "",
-    image: data.image || null,
-    // Compressed variants of data.image. Null when the post has no header
-    // image; falls back to the original path for anything the optimizer has
-    // not processed, including an external CDN URL pasted into the CMS.
-    img: resolveImage(data.image),
-    imageAlt: data.imageAlt || data.title || "",
-    author: data.author || "Devriz Healthcare Team",
-    date: data.date ? new Date(data.date).toISOString() : null,
-    tags: Array.isArray(data.tags) ? data.tags : [],
-    seoTitle: data.seoTitle || null,
-    draft: data.draft === true,
-    readingTime: readingTime(body),
-    html: rewriteBodyImages(marked.parse(body)),
-  };
+const embedded = readEmbedded();
+
+let cache = Array.isArray(embedded?.posts) ? embedded.posts : null;
+/** The article this page was prerendered for, even if it is a draft preview. */
+const embeddedPost = embedded?.post || null;
+
+let inflight = null;
+
+function fetchPosts() {
+  if (inflight) return inflight;
+  inflight = fetch("/api/posts.json", { headers: { Accept: "application/json" } })
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+    .then((data) => {
+      cache = Array.isArray(data.posts) ? data.posts : [];
+      return cache;
+    })
+    .catch(() => cache || [])
+    .finally(() => {
+      inflight = null;
+    });
+  return inflight;
 }
 
-const ALL = Object.entries(files)
-  .map(([path, raw]) => parse(path, raw))
-  .filter((p) => p && !p.draft)
-  .sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+/** Synchronous read of whatever is known right now. */
+export const getPosts = () => cache || [];
+export const getPost = (slug) => getPosts().find((p) => p.slug === slug) || null;
 
-export const getPosts = () => ALL;
-export const getPost = (slug) => ALL.find((p) => p.slug === slug) || null;
+/**
+ * `loading` is only ever true when there was no embedded data to start from —
+ * i.e. client-side navigation. On a fresh page load it stays false, so the
+ * article never flickers through an empty state it does not need.
+ */
+export function usePosts() {
+  const [posts, setPosts] = useState(() => cache);
+
+  useEffect(() => {
+    let live = true;
+    fetchPosts().then((next) => live && setPosts(next));
+    return () => {
+      live = false;
+    };
+  }, []);
+
+  return { posts: posts || [], loading: posts === null };
+}
+
+export function usePost(slug) {
+  const { posts, loading } = usePosts();
+  const post =
+    posts.find((p) => p.slug === slug) ||
+    (embeddedPost && embeddedPost.slug === slug ? embeddedPost : null);
+  return { post, loading: loading && !post };
+}
 
 /** "12 Aug 2026" — readable and unambiguous for an Indian audience. */
 export function formatDate(iso) {

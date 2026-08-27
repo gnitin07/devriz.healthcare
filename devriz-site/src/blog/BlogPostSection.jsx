@@ -1,11 +1,15 @@
 import { useEffect } from "react";
 import { useBooking } from "../lib/BookingContext";
 import { useContent } from "../lib/ContentContext";
-import { getPost, getPosts, formatDate, setSeo } from "../lib/blog";
+import { usePost, usePosts, formatDate, setSeo } from "../lib/blog";
 import { HERO_SIZES } from "../lib/blog-images";
 
 const BlogPostSection = ({ slug }) => {
-  const post = getPost(slug);
+  // On a direct load the article is embedded in the page, so `post` is there
+  // from the first render and this never flashes. `loading` is for arriving
+  // here from another article without a page load.
+  const { post, loading } = usePost(slug);
+  const { posts } = usePosts();
   const { openBooking } = useBooking();
   const { settings } = useContent();
 
@@ -14,7 +18,7 @@ const BlogPostSection = ({ slug }) => {
     if (!post) return;
     setSeo({
       title: `${post.seoTitle || post.title} | Devriz Healthcare`,
-      description: post.excerpt,
+      description: post.seoDescription || post.excerpt,
       canonical: `https://devrizhealthcare.com/blogs/${post.slug}`,
     });
   }, [post]);
@@ -23,16 +27,20 @@ const BlogPostSection = ({ slug }) => {
     return (
       <section className="blog-section">
         <div className="blog-inner blog-notfound">
-          <h1>Article not found</h1>
-          <p>It may have been moved or renamed.</p>
-          <a href="/blogs" className="blog-back">← All articles</a>
+          <h1>{loading ? "Loading…" : "Article not found"}</h1>
+          {!loading && (
+            <>
+              <p>It may have been moved or renamed.</p>
+              <a href="/blogs" className="blog-back">← All articles</a>
+            </>
+          )}
         </div>
       </section>
     );
   }
 
   // Up to two further reads, newest first, excluding the current post.
-  const more = getPosts().filter((p) => p.slug !== post.slug).slice(0, 2);
+  const more = posts.filter((p) => p.slug !== post.slug).slice(0, 2);
 
   return (
     <section className="blog-section">

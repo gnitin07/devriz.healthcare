@@ -910,11 +910,25 @@ body::-webkit-scrollbar {
         li {
           @apply mb-1.5;
         }
+        /* The editor wraps every list item's text in a <p>, which would
+           otherwise inherit the paragraph's 1.25rem bottom margin and space a
+           tight list out like body copy. */
+        li > p {
+          @apply mb-0;
+        }
         blockquote {
           @apply border-l-4 border-amber bg-mint/60 rounded-r-xl px-5 py-3 my-6 italic text-teal-dark;
         }
         strong {
           @apply text-teal-dark;
+        }
+        /* Buttons dropped mid-article from the editor's toolbar — usually the
+           ₹49 consult link, placed where the argument for booking lands rather
+           than only in the fixed block at the foot of every post. Matches the
+           .blog-cta button so an article does not sprout a second button
+           style. */
+        .blog-btn {
+          @apply block w-fit mx-auto no-underline bg-amber text-teal-dark font-paragraph font-bold rounded-full md:px-8 px-6 py-3 text-sm my-7 hover:bg-amber-light hover:text-teal-dark transition-colors;
         }
         /* Images dropped mid-article from the CMS toolbar. Kept at their own
            proportions — unlike the header, these are often diagrams or
