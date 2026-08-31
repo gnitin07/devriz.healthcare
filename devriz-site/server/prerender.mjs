@@ -127,8 +127,11 @@ ${cards ? `<nav class="rail-recent"><h3>Recent blogs from Devriz</h3>${cards}<a 
 </aside>`
 }
 
-/** The one supplied artwork. Mirrors BANNER_SRC in BlogPostSection.jsx. */
-const BANNER_SRC = '/images/blog-consult-banner.webp'
+/** The supplied artwork. Mirrors the constants in BlogPostSection.jsx. */
+const BANNER_DESKTOP = '/images/blog-consult-desktop.webp'
+const BANNER_MOBILE = '/images/blog-consult-mobile.webp'
+const BANNER_ALT =
+  'Live dermatologist consult — ₹499 reduced to ₹49. Book your consultation.'
 
 /**
  * Mirrors <ConsultBanner> in BlogPostSection.jsx. Keep the two in step.
@@ -138,12 +141,13 @@ const BANNER_SRC = '/images/blog-consult-banner.webp'
  * crawler should not be told about a button that is not there.
  */
 const consultBanner = (distDir, cls = '', eager = false) => {
-  if (!existsSync(path.join(distDir, BANNER_SRC.replace(/^\//, '')))) return ''
+  const has = (src) => existsSync(path.join(distDir, src.replace(/^\//, '')))
+  if (!has(BANNER_DESKTOP) || !has(BANNER_MOBILE)) return ''
   return `<button type="button" class="blog-consult-banner${
     cls ? ` ${cls}` : ''
-  }" aria-label="Book your live video call consultation"><img src="${BANNER_SRC}" alt="Book your live video call consultation with a Devriz expert" loading="${
-    eager ? 'eager' : 'lazy'
-  }" decoding="async" /></button>`
+  }" aria-label="Book your live dermatologist consultation for ₹49"><picture><source media="(min-width: 1024px)" srcset="${BANNER_DESKTOP}" /><img src="${BANNER_MOBILE}" alt="${esc(
+    BANNER_ALT
+  )}" loading="${eager ? 'eager' : 'lazy'}" decoding="async" /></picture></button>`
 }
 
 function postMarkup(post, posts = [], distDir) {

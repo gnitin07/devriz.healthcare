@@ -884,10 +884,11 @@ body::-webkit-scrollbar {
     }
 
     /* The consultation banner: one supplied artwork at /images/
-       blog-consult-banner.webp, nothing drawn over it in code.
+       blog-consult-desktop.webp (sidebar) and -mobile.webp (in-article), nothing
+       drawn over them in code.
 
        No aspect-ratio is set, so the artwork's own shape is what renders — in
-       the sidebar on desktop and full width on a phone. Draw it at whatever
+       the sidebar on desktop and full width on a phone. Redraw either at whatever
        proportions suit; 1200x675 (16:9) is the recommendation. Dropping the
        file in is the whole job. */
     .blog-consult-banner {

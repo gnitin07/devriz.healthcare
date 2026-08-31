@@ -1,106 +1,358 @@
 {
   "redirects": [
-    { "source": "/write(/)?", "destination": "/admin/#/collections/blog/new", "permanent": false },
-    { "source": "/edit(/)?", "destination": "/admin/#/collections/blog", "permanent": false },
-    { "source": "/posts(/)?", "destination": "/admin/#/collections/blog", "permanent": false },
-    { "source": "/online-skin-consultation-in-india(/)?", "destination": "/consult", "permanent": true },
-    { "source": "/online-dermatologist-consultation(/)?", "destination": "/consult", "permanent": true },
-    { "source": "/acne-treatment-online-consultation(/)?", "destination": "/consult", "permanent": true },
-    { "source": "/hair-fall-treatment-online-consultation(/)?", "destination": "/consult", "permanent": true },
-    { "source": "/pigmentation-treatment-online-consultation(/)?", "destination": "/consult", "permanent": true },
-    { "source": "/melasma-treatment-online-consultation(/)?", "destination": "/consult", "permanent": true },
-    { "source": "/dark-spots-treatment-online(/)?", "destination": "/consult", "permanent": true },
-    { "source": "/tanning-treatment-online-consultation(/)?", "destination": "/consult", "permanent": true },
-    { "source": "/dermatologist-for-acne-online(/)?", "destination": "/consult", "permanent": true },
-    { "source": "/skin-doctor-online-consultation(/)?", "destination": "/consult", "permanent": true },
-    { "source": "/best-dermatologist-for-acne-online-doctor-guided-acne-consultation-from-home(/)?", "destination": "/consult", "permanent": true },
-    { "source": "/acne(/)?", "destination": "/consult", "permanent": true },
-    { "source": "/pigmentation(/)?", "destination": "/consult", "permanent": true },
-    { "source": "/consultation(/)?", "destination": "/consult", "permanent": true },
-    { "source": "/pages/consult(/)?", "destination": "/consult", "permanent": true },
-    { "source": "/why-does-acne-keep-coming-back(/)?", "destination": "/", "permanent": true },
-    { "source": "/what-is-skin-pigmentation-causes-and-care-guide(/)?", "destination": "/", "permanent": true },
-    { "source": "/home-remedies-for-tan-removal-and-glowing-skin(/)?", "destination": "/", "permanent": true },
-    { "source": "/doctor-bite(/)?", "destination": "/", "permanent": true },
-    { "source": "/devriz(/)?", "destination": "/", "permanent": true },
-    { "source": "/whatsapp-review(/)?", "destination": "/", "permanent": true },
-    { "source": "/about(/)?", "destination": "/", "permanent": true },
-    { "source": "/concern(/)?", "destination": "/", "permanent": true },
-    { "source": "/contact(/)?", "destination": "/", "permanent": true },
-    { "source": "/terms-conditions(/)?", "destination": "/privacy-policy", "permanent": true },
-    { "source": "/why-acne-keeps-coming-back(/)?", "destination": "/", "permanent": true },
-    { "source": "/how-to-get-rid-of-pimples(/)?", "destination": "/", "permanent": true },
-    { "source": "/pimples-on-face-reasons(/)?", "destination": "/", "permanent": true },
-    { "source": "/oily-skin-pimples-treatment(/)?", "destination": "/", "permanent": true },
-    { "source": "/what-is-hormonal-acne(/)?", "destination": "/", "permanent": true },
-    { "source": "/teenage-acne-problem(/)?", "destination": "/", "permanent": true },
-    { "source": "/adult-acne-causes(/)?", "destination": "/", "permanent": true },
-    { "source": "/how-to-remove-acne-marks(/)?", "destination": "/", "permanent": true },
-    { "source": "/acne-scars-vs-acne-marks(/)?", "destination": "/", "permanent": true },
-    { "source": "/post-acne-marks(/)?", "destination": "/", "permanent": true },
-    { "source": "/what-is-pigmentation(/)?", "destination": "/", "permanent": true },
-    { "source": "/pigmentation-on-face(/)?", "destination": "/", "permanent": true },
-    { "source": "/how-to-reduce-pigmentation(/)?", "destination": "/", "permanent": true },
-    { "source": "/dark-spots-on-face(/)?", "destination": "/", "permanent": true },
-    { "source": "/tag/(.*)", "destination": "/blogs", "permanent": true },
-    { "source": "/category/(.*)", "destination": "/consult", "permanent": true },
-    { "source": "/author/(.*)", "destination": "/blogs", "permanent": true },
-    { "source": "/blog/(.*)", "destination": "/blogs", "permanent": true },
-    { "source": "/blogs/", "destination": "/blogs", "permanent": true },
-    { "source": "/blogs/:slug/", "destination": "/blogs/:slug", "permanent": true },
-    { "source": "/consult/", "destination": "/consult", "permanent": true },
-    { "source": "/privacy-policy/", "destination": "/privacy-policy", "permanent": true },
-    { "source": "/ai-scan/", "destination": "/ai-scan", "permanent": true }
+    {
+      "source": "/write(/)?",
+      "destination": "/admin/#/collections/blog/new",
+      "permanent": false
+    },
+    {
+      "source": "/edit(/)?",
+      "destination": "/admin/#/collections/blog",
+      "permanent": false
+    },
+    {
+      "source": "/posts(/)?",
+      "destination": "/admin/#/collections/blog",
+      "permanent": false
+    },
+    {
+      "source": "/online-skin-consultation-in-india(/)?",
+      "destination": "/consult",
+      "permanent": true
+    },
+    {
+      "source": "/online-dermatologist-consultation(/)?",
+      "destination": "/consult",
+      "permanent": true
+    },
+    {
+      "source": "/acne-treatment-online-consultation(/)?",
+      "destination": "/consult",
+      "permanent": true
+    },
+    {
+      "source": "/hair-fall-treatment-online-consultation(/)?",
+      "destination": "/consult",
+      "permanent": true
+    },
+    {
+      "source": "/pigmentation-treatment-online-consultation(/)?",
+      "destination": "/consult",
+      "permanent": true
+    },
+    {
+      "source": "/melasma-treatment-online-consultation(/)?",
+      "destination": "/consult",
+      "permanent": true
+    },
+    {
+      "source": "/dark-spots-treatment-online(/)?",
+      "destination": "/consult",
+      "permanent": true
+    },
+    {
+      "source": "/tanning-treatment-online-consultation(/)?",
+      "destination": "/consult",
+      "permanent": true
+    },
+    {
+      "source": "/dermatologist-for-acne-online(/)?",
+      "destination": "/consult",
+      "permanent": true
+    },
+    {
+      "source": "/skin-doctor-online-consultation(/)?",
+      "destination": "/consult",
+      "permanent": true
+    },
+    {
+      "source": "/best-dermatologist-for-acne-online-doctor-guided-acne-consultation-from-home(/)?",
+      "destination": "/consult",
+      "permanent": true
+    },
+    {
+      "source": "/acne(/)?",
+      "destination": "/consult",
+      "permanent": true
+    },
+    {
+      "source": "/pigmentation(/)?",
+      "destination": "/consult",
+      "permanent": true
+    },
+    {
+      "source": "/consultation(/)?",
+      "destination": "/consult",
+      "permanent": true
+    },
+    {
+      "source": "/pages/consult(/)?",
+      "destination": "/consult",
+      "permanent": true
+    },
+    {
+      "source": "/why-does-acne-keep-coming-back(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/what-is-skin-pigmentation-causes-and-care-guide(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/home-remedies-for-tan-removal-and-glowing-skin(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/doctor-bite(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/devriz(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/whatsapp-review(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/about(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/concern(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/contact(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/terms-conditions(/)?",
+      "destination": "/privacy-policy",
+      "permanent": true
+    },
+    {
+      "source": "/why-acne-keeps-coming-back(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/how-to-get-rid-of-pimples(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/pimples-on-face-reasons(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/oily-skin-pimples-treatment(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/what-is-hormonal-acne(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/teenage-acne-problem(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/adult-acne-causes(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/how-to-remove-acne-marks(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/acne-scars-vs-acne-marks(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/post-acne-marks(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/what-is-pigmentation(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/pigmentation-on-face(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/how-to-reduce-pigmentation(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/dark-spots-on-face(/)?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/tag/(.*)",
+      "destination": "/blogs",
+      "permanent": true
+    },
+    {
+      "source": "/category/(.*)",
+      "destination": "/consult",
+      "permanent": true
+    },
+    {
+      "source": "/author/(.*)",
+      "destination": "/blogs",
+      "permanent": true
+    },
+    {
+      "source": "/blog/(.*)",
+      "destination": "/blogs",
+      "permanent": true
+    },
+    {
+      "source": "/blogs/",
+      "destination": "/blogs",
+      "permanent": true
+    },
+    {
+      "source": "/blogs/:slug/",
+      "destination": "/blogs/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/consult/",
+      "destination": "/consult",
+      "permanent": true
+    },
+    {
+      "source": "/privacy-policy/",
+      "destination": "/privacy-policy",
+      "permanent": true
+    },
+    {
+      "source": "/ai-scan/",
+      "destination": "/ai-scan",
+      "permanent": true
+    }
   ],
   "rewrites": [
-    { "source": "/consult", "destination": "/index.html" },
-    { "source": "/ai-scan", "destination": "/index.html" },
-    { "source": "/privacy-policy", "destination": "/index.html" },
-    { "source": "/admin", "destination": "/admin/index.html" },
-    { "source": "/blogs", "destination": "/index.html" },
-    { "source": "/blogs/(.*)", "destination": "/index.html" }
+    {
+      "source": "/consult",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/ai-scan",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/privacy-policy",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/blogs",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/blogs/(.*)",
+      "destination": "/index.html"
+    }
   ],
   "headers": [
     {
       "source": "/models/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
     },
     {
       "source": "/images/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/images/(blog-consult-desktop.webp|blog-consult-mobile.webp)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, must-revalidate"
+        }
       ]
     },
     {
       "source": "/blog-images/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
     },
     {
       "source": "/assets/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
     },
     {
       "source": "/transformations/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
     },
     {
       "source": "/(favicon-dh-32.png|favicon-dh-48.png|favicon-dh-180.png|favicon-dh-192.png|favicon-dh-512.png|favicon-dh.svg|site.webmanifest)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, stale-while-revalidate=86400"
+        }
       ]
     },
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
       ]
     }
   ]

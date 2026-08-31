@@ -5,19 +5,23 @@ import { usePost, usePosts, formatDate, setSeo } from "../lib/blog";
 import { HERO_SIZES } from "../lib/blog-images";
 
 /**
- * The consultation banner: one supplied artwork, used in the sidebar on desktop
- * and full width under the article on a phone.
+ * The consultation banner — supplied artwork, two shapes for two placements:
  *
- *   /images/blog-consult-banner.webp
+ *   /images/blog-consult-desktop.webp   640x800  (4:5)  the sidebar
+ *   /images/blog-consult-mobile.webp   1080x608 (16:9)  under the article
  *
- * No aspect ratio is imposed — the CSS is width:100%, height:auto — so whatever
- * shape the artwork is drawn at is the shape it renders at, in both places.
- * One file, one design, nothing to keep in step.
+ * Both are 2x the size they display at, so they stay sharp on retina screens.
+ * <picture> chooses by viewport, so a phone never downloads the tall one and a
+ * desktop never downloads the wide one.
  *
- * Until that file exists the banner renders nothing at all, rather than a
- * placeholder: an empty box on a live article looks broken to a reader.
+ * No aspect-ratio is imposed in CSS: each file's own proportions are what
+ * render, so redrawing either at a different shape needs no code change.
+ *
+ * If the artwork is missing the banner renders nothing rather than an empty
+ * box, which on a live article would read as a broken page.
  */
-const BANNER_SRC = "/images/blog-consult-banner.webp";
+const BANNER_DESKTOP = "/images/blog-consult-desktop.webp";
+const BANNER_MOBILE = "/images/blog-consult-mobile.webp";
 
 const ConsultBanner = ({ onClick, className = "", eager = false }) => {
   const [missing, setMissing] = useState(false);
@@ -28,17 +32,20 @@ const ConsultBanner = ({ onClick, className = "", eager = false }) => {
       type="button"
       className={`blog-consult-banner ${className}`.trim()}
       onClick={onClick}
-      aria-label="Book your live video call consultation"
+      aria-label="Book your live dermatologist consultation for ₹49"
     >
-      <img
-        src={BANNER_SRC}
-        alt="Book your live video call consultation with a Devriz expert"
-        // The rail copy is on screen the moment the article opens; the
-        // in-article copy is far below the fold.
-        loading={eager ? "eager" : "lazy"}
-        decoding="async"
-        onError={() => setMissing(true)}
-      />
+      <picture>
+        <source media="(min-width: 1024px)" srcSet={BANNER_DESKTOP} />
+        <img
+          src={BANNER_MOBILE}
+          alt="Live dermatologist consult — ₹499 reduced to ₹49. Book your consultation."
+          // The rail copy is on screen the moment the article opens; the
+          // in-article copy is far below the fold.
+          loading={eager ? "eager" : "lazy"}
+          decoding="async"
+          onError={() => setMissing(true)}
+        />
+      </picture>
     </button>
   );
 };
