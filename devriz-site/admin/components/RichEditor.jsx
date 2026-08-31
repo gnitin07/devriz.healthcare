@@ -161,8 +161,13 @@ export default function RichEditor({ value, onChange, onDirty, onSelectImage, on
    * post already lives, so that is where a picture's properties belong too.
    */
   const report = (e) => {
-    const node = e.state.selection.node;
-    onSelectImage?.(node?.type?.name === "image" ? node.attrs : null);
+    const sel = e.state.selection;
+    const node = sel.node;
+    // `pos` travels with the attributes so the panel can edit the node in
+    // place, by position, without needing the selection to still be on it.
+    onSelectImage?.(
+      node?.type?.name === "image" ? { ...node.attrs, pos: sel.from } : null
+    );
   };
 
   const editor = useEditor({

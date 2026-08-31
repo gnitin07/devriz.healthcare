@@ -871,36 +871,42 @@ body::-webkit-scrollbar {
        left edge, with the reclaimed space on the right carrying a consultation
        card and links to other articles that stay in view while reading. */
     .blog-layout {
-      @apply w-full mx-auto max-w-[1500px];
-      @apply lg:grid lg:grid-cols-[minmax(0,1fr)_19rem] lg:gap-10 lg:items-start lg:px-5;
+      /* Centred, not flush left. The first attempt pinned the article 20px from
+         the left edge, which on a 1920 monitor left it stranded in the corner
+         with an ocean of empty space in the middle. A capped, centred block
+         keeps the reading column a comfortable width and puts even margins on
+         both sides at every screen size. */
+      /* Padding only from lg up. Below that .blog-article still supplies its
+         own gutter, and applying both narrowed the phone reading column from
+         335px to 295px. */
+      @apply w-full mx-auto max-w-[1240px];
+      @apply lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-10 lg:items-start lg:px-5;
+    }
+
+    /* The consultation banner: one supplied artwork, no text drawn over it.
+         desktop  /images/blog-consult-desktop.webp    640x800  (4:5)
+         mobile   /images/blog-consult-mobile.webp    1080x608  (16:9)
+       Both are @2x for the size they display at, so they stay sharp on retina
+       screens. Replacing those two files is the whole job — nothing here
+       needs to change. */
+    .blog-consult-banner {
+      @apply block w-full cursor-pointer rounded-[1.25rem] overflow-hidden card-shadow p-0 border-0 bg-transparent;
+      @apply transition-transform duration-300 hover:-translate-y-1;
+
+      img {
+        @apply block w-full h-auto;
+      }
+    }
+    /* In the article on a phone, it needs the vertical breathing room the rail
+       gets from its flex gap. */
+    .blog-article > .blog-consult-banner {
+      @apply mt-8;
     }
 
     .blog-rail {
       /* Hidden below lg: on a phone a sidebar is just more scrolling, and the
          article already ends with "Keep reading". */
       @apply hidden lg:flex lg:flex-col gap-5 lg:sticky lg:top-24;
-
-      .rail-consult {
-        @apply rounded-[1.25rem] overflow-hidden bg-teal-dark card-shadow;
-
-        img {
-          @apply w-full aspect-[4/3] object-cover object-top;
-        }
-
-        .rail-consult-body {
-          @apply p-5;
-
-          h3 {
-            @apply font-paragraph font-bold text-cream text-[15px] leading-snug;
-          }
-          p {
-            @apply font-paragraph text-cream/75 text-[13px] leading-relaxed mt-2;
-          }
-          button {
-            @apply w-full mt-4 bg-amber text-teal-dark font-paragraph font-bold rounded-full py-2.5 text-[13px] hover:bg-amber-light transition-colors cursor-pointer;
-          }
-        }
-      }
 
       .rail-recent {
         @apply rounded-[1.25rem] bg-white card-shadow p-5;

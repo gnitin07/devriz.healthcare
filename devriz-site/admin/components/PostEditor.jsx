@@ -161,14 +161,44 @@ export default function PostEditor({ slug, onDone, onToast }) {
   /** The TipTap instance, so the side panel can act on the selected picture. */
   const editorRef = useRef(null);
 
+  /**
+   * Edit the selected picture in place, by document position.
+   *
+   * This must NOT call .focus(). A picture in the article is held as a
+   * ProseMirror node selection, so pulling focus back into the editor — which
+   * .focus() does — means the next character typed REPLACES the selected node.
+   * With the description field focused and updating on every keystroke, that
+   * destroyed the picture and left the half-typed description standing where it
+   * had been.
+   *
+   * Dispatching setNodeMarkup at a known position changes the attributes and
+   * nothing else: focus stays in the field being typed into, and the selection
+   * is left alone.
+   */
   const updateImage = (attrs) => {
-    editorRef.current?.chain().focus().updateAttributes("image", attrs).run();
+    const editor = editorRef.current;
+    const pos = selectedImage?.pos;
+    if (!editor || pos == null) return;
+
+    const node = editor.state.doc.nodeAt(pos);
+    if (!node || node.type.name !== "image") return;
+
+    editor.view.dispatch(
+      editor.state.tr.setNodeMarkup(pos, undefined, { ...node.attrs, ...attrs })
+    );
     setSelectedImage((prev) => (prev ? { ...prev, ...attrs } : prev));
     setDirty(true);
   };
 
   const removeImage = () => {
-    editorRef.current?.chain().focus().deleteSelection().run();
+    const editor = editorRef.current;
+    const pos = selectedImage?.pos;
+    if (!editor || pos == null) return;
+    const node = editor.state.doc.nodeAt(pos);
+    if (!node) return;
+    // Deleting is the one case where returning focus to the article is right.
+    editor.view.dispatch(editor.state.tr.delete(pos, pos + node.nodeSize));
+    editor.commands.focus();
     setSelectedImage(null);
     setDirty(true);
   };

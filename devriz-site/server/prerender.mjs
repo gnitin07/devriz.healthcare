@@ -122,13 +122,14 @@ function railMarkup(post, posts) {
     .join('')
 
   return `<aside class="blog-rail">
-<div class="rail-consult"><img src="/images/doctor-rachita.webp" alt="Devriz doctor ready for a video consultation" loading="lazy" decoding="async" />
-<div class="rail-consult-body"><h3>Book your live video call consultation now</h3>
-<p>Talk face to face with a Devriz expert about your skin, hair or body concern — ₹49.</p>
-<button type="button">Book my video call</button></div></div>
+${consultBanner('', true)}
 ${cards ? `<nav class="rail-recent"><h3>Recent blogs from Devriz</h3>${cards}</nav>` : ''}
 </aside>`
 }
+
+/** Mirrors <ConsultBanner> in BlogPostSection.jsx. Keep the two in step. */
+const consultBanner = (cls = '', eager = false) =>
+  `<button type="button" class="blog-consult-banner${cls ? ` ${cls}` : ''}" aria-label="Book your live video call consultation"><picture><source media="(min-width: 1024px)" srcset="/images/blog-consult-desktop.webp" /><img src="/images/blog-consult-mobile.webp" alt="Book your live video call consultation with a Devriz expert" loading="${eager ? 'eager' : 'lazy'}" decoding="async" width="${eager ? 640 : 1080}" height="${eager ? 800 : 608}" /></picture></button>`
 
 function postMarkup(post, posts = []) {
   return `<section class="blog-section"><div class="blog-layout"><article class="blog-article">
@@ -138,6 +139,7 @@ function postMarkup(post, posts = []) {
 </header>
 ${imgTag(post.img, post.imageAlt, { cls: 'blog-hero-img', sizes: HERO_SIZES, eager: true })}
 <div class="blog-body">${post.html}</div>
+${consultBanner('lg:hidden')}
 </article>
 ${railMarkup(post, posts)}
 </div></section>`

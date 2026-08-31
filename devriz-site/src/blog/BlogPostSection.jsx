@@ -4,6 +4,39 @@ import { useContent } from "../lib/ContentContext";
 import { usePost, usePosts, formatDate, setSeo } from "../lib/blog";
 import { HERO_SIZES } from "../lib/blog-images";
 
+/**
+ * The consultation banner: a single supplied artwork, not a layout drawn in
+ * code, so it can be designed properly and swapped by replacing two files.
+ *
+ *   /images/blog-consult-desktop.webp   640x800  (4:5)  — the sidebar
+ *   /images/blog-consult-mobile.webp   1080x608 (16:9)  — under the article
+ *
+ * <picture> picks by viewport rather than shipping both: a phone never
+ * downloads the tall one, a desktop never downloads the wide one.
+ */
+const ConsultBanner = ({ onClick, className = "", eager = false }) => (
+  <button
+    type="button"
+    className={`blog-consult-banner ${className}`.trim()}
+    onClick={onClick}
+    aria-label="Book your live video call consultation"
+  >
+    <picture>
+      <source media="(min-width: 1024px)" srcSet="/images/blog-consult-desktop.webp" />
+      <img
+        src="/images/blog-consult-mobile.webp"
+        alt="Book your live video call consultation with a Devriz expert"
+        // The rail copy is on screen the moment the article opens, so it is
+        // fetched straight away; the in-article copy is far below the fold.
+        loading={eager ? "eager" : "lazy"}
+        decoding="async"
+        width={eager ? 640 : 1080}
+        height={eager ? 800 : 608}
+      />
+    </picture>
+  </button>
+);
+
 const BlogPostSection = ({ slug }) => {
   // On a direct load the article is embedded in the page, so `post` is there
   // from the first render and this never flashes. `loading` is for arriving
@@ -47,11 +80,10 @@ const BlogPostSection = ({ slug }) => {
 
   return (
     <section className="blog-section">
-      {/* Two columns on a large screen. The article used to be centred in a
-          max-w-3xl column, which on a wide monitor left two broad empty margins;
-          it now sits to the left and the reclaimed space on the right carries a
-          sticky consultation card and links to other articles. Below 1024px the
-          rail is hidden and the layout is exactly as it was. */}
+      {/* Two columns on a large screen: the article, and a sticky rail holding
+          the consultation banner and links to recent posts. The pair is centred
+          as a block, so the margins stay even on a wide monitor. Below 1024px
+          the rail is hidden and the banner moves into the article instead. */}
       <div className="blog-layout">
       <article className="blog-article">
         <a href="/blogs" className="blog-back">← All articles</a>
@@ -106,6 +138,11 @@ const BlogPostSection = ({ slug }) => {
           </button>
         </aside>
 
+        {/* On a phone there is no rail, so the banner runs in the article
+            itself, straight after the CTA block. Hidden from lg up, where the
+            rail carries it. */}
+        <ConsultBanner onClick={openBooking} className="lg:hidden" />
+
         {/* Hidden on large screens, where the rail already lists other
             articles — the same links twice on one page helps nobody. */}
         {more.length > 0 && (
@@ -124,24 +161,9 @@ const BlogPostSection = ({ slug }) => {
       </article>
 
       <aside className="blog-rail">
-        <div className="rail-consult">
-          <img
-            src="/images/doctor-rachita.webp"
-            alt="Devriz doctor ready for a video consultation"
-            loading="lazy"
-            decoding="async"
-          />
-          <div className="rail-consult-body">
-            <h3>Book your live video call consultation now</h3>
-            <p>
-              Talk face to face with a Devriz expert about your skin, hair or
-              body concern — ₹{settings.consultPrice}.
-            </p>
-            <button type="button" onClick={openBooking}>
-              Book my video call
-            </button>
-          </div>
-        </div>
+        {/* The banner is one supplied artwork, nothing drawn in code — see
+            .blog-consult-banner in index.css for the two sizes it expects. */}
+        <ConsultBanner onClick={openBooking} eager />
 
         {recent.length > 0 && (
           <nav className="rail-recent">
