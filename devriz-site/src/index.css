@@ -883,12 +883,13 @@ body::-webkit-scrollbar {
       @apply lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-10 lg:items-start lg:px-5;
     }
 
-    /* The consultation banner: one supplied artwork, no text drawn over it.
-         desktop  /images/blog-consult-desktop.webp    640x800  (4:5)
-         mobile   /images/blog-consult-mobile.webp    1080x608  (16:9)
-       Both are @2x for the size they display at, so they stay sharp on retina
-       screens. Replacing those two files is the whole job — nothing here
-       needs to change. */
+    /* The consultation banner: one supplied artwork at /images/
+       blog-consult-banner.webp, nothing drawn over it in code.
+
+       No aspect-ratio is set, so the artwork's own shape is what renders — in
+       the sidebar on desktop and full width on a phone. Draw it at whatever
+       proportions suit; 1200x675 (16:9) is the recommendation. Dropping the
+       file in is the whole job. */
     .blog-consult-banner {
       @apply block w-full cursor-pointer rounded-[1.25rem] overflow-hidden card-shadow p-0 border-0 bg-transparent;
       @apply transition-transform duration-300 hover:-translate-y-1;
@@ -939,6 +940,11 @@ body::-webkit-scrollbar {
           &:hover .rail-recent-text span {
             @apply text-teal;
           }
+        }
+
+        /* The way out of the rail and into the full list. */
+        .rail-recent-all {
+          @apply block mt-3 pt-3 border-t border-teal-dark/10 font-paragraph font-bold text-[12.5px] text-teal hover:text-teal-dark transition-colors;
         }
       }
     }

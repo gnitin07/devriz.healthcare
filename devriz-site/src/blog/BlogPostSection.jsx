@@ -1,41 +1,47 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useBooking } from "../lib/BookingContext";
 import { useContent } from "../lib/ContentContext";
 import { usePost, usePosts, formatDate, setSeo } from "../lib/blog";
 import { HERO_SIZES } from "../lib/blog-images";
 
 /**
- * The consultation banner: a single supplied artwork, not a layout drawn in
- * code, so it can be designed properly and swapped by replacing two files.
+ * The consultation banner: one supplied artwork, used in the sidebar on desktop
+ * and full width under the article on a phone.
  *
- *   /images/blog-consult-desktop.webp   640x800  (4:5)  — the sidebar
- *   /images/blog-consult-mobile.webp   1080x608 (16:9)  — under the article
+ *   /images/blog-consult-banner.webp
  *
- * <picture> picks by viewport rather than shipping both: a phone never
- * downloads the tall one, a desktop never downloads the wide one.
+ * No aspect ratio is imposed — the CSS is width:100%, height:auto — so whatever
+ * shape the artwork is drawn at is the shape it renders at, in both places.
+ * One file, one design, nothing to keep in step.
+ *
+ * Until that file exists the banner renders nothing at all, rather than a
+ * placeholder: an empty box on a live article looks broken to a reader.
  */
-const ConsultBanner = ({ onClick, className = "", eager = false }) => (
-  <button
-    type="button"
-    className={`blog-consult-banner ${className}`.trim()}
-    onClick={onClick}
-    aria-label="Book your live video call consultation"
-  >
-    <picture>
-      <source media="(min-width: 1024px)" srcSet="/images/blog-consult-desktop.webp" />
+const BANNER_SRC = "/images/blog-consult-banner.webp";
+
+const ConsultBanner = ({ onClick, className = "", eager = false }) => {
+  const [missing, setMissing] = useState(false);
+  if (missing) return null;
+
+  return (
+    <button
+      type="button"
+      className={`blog-consult-banner ${className}`.trim()}
+      onClick={onClick}
+      aria-label="Book your live video call consultation"
+    >
       <img
-        src="/images/blog-consult-mobile.webp"
+        src={BANNER_SRC}
         alt="Book your live video call consultation with a Devriz expert"
-        // The rail copy is on screen the moment the article opens, so it is
-        // fetched straight away; the in-article copy is far below the fold.
+        // The rail copy is on screen the moment the article opens; the
+        // in-article copy is far below the fold.
         loading={eager ? "eager" : "lazy"}
         decoding="async"
-        width={eager ? 640 : 1080}
-        height={eager ? 800 : 608}
+        onError={() => setMissing(true)}
       />
-    </picture>
-  </button>
-);
+    </button>
+  );
+};
 
 const BlogPostSection = ({ slug }) => {
   // On a direct load the article is embedded in the page, so `post` is there
@@ -161,10 +167,11 @@ const BlogPostSection = ({ slug }) => {
       </article>
 
       <aside className="blog-rail">
-        {/* The banner is one supplied artwork, nothing drawn in code — see
-            .blog-consult-banner in index.css for the two sizes it expects. */}
+        {/* Block one: the supplied banner. Nothing is drawn in code, and
+            nothing renders until the artwork exists. */}
         <ConsultBanner onClick={openBooking} eager />
 
+        {/* Block two: what else there is to read, and a way to all of it. */}
         {recent.length > 0 && (
           <nav className="rail-recent">
             <h3>Recent blogs from Devriz</h3>
@@ -181,6 +188,9 @@ const BlogPostSection = ({ slug }) => {
                 </span>
               </a>
             ))}
+            <a className="rail-recent-all" href="/blogs">
+              See all articles →
+            </a>
           </nav>
         )}
       </aside>

@@ -109,7 +109,7 @@ const imgTag = (img, alt, { cls, sizes, eager }) => {
  * JavaScript. The consultation button only works once React mounts, which is
  * the same deal as the CTA block at the foot of the article.
  */
-function railMarkup(post, posts) {
+function railMarkup(post, posts, distDir) {
   const recent = posts.filter((p) => p.slug !== post.slug).slice(0, 4)
   const cards = recent
     .map(
@@ -122,16 +122,31 @@ function railMarkup(post, posts) {
     .join('')
 
   return `<aside class="blog-rail">
-${consultBanner('', true)}
-${cards ? `<nav class="rail-recent"><h3>Recent blogs from Devriz</h3>${cards}</nav>` : ''}
+${consultBanner(distDir, '', true)}
+${cards ? `<nav class="rail-recent"><h3>Recent blogs from Devriz</h3>${cards}<a class="rail-recent-all" href="/blogs">See all articles →</a></nav>` : ''}
 </aside>`
 }
 
-/** Mirrors <ConsultBanner> in BlogPostSection.jsx. Keep the two in step. */
-const consultBanner = (cls = '', eager = false) =>
-  `<button type="button" class="blog-consult-banner${cls ? ` ${cls}` : ''}" aria-label="Book your live video call consultation"><picture><source media="(min-width: 1024px)" srcset="/images/blog-consult-desktop.webp" /><img src="/images/blog-consult-mobile.webp" alt="Book your live video call consultation with a Devriz expert" loading="${eager ? 'eager' : 'lazy'}" decoding="async" width="${eager ? 640 : 1080}" height="${eager ? 800 : 608}" /></picture></button>`
+/** The one supplied artwork. Mirrors BANNER_SRC in BlogPostSection.jsx. */
+const BANNER_SRC = '/images/blog-consult-banner.webp'
 
-function postMarkup(post, posts = []) {
+/**
+ * Mirrors <ConsultBanner> in BlogPostSection.jsx. Keep the two in step.
+ *
+ * Emits nothing while the artwork is missing, matching the component's own
+ * behaviour — an empty box on a live article reads as a broken page, and a
+ * crawler should not be told about a button that is not there.
+ */
+const consultBanner = (distDir, cls = '', eager = false) => {
+  if (!existsSync(path.join(distDir, BANNER_SRC.replace(/^\//, '')))) return ''
+  return `<button type="button" class="blog-consult-banner${
+    cls ? ` ${cls}` : ''
+  }" aria-label="Book your live video call consultation"><img src="${BANNER_SRC}" alt="Book your live video call consultation with a Devriz expert" loading="${
+    eager ? 'eager' : 'lazy'
+  }" decoding="async" /></button>`
+}
+
+function postMarkup(post, posts = [], distDir) {
   return `<section class="blog-section"><div class="blog-layout"><article class="blog-article">
 <a href="/blogs" class="blog-back">← All articles</a>
 <header class="blog-article-head">${tagChips(post.tags)}<h1>${esc(post.title)}</h1>
@@ -139,9 +154,9 @@ function postMarkup(post, posts = []) {
 </header>
 ${imgTag(post.img, post.imageAlt, { cls: 'blog-hero-img', sizes: HERO_SIZES, eager: true })}
 <div class="blog-body">${post.html}</div>
-${consultBanner('lg:hidden')}
+${consultBanner(distDir, 'lg:hidden')}
 </article>
-${railMarkup(post, posts)}
+${railMarkup(post, posts, distDir)}
 </div></section>`
 }
 
@@ -282,7 +297,7 @@ export function renderPost({ template, distDir, post, posts, site = SITE }) {
   // `posts` as well: the "Keep reading" cards at the foot of every article need
   // the others, and the list is small enough that shipping it costs nothing.
   html = embedData(html, { post, posts })
-  write(path.join(distDir, 'blogs', post.slug), injectBody(html, postMarkup(post, posts)))
+  write(path.join(distDir, 'blogs', post.slug), injectBody(html, postMarkup(post, posts, distDir)))
 }
 
 /** Remove an unpublished or deleted article's page so the URL 404s again. */
