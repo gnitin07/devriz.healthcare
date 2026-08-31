@@ -164,17 +164,37 @@ export default function PostEditor({ slug, onDone, onToast }) {
   /**
    * Edit the selected picture in place, by document position.
    *
-   * This must NOT call .focus(). A picture in the article is held as a
-   * ProseMirror node selection, so pulling focus back into the editor — which
-   * .focus() does — means the next character typed REPLACES the selected node.
-   * With the description field focused and updating on every keystroke, that
-   * destroyed the picture and left the half-typed description standing where it
-   * had been.
+   * Two separate things conspired to destroy the picture while its description
+   * was being typed, and both are guarded here.
    *
-   * Dispatching setNodeMarkup at a known position changes the attributes and
-   * nothing else: focus stays in the field being typed into, and the selection
-   * is left alone.
+   * 1. NEVER .focus(). A picture is held as a ProseMirror node selection, so
+   *    pulling focus back into the editor means the next character typed
+   *    REPLACES the selected node.
+   *
+   * 2. IGNORE OUR OWN TRANSACTIONS. Dispatching the change fires
+   *    onTransaction, which re-reads the selection — and after setNodeMarkup
+   *    that selection is no longer a node selection on the image. The panel
+   *    would be told "nothing is selected", unmount mid-keystroke (the visible
+   *    jiggle), drop focus back into the editor, and the next letter would land
+   *    on the still-selected image node and replace it.
+   *
+   *    `applying` makes the panel deaf to the selection change it caused
+   *    itself. It is set for the duration of a synchronous dispatch, so it
+   *    covers exactly the transaction we are responsible for and nothing else.
    */
+  const applying = useRef(false);
+
+  // Stable identity: an inline arrow here would re-run RichEditor's onEditor
+  // effect on every keystroke.
+  const keepEditor = useCallback((e) => {
+    editorRef.current = e;
+  }, []);
+
+  const handleSelectImage = useCallback((info) => {
+    if (applying.current) return;
+    setSelectedImage(info);
+  }, []);
+
   const updateImage = (attrs) => {
     const editor = editorRef.current;
     const pos = selectedImage?.pos;
@@ -183,9 +203,17 @@ export default function PostEditor({ slug, onDone, onToast }) {
     const node = editor.state.doc.nodeAt(pos);
     if (!node || node.type.name !== "image") return;
 
-    editor.view.dispatch(
-      editor.state.tr.setNodeMarkup(pos, undefined, { ...node.attrs, ...attrs })
-    );
+    applying.current = true;
+    try {
+      editor.view.dispatch(
+        editor.state.tr.setNodeMarkup(pos, undefined, { ...node.attrs, ...attrs })
+      );
+    } finally {
+      applying.current = false;
+    }
+
+    // setNodeMarkup swaps the node for one with the same size, so the position
+    // we captured stays valid.
     setSelectedImage((prev) => (prev ? { ...prev, ...attrs } : prev));
     setDirty(true);
   };
@@ -410,8 +438,8 @@ export default function PostEditor({ slug, onDone, onToast }) {
             value={post.html}
             onChange={(html) => change({ html })}
             onDirty={() => setDirty(true)}
-            onEditor={(e) => (editorRef.current = e)}
-            onSelectImage={setSelectedImage}
+            onEditor={keepEditor}
+            onSelectImage={handleSelectImage}
           />
         </div>
 
