@@ -35,7 +35,7 @@ const ConsultBanner = ({ onClick, className = "", eager = false }) => {
       aria-label="Book your live dermatologist consultation for ₹49"
     >
       <picture>
-        <source media="(min-width: 1024px)" srcSet={BANNER_DESKTOP} />
+        <source media="(min-width: 1280px)" srcSet={BANNER_DESKTOP} />
         <img
           src={BANNER_MOBILE}
           alt="Live dermatologist consult — ₹499 reduced to ₹49. Book your consultation."
@@ -95,8 +95,9 @@ const BlogPostSection = ({ slug }) => {
     <section className="blog-section">
       {/* Two columns on a large screen: the article, and a sticky rail holding
           the consultation banner and links to recent posts. The pair is centred
-          as a block, so the margins stay even on a wide monitor. Below 1024px
-          the rail is hidden and the banner moves into the article instead. */}
+          as a block, so the margins stay even on a wide monitor. Below 1280px
+          there is not enough width for both without squeezing the article, so the
+          rail is hidden and the banner moves into the article instead. */}
       <div className="blog-layout">
       <article className="blog-article">
         <a href="/blogs" className="blog-back">← All articles</a>
@@ -151,13 +152,13 @@ const BlogPostSection = ({ slug }) => {
           </button>
         </aside>
 
-        {/* On a phone there is no rail, so the banner runs in the article
-            itself, straight after the CTA block. Hidden from lg up, where the
+        {/* Below 1280px there is no rail, so the banner runs in the article
+            itself, straight after the CTA block. Hidden above that, where the
             rail carries it. */}
-        <ConsultBanner onClick={openBooking} className="lg:hidden" />
+        <ConsultBanner onClick={openBooking} className="xl:hidden" />
 
-        {/* Hidden on large screens, where the rail already lists other
-            articles — the same links twice on one page helps nobody. */}
+        {/* Hidden once the rail appears, which already lists other articles —
+            the same links twice on one page helps nobody. */}
         {more.length > 0 && (
           <nav className="blog-more">
             <h3>Keep reading</h3>

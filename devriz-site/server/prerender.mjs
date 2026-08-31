@@ -145,7 +145,7 @@ const consultBanner = (distDir, cls = '', eager = false) => {
   if (!has(BANNER_DESKTOP) || !has(BANNER_MOBILE)) return ''
   return `<button type="button" class="blog-consult-banner${
     cls ? ` ${cls}` : ''
-  }" aria-label="Book your live dermatologist consultation for ₹49"><picture><source media="(min-width: 1024px)" srcset="${BANNER_DESKTOP}" /><img src="${BANNER_MOBILE}" alt="${esc(
+  }" aria-label="Book your live dermatologist consultation for ₹49"><picture><source media="(min-width: 1280px)" srcset="${BANNER_DESKTOP}" /><img src="${BANNER_MOBILE}" alt="${esc(
     BANNER_ALT
   )}" loading="${eager ? 'eager' : 'lazy'}" decoding="async" /></picture></button>`
 }
@@ -158,7 +158,7 @@ function postMarkup(post, posts = [], distDir) {
 </header>
 ${imgTag(post.img, post.imageAlt, { cls: 'blog-hero-img', sizes: HERO_SIZES, eager: true })}
 <div class="blog-body">${post.html}</div>
-${consultBanner(distDir, 'lg:hidden')}
+${consultBanner(distDir, 'xl:hidden')}
 </article>
 ${railMarkup(post, posts, distDir)}
 </div></section>`

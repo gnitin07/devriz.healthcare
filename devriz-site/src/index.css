@@ -880,7 +880,7 @@ body::-webkit-scrollbar {
          own gutter, and applying both narrowed the phone reading column from
          335px to 295px. */
       @apply w-full mx-auto max-w-[1240px];
-      @apply lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-10 lg:items-start lg:px-5;
+      @apply xl:grid xl:grid-cols-[minmax(0,1fr)_20rem] xl:gap-10 xl:items-start xl:px-8;
     }
 
     /* The consultation banner: one supplied artwork at /images/
@@ -908,7 +908,7 @@ body::-webkit-scrollbar {
     .blog-rail {
       /* Hidden below lg: on a phone a sidebar is just more scrolling, and the
          article already ends with "Keep reading". */
-      @apply hidden lg:flex lg:flex-col gap-5 lg:sticky lg:top-24;
+      @apply hidden xl:flex xl:flex-col gap-5 xl:sticky xl:top-24;
 
       .rail-recent {
         @apply rounded-[1.25rem] bg-white card-shadow p-5;
@@ -954,8 +954,8 @@ body::-webkit-scrollbar {
     .blog-article {
       @apply mx-auto max-w-3xl md:px-8 px-5;
       /* Inside the grid the column already positions it, and the 20px gutter
-         comes from .blog-layout's lg:px-5. */
-      @apply lg:mx-0 lg:px-0 lg:max-w-3xl;
+         comes from .blog-layout's xl:px-8. */
+      @apply xl:mx-0 xl:px-0 xl:max-w-3xl;
 
       .blog-article-head {
         @apply md:mb-8 mb-6;
@@ -1082,7 +1082,7 @@ body::-webkit-scrollbar {
          link equity across the blog. Hidden from lg up, where the rail already
          carries the same links and duplicating them helps nobody. */
       .blog-more {
-        @apply mt-12 pt-8 border-t border-teal-dark/12 lg:hidden;
+        @apply mt-12 pt-8 border-t border-teal-dark/12 xl:hidden;
 
         h3 {
           @apply font-paragraph font-bold text-teal-dark text-lg mb-4;
