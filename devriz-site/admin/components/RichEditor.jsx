@@ -257,10 +257,20 @@ export default function RichEditor({ value, onChange, onDirty, onSelectImage, on
         const saved = await api.upload(payload);
         const attrs = { src: saved.url, alt: "", size: "full", align: "center" };
         editor.chain().focus().setImage(attrs).createParagraphNear().run();
-        // Opens the side panel on the picture just inserted, so the writer is
-        // already looking at the description box while they still remember what
-        // the photo shows.
-        onSelectImage?.(attrs);
+
+        // Select the picture we just inserted, so the panel opens through the
+        // normal reporting path and gets a real document position with it.
+        //
+        // It used to call onSelectImage(attrs) directly. Those attrs carried no
+        // position, so every edit from the panel bailed out silently and the
+        // description could not be typed at all — while the editor still held
+        // the image selected, which is what let the next keystroke replace it.
+        let pos = null;
+        editor.state.doc.descendants((node, at) => {
+          if (pos !== null) return false;
+          if (node.type.name === "image" && node.attrs.src === saved.url) pos = at;
+        });
+        if (pos !== null) editor.commands.setNodeSelection(pos);
       } catch (err) {
         alert(err.message);
       } finally {

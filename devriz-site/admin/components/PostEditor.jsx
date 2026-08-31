@@ -74,6 +74,34 @@ const parseTags = (text) =>
     .filter(Boolean);
 
 /**
+ * Where the selected picture currently sits in the document.
+ *
+ * The cached position is right almost always, and is checked first. But it can
+ * be absent — the panel used to be opened directly after an upload with no
+ * position at all — or stale, if text above the picture was edited while the
+ * panel was open. Falling back to a search by src recovers both cases; an
+ * upload's filename is made unique by the server, so it identifies one node.
+ *
+ * Returning null here means "do nothing", which is the correct outcome when
+ * the picture has genuinely been deleted.
+ */
+function resolveImagePos(editor, image) {
+  if (!editor || !image?.src) return null;
+
+  if (image.pos != null) {
+    const at = editor.state.doc.nodeAt(image.pos);
+    if (at?.type.name === "image" && at.attrs.src === image.src) return image.pos;
+  }
+
+  let found = null;
+  editor.state.doc.descendants((node, pos) => {
+    if (found !== null) return false;
+    if (node.type.name === "image" && node.attrs.src === image.src) found = pos;
+  });
+  return found;
+}
+
+/**
  * Properties of the picture currently selected in the article.
  *
  * It sits at the TOP of the side column, above everything else, and only while
@@ -82,6 +110,21 @@ const parseTags = (text) =>
  * without ever noticing an image had a description field at all.
  */
 function ImagePanel({ image, onChange, onRemove }) {
+  const altField = useRef(null);
+
+  /**
+   * Put the cursor in the description box whenever a different picture is
+   * selected — not just on mount, and not left to `autoFocus`.
+   *
+   * This matters for more than convenience. The editor holds the picture as a
+   * node selection, and a node selection plus focus in the document means the
+   * next keystroke replaces the picture. Moving focus out to this field, every
+   * time and deterministically, is what makes typing here safe.
+   */
+  useEffect(() => {
+    altField.current?.focus();
+  }, [image.src]);
+
   return (
     <section className="panel panel-accent">
       <div className="panel-head static">Selected picture</div>
@@ -91,8 +134,8 @@ function ImagePanel({ image, onChange, onRemove }) {
         <label>
           Image description (alt text)
           <input
+            ref={altField}
             type="text"
-            autoFocus
             value={image.alt || ""}
             placeholder="e.g. close-up of dark patches on a woman’s cheek"
             onChange={(e) => onChange({ alt: e.target.value })}
@@ -197,8 +240,8 @@ export default function PostEditor({ slug, onDone, onToast }) {
 
   const updateImage = (attrs) => {
     const editor = editorRef.current;
-    const pos = selectedImage?.pos;
-    if (!editor || pos == null) return;
+    const pos = resolveImagePos(editor, selectedImage);
+    if (pos == null) return;
 
     const node = editor.state.doc.nodeAt(pos);
     if (!node || node.type.name !== "image") return;
