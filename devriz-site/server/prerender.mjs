@@ -110,7 +110,8 @@ const imgTag = (img, alt, { cls, sizes, eager }) => {
  * the same deal as the CTA block at the foot of the article.
  */
 function railMarkup(post, posts, distDir) {
-  const recent = posts.filter((p) => p.slug !== post.slug).slice(0, 4)
+  // Two, not four: the rail has to fit the screen height (see .blog-rail).
+  const recent = posts.filter((p) => p.slug !== post.slug).slice(0, 2)
   const cards = recent
     .map(
       (p) => `<a href="/blogs/${esc(p.slug)}">${

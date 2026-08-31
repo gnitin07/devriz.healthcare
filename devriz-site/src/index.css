@@ -906,12 +906,33 @@ body::-webkit-scrollbar {
     }
 
     .blog-rail {
-      /* Hidden below lg: on a phone a sidebar is just more scrolling, and the
-         article already ends with "Keep reading". */
+      /* Hidden below 1280px: on a narrower screen a sidebar only squeezes the
+         article, and it already ends with "Keep reading". */
       @apply hidden xl:flex xl:flex-col gap-5 xl:sticky xl:top-24;
 
+      /* The rail must never be taller than the screen. Stuck at top-24 (96px),
+         anything past the viewport is simply unreachable — the recent-posts
+         block was falling off the bottom edge with no way to scroll to it,
+         because the rail stops moving while the article carries on.
+         100dvh, not 100vh, so a phone-style collapsing browser bar counts.
+         7.5rem = the 96px it is stuck at, plus 24px of breathing room. */
+      @apply xl:max-h-[calc(100dvh-7.5rem)];
+
+      /* When the two blocks together do not fit, the banner is what gives: it
+         is a picture and survives losing some of its lower edge, whereas the
+         recent-posts list would lose whole entries. object-top keeps the
+         headline, the price and the button — everything that makes it work as
+         a call to action — and crops the photograph beneath them. */
+      .blog-consult-banner {
+        @apply min-h-0 overflow-hidden;
+
+        img {
+          @apply h-full w-full object-cover object-top;
+        }
+      }
+
       .rail-recent {
-        @apply rounded-[1.25rem] bg-white card-shadow p-5;
+        @apply shrink-0 rounded-[1.25rem] bg-white card-shadow p-5;
 
         h3 {
           @apply font-paragraph font-bold text-teal-dark text-[13px] uppercase tracking-[.12em] mb-3;

@@ -88,8 +88,10 @@ const BlogPostSection = ({ slug }) => {
   // Up to two further reads, newest first, excluding the current post.
   const others = posts.filter((p) => p.slug !== post.slug);
   const more = others.slice(0, 2);
-  /** The rail has room for more, and it is visible for the whole article. */
-  const recent = others.slice(0, 4);
+  /** Two, not four. The rail has to fit the screen height, and every entry is
+   *  height taken from the banner above it — at two, the banner renders at its
+   *  full 320x400 on any screen 800px or taller, which is most of them. */
+  const recent = others.slice(0, 2);
 
   return (
     <section className="blog-section">
