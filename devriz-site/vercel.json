@@ -302,7 +302,7 @@
       ]
     },
     {
-      "source": "/images/(blog-consult-desktop.webp|blog-consult-mobile.webp)",
+      "source": "/images/(blog-consult-banner.webp)",
       "headers": [
         {
           "key": "Cache-Control",

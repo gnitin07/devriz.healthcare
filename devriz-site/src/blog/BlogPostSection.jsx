@@ -5,23 +5,24 @@ import { usePost, usePosts, formatDate, setSeo } from "../lib/blog";
 import { HERO_SIZES } from "../lib/blog-images";
 
 /**
- * The consultation banner — supplied artwork, two shapes for two placements:
+ * The consultation banner — one supplied artwork, the same in both placements:
  *
- *   /images/blog-consult-desktop.webp   640x800  (4:5)  the sidebar
- *   /images/blog-consult-mobile.webp   1080x608 (16:9)  under the article
+ *   /images/blog-consult-banner.webp   1080x608 (16:9)
  *
- * Both are 2x the size they display at, so they stay sharp on retina screens.
- * <picture> chooses by viewport, so a phone never downloads the tall one and a
- * desktop never downloads the wide one.
+ * It was briefly two files, a tall 4:5 for the sidebar and this one for the
+ * article. The tall one did not fit: the sidebar is capped at the height of the
+ * screen, so on a laptop it had to be cropped to leave room for the posts
+ * beneath it. A 16:9 banner renders at 320x180 in the sidebar and fits on any
+ * screen with room to spare, so nothing is ever cut off.
  *
- * No aspect-ratio is imposed in CSS: each file's own proportions are what
- * render, so redrawing either at a different shape needs no code change.
+ * 1080 wide is roughly 2x the widest it displays at, so it stays sharp on
+ * retina screens. No aspect-ratio is imposed in CSS — the artwork's own shape
+ * is what renders, so redrawing it needs no code change.
  *
- * If the artwork is missing the banner renders nothing rather than an empty
- * box, which on a live article would read as a broken page.
+ * If the file is missing the banner renders nothing rather than an empty box,
+ * which on a live article would read as a broken page.
  */
-const BANNER_DESKTOP = "/images/blog-consult-desktop.webp";
-const BANNER_MOBILE = "/images/blog-consult-mobile.webp";
+const BANNER_SRC = "/images/blog-consult-banner.webp";
 
 const ConsultBanner = ({ onClick, className = "", eager = false }) => {
   const [missing, setMissing] = useState(false);
@@ -34,18 +35,15 @@ const ConsultBanner = ({ onClick, className = "", eager = false }) => {
       onClick={onClick}
       aria-label="Book your live dermatologist consultation for ₹49"
     >
-      <picture>
-        <source media="(min-width: 1280px)" srcSet={BANNER_DESKTOP} />
-        <img
-          src={BANNER_MOBILE}
-          alt="Live dermatologist consult — ₹499 reduced to ₹49. Book your consultation."
-          // The rail copy is on screen the moment the article opens; the
-          // in-article copy is far below the fold.
-          loading={eager ? "eager" : "lazy"}
-          decoding="async"
-          onError={() => setMissing(true)}
-        />
-      </picture>
+      <img
+        src={BANNER_SRC}
+        alt="Live dermatologist consult — ₹499 reduced to ₹49. Book your consultation."
+        // The rail copy is on screen the moment the article opens; the
+        // in-article copy is far below the fold.
+        loading={eager ? "eager" : "lazy"}
+        decoding="async"
+        onError={() => setMissing(true)}
+      />
     </button>
   );
 };
