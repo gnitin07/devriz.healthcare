@@ -156,28 +156,32 @@ export default function adminApi({ distDir }) {
       })
     }
 
+    // A title is the only hard requirement, because the file is named after it
+    // and a post without one has no address to live at. Everything else — the
+    // summary, the header image, alt text — is advice, reported back as
+    // warnings for the panel to show and never a reason to refuse.
+    //
+    // These used to block publishing. That is the wrong trade: the person
+    // pressing the button owns the site, knows what is missing, and sometimes
+    // needs an article up now and tidy later. A tool that refuses is a tool
+    // they route around.
+    const warnings = []
     if (body.draft !== true) {
-      const problems = []
       if (!String(body.excerpt || '').trim()) {
-        problems.push('a short summary (this is the grey text Google shows under the headline)')
+        warnings.push('no short summary — Google will pick its own sentence')
       }
-      if (!body.image) problems.push('a header image')
-      else if (!String(body.imageAlt || '').trim()) problems.push('a description of the header image')
+      if (!body.image) warnings.push('no header image — WhatsApp will share it as a grey box')
+      else if (!String(body.imageAlt || '').trim()) {
+        warnings.push('the header image has no description')
+      }
 
       const missingAlt = String(body.html || '').match(
         /<img\b(?![^>]*\balt\s*=\s*"[^"]*[^"\s][^"]*")[^>]*>/gi
       )
       if (missingAlt) {
-        problems.push(
-          `a description on ${missingAlt.length} image(s) inside the article — click each one and fill in "Image description"`
+        warnings.push(
+          `${missingAlt.length} picture(s) in the article have no description — invisible to Google Images and to screen readers`
         )
-      }
-
-      if (problems.length) {
-        return res.status(400).json({
-          error: `Before this can go live it needs ${problems.join('; ')}.`,
-          fields: problems,
-        })
       }
     }
 
@@ -189,7 +193,7 @@ export default function adminApi({ distDir }) {
     }
 
     publish()
-    res.json({ post, url: `/blogs/${post.slug}` })
+    res.json({ post, url: `/blogs/${post.slug}`, warnings })
   })
 
   router.delete('/posts/:slug', (req, res) => {

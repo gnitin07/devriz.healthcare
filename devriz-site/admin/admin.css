@@ -9,6 +9,12 @@
  */
 
 :root {
+  /* Height of the sticky action bar at the top of the editor page. The
+     formatting toolbar sticks directly beneath it, so both read this. It is a
+     fallback: PostEditor measures the real bar and overwrites it, because the
+     bar wraps to two rows on a narrow window and a hard-coded value would leave
+     a gap or an overlap. */
+  --editor-bar-h: 3.4rem;
   --bg: #f6f4ee;
   --surface: #ffffff;
   --line: #e3ded1;
@@ -26,7 +32,13 @@ html,
 body {
   background: var(--bg);
   color: var(--ink);
-  overflow-x: auto;
+  /* `visible`, not `auto`. index.css sets overflow-x: hidden site-wide, which
+     has to be undone here — but undoing it with `auto` turns html and body into
+     scroll containers, and a sticky element measures itself against its nearest
+     scrolling ancestor. That is what left the formatting toolbar anchored to the
+     page instead of to the viewport. `visible` restores the initial value, so
+     the document scrolls normally and sticky works against the viewport. */
+  overflow: visible;
   /* index.css hides the scrollbar site-wide. In a long editor that removes the
      only cue for how much article is left. */
   scrollbar-width: auto;
@@ -593,9 +605,20 @@ textarea {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  overflow: hidden;
+  /* NOT overflow:hidden. That makes this a scroll container, and a scroll
+     container clips `position: sticky` descendants to itself — which is why the
+     toolbar used to scroll out of sight partway down a long article. The
+     rounded corners are handled by the children instead. */
 }
 
+/**
+ * The toolbar follows you down the article. Anything else means scrolling back
+ * to the top to make a word bold, which is most of what writing an article
+ * consists of.
+ *
+ * `top` clears the page's own sticky action bar, whose height is declared once
+ * in --editor-bar-h so the two cannot drift apart.
+ */
 .editor-toolbar {
   display: flex;
   align-items: center;
@@ -603,8 +626,9 @@ textarea {
   padding: 0.4rem 0.5rem;
   border-bottom: 1px solid var(--line);
   background: #fbf9f3;
+  border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
   position: sticky;
-  top: 3.4rem;
+  top: var(--editor-bar-h);
   z-index: 10;
   flex-wrap: wrap;
 }
@@ -699,28 +723,9 @@ textarea {
   color: var(--muted);
 }
 
-/* the panel that appears when a picture in the article is selected */
-.image-panel {
-  display: flex;
-  gap: 1rem;
-  padding: 0.9rem;
-  border-top: 1px solid var(--line);
-  background: #fbf9f3;
-}
-.image-panel-preview img {
-  width: 7rem;
-  height: 5rem;
-  object-fit: cover;
-  border-radius: 8px;
-  display: block;
-}
-.image-panel-fields {
-  flex: 1;
-  min-width: 0;
-}
-.image-panel-fields label {
-  margin-top: 0;
-}
+/* A picture's properties are edited in the side column now — see .panel-accent
+   at the foot of this file. The strip that used to live under the article was
+   easy to scroll past without noticing images had settings at all. */
 
 /* ---------- sidebar panels ---------- */
 
@@ -954,4 +959,52 @@ textarea {
 .notice .btn-primary {
   margin-left: auto;
   flex-shrink: 0;
+}
+
+/* The selected-picture panel sits at the top of the side column and needs to
+   read as "this is about the thing you just clicked", not as another permanent
+   section like Header image or Details. */
+.panel-accent {
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px #e8a33d22, var(--shadow);
+}
+.panel-accent .panel-head {
+  background: var(--accent-soft);
+}
+
+/* Segmented control — size and position for the selected picture. */
+.seg {
+  display: flex;
+  margin-top: 0.35rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.seg button {
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  flex: 1;
+  padding: 0.4rem 0.3rem;
+  background: var(--surface);
+  border: 0;
+  border-left: 1px solid var(--line);
+  color: var(--muted);
+  cursor: pointer;
+}
+.seg button:first-child {
+  border-left: 0;
+}
+.seg button:hover {
+  background: #f2ede0;
+}
+.seg button.is-active {
+  background: var(--accent);
+  color: #fffdf0;
+}
+
+.btn-quiet.full {
+  width: 100%;
+  justify-content: center;
+  margin-top: 1rem;
 }

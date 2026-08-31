@@ -40,10 +40,19 @@ const BlogPostSection = ({ slug }) => {
   }
 
   // Up to two further reads, newest first, excluding the current post.
-  const more = posts.filter((p) => p.slug !== post.slug).slice(0, 2);
+  const others = posts.filter((p) => p.slug !== post.slug);
+  const more = others.slice(0, 2);
+  /** The rail has room for more, and it is visible for the whole article. */
+  const recent = others.slice(0, 4);
 
   return (
     <section className="blog-section">
+      {/* Two columns on a large screen. The article used to be centred in a
+          max-w-3xl column, which on a wide monitor left two broad empty margins;
+          it now sits to the left and the reclaimed space on the right carries a
+          sticky consultation card and links to other articles. Below 1024px the
+          rail is hidden and the layout is exactly as it was. */}
+      <div className="blog-layout">
       <article className="blog-article">
         <a href="/blogs" className="blog-back">← All articles</a>
 
@@ -97,6 +106,8 @@ const BlogPostSection = ({ slug }) => {
           </button>
         </aside>
 
+        {/* Hidden on large screens, where the rail already lists other
+            articles — the same links twice on one page helps nobody. */}
         {more.length > 0 && (
           <nav className="blog-more">
             <h3>Keep reading</h3>
@@ -111,6 +122,47 @@ const BlogPostSection = ({ slug }) => {
           </nav>
         )}
       </article>
+
+      <aside className="blog-rail">
+        <div className="rail-consult">
+          <img
+            src="/images/doctor-rachita.webp"
+            alt="Devriz doctor ready for a video consultation"
+            loading="lazy"
+            decoding="async"
+          />
+          <div className="rail-consult-body">
+            <h3>Book your live video call consultation now</h3>
+            <p>
+              Talk face to face with a Devriz expert about your skin, hair or
+              body concern — ₹{settings.consultPrice}.
+            </p>
+            <button type="button" onClick={openBooking}>
+              Book my video call
+            </button>
+          </div>
+        </div>
+
+        {recent.length > 0 && (
+          <nav className="rail-recent">
+            <h3>Recent blogs from Devriz</h3>
+            {recent.map((p) => (
+              <a key={p.slug} href={`/blogs/${p.slug}`}>
+                {p.img ? (
+                  <img src={p.img.src} alt={p.imageAlt} loading="lazy" decoding="async" />
+                ) : (
+                  <span className="rail-recent-ph" aria-hidden="true" />
+                )}
+                <span className="rail-recent-text">
+                  <span>{p.title}</span>
+                  <em>{p.readingTime} min read</em>
+                </span>
+              </a>
+            ))}
+          </nav>
+        )}
+      </aside>
+      </div>
     </section>
   );
 };

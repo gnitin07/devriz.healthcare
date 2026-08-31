@@ -102,15 +102,45 @@ const imgTag = (img, alt, { cls, sizes, eager }) => {
   } alt="${esc(alt)}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" />`
 }
 
-function postMarkup(post) {
-  return `<section class="blog-section"><article class="blog-article">
+/**
+ * The sticky right-hand column. Included in the crawler's HTML rather than left
+ * to React because the "recent blogs" links are internal links between
+ * articles, and those are worth something to a crawler that never runs
+ * JavaScript. The consultation button only works once React mounts, which is
+ * the same deal as the CTA block at the foot of the article.
+ */
+function railMarkup(post, posts) {
+  const recent = posts.filter((p) => p.slug !== post.slug).slice(0, 4)
+  const cards = recent
+    .map(
+      (p) => `<a href="/blogs/${esc(p.slug)}">${
+        p.img
+          ? `<img src="${esc(p.img.src)}" alt="${esc(p.imageAlt)}" loading="lazy" decoding="async" />`
+          : '<span class="rail-recent-ph"></span>'
+      }<span class="rail-recent-text"><span>${esc(p.title)}</span><em>${p.readingTime} min read</em></span></a>`
+    )
+    .join('')
+
+  return `<aside class="blog-rail">
+<div class="rail-consult"><img src="/images/doctor-rachita.webp" alt="Devriz doctor ready for a video consultation" loading="lazy" decoding="async" />
+<div class="rail-consult-body"><h3>Book your live video call consultation now</h3>
+<p>Talk face to face with a Devriz expert about your skin, hair or body concern — ₹49.</p>
+<button type="button">Book my video call</button></div></div>
+${cards ? `<nav class="rail-recent"><h3>Recent blogs from Devriz</h3>${cards}</nav>` : ''}
+</aside>`
+}
+
+function postMarkup(post, posts = []) {
+  return `<section class="blog-section"><div class="blog-layout"><article class="blog-article">
 <a href="/blogs" class="blog-back">← All articles</a>
 <header class="blog-article-head">${tagChips(post.tags)}<h1>${esc(post.title)}</h1>
 <div class="blog-meta"><span>${esc(post.author)}</span><span>${fmtDate(post.date)}</span><span>${post.readingTime} min read</span></div>
 </header>
 ${imgTag(post.img, post.imageAlt, { cls: 'blog-hero-img', sizes: HERO_SIZES, eager: true })}
 <div class="blog-body">${post.html}</div>
-</article></section>`
+</article>
+${railMarkup(post, posts)}
+</div></section>`
 }
 
 function listMarkup(posts) {
@@ -250,7 +280,7 @@ export function renderPost({ template, distDir, post, posts, site = SITE }) {
   // `posts` as well: the "Keep reading" cards at the foot of every article need
   // the others, and the list is small enough that shipping it costs nothing.
   html = embedData(html, { post, posts })
-  write(path.join(distDir, 'blogs', post.slug), injectBody(html, postMarkup(post)))
+  write(path.join(distDir, 'blogs', post.slug), injectBody(html, postMarkup(post, posts)))
 }
 
 /** Remove an unpublished or deleted article's page so the URL 404s again. */

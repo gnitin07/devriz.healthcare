@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import RichEditor from "./RichEditor";
+import RichEditor, { IMAGE_SIZES, IMAGE_ALIGNMENTS } from "./RichEditor";
 import SeoPanel from "./SeoPanel";
 import Preview from "./Preview";
 import { api } from "../api";
@@ -73,6 +73,76 @@ const parseTags = (text) =>
     .map((t) => t.trim())
     .filter(Boolean);
 
+/**
+ * Properties of the picture currently selected in the article.
+ *
+ * It sits at the TOP of the side column, above everything else, and only while
+ * a picture is selected — the previous version put these controls in a strip
+ * under the article body, where they were easy to miss and easy to scroll past
+ * without ever noticing an image had a description field at all.
+ */
+function ImagePanel({ image, onChange, onRemove }) {
+  return (
+    <section className="panel panel-accent">
+      <div className="panel-head static">Selected picture</div>
+      <div className="panel-body">
+        <img className="hero-thumb" src={image.src} alt="" />
+
+        <label>
+          Image description (alt text)
+          <input
+            type="text"
+            autoFocus
+            value={image.alt || ""}
+            placeholder="e.g. close-up of dark patches on a woman’s cheek"
+            onChange={(e) => onChange({ alt: e.target.value })}
+          />
+        </label>
+        <p className="hint">
+          Say what is in the photo, not “pigmentation image”. Google Images reads
+          this, screen readers read it aloud, and it shows if the picture fails
+          to load.{" "}
+          {!String(image.alt || "").trim() && (
+            <strong className="warn">Still empty.</strong>
+          )}
+        </p>
+
+        <label>Size</label>
+        <div className="seg">
+          {IMAGE_SIZES.map(([value, label]) => (
+            <button
+              key={value}
+              type="button"
+              className={image.size === value ? "is-active" : ""}
+              onClick={() => onChange({ size: value })}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <label>Position</label>
+        <div className="seg">
+          {IMAGE_ALIGNMENTS.map(([value, label]) => (
+            <button
+              key={value}
+              type="button"
+              className={image.align === value ? "is-active" : ""}
+              onClick={() => onChange({ align: value })}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <button type="button" className="btn-quiet danger full" onClick={onRemove}>
+          Remove this picture
+        </button>
+      </div>
+    </section>
+  );
+}
+
 export default function PostEditor({ slug, onDone, onToast }) {
   const isNew = !slug;
   const [post, setPost] = useState(isNew ? BLANK : null);
@@ -85,6 +155,48 @@ export default function PostEditor({ slug, onDone, onToast }) {
   /** Once the address is set by hand it stops following the title. */
   const slugLocked = useRef(!isNew);
   const heroInput = useRef(null);
+  const observerRef = useRef(null);
+  /** The image currently selected in the article, edited in the side panel. */
+  const [selectedImage, setSelectedImage] = useState(null);
+  /** The TipTap instance, so the side panel can act on the selected picture. */
+  const editorRef = useRef(null);
+
+  const updateImage = (attrs) => {
+    editorRef.current?.chain().focus().updateAttributes("image", attrs).run();
+    setSelectedImage((prev) => (prev ? { ...prev, ...attrs } : prev));
+    setDirty(true);
+  };
+
+  const removeImage = () => {
+    editorRef.current?.chain().focus().deleteSelection().run();
+    setSelectedImage(null);
+    setDirty(true);
+  };
+
+  /**
+   * The formatting toolbar sticks directly below the action bar, so it needs
+   * the bar's exact height. Measured rather than assumed: the bar wraps to two
+   * rows on a narrow window, and a hard-coded value leaves the toolbar either
+   * overlapping it or floating below a gap.
+   *
+   * A callback ref rather than an effect: on first render `post` is still
+   * loading and the bar is not in the DOM at all, so a mount effect would find
+   * nothing and never run again.
+   */
+  const measureBar = useCallback((bar) => {
+    observerRef.current?.disconnect();
+    if (!bar) return;
+    const apply = () =>
+      document.documentElement.style.setProperty(
+        "--editor-bar-h",
+        `${bar.getBoundingClientRect().height}px`
+      );
+    apply();
+    observerRef.current = new ResizeObserver(apply);
+    observerRef.current.observe(bar);
+  }, []);
+
+  useEffect(() => () => observerRef.current?.disconnect(), []);
 
   useEffect(() => {
     if (isNew) return;
@@ -130,10 +242,13 @@ export default function PostEditor({ slug, onDone, onToast }) {
       const body = { ...post, draft, slug: slugify(post.slug || post.title) };
       const res = await api.savePost(isNew ? null : slug, body);
       setDirty(false);
+      // Publishing is never refused any more, so the advice has to arrive
+      // somewhere — after the fact rather than as a locked button.
+      const notes = res.warnings?.length ? ` Worth fixing: ${res.warnings.join("; ")}.` : "";
       onToast(
         draft
           ? "Saved as a draft. It is not on the website yet."
-          : `Published — it is live now at /blogs/${res.post.slug}`
+          : `Published — it is live now at /blogs/${res.post.slug}.${notes}`
       );
       onDone(res.post.slug);
     } catch (e) {
@@ -157,10 +272,15 @@ export default function PostEditor({ slug, onDone, onToast }) {
     }
   };
 
+  /**
+   * Advice, not gates. Only a title is genuinely required — the post's file and
+   * its web address are named after it. Everything else is shown so the writer
+   * knows what they are giving up, and then it is their call: a tool that
+   * refuses to publish is a tool people find ways around.
+   */
   const missing = useMemo(() => {
     if (!post) return [];
     const out = [];
-    if (!post.title?.trim()) out.push("a title");
     if (!post.excerpt?.trim()) out.push("a short summary");
     if (!post.image) out.push("a header image");
     else if (!post.imageAlt?.trim()) out.push("a description of the header image");
@@ -183,11 +303,12 @@ export default function PostEditor({ slug, onDone, onToast }) {
   }
   if (!post) return <div className="pane">Loading…</div>;
 
-  const canPublish = missing.length === 0;
+  // The only thing that can genuinely stop a publish.
+  const canPublish = Boolean(post.title?.trim());
 
   return (
     <div className="editor-page">
-      <header className="editor-bar">
+      <header className="editor-bar" ref={measureBar}>
         <button
           className="btn-quiet"
           onClick={() => {
@@ -213,7 +334,7 @@ export default function PostEditor({ slug, onDone, onToast }) {
           <button
             className="btn-primary"
             disabled={!!busy || !canPublish}
-            title={canPublish ? "" : `Still needs ${missing.join(", ")}`}
+            title={canPublish ? "" : "Give the post a title first"}
             onClick={() => save(false)}
           >
             {busy === "Publishing…" ? busy : post.draft ? "Publish" : "Update"}
@@ -259,10 +380,20 @@ export default function PostEditor({ slug, onDone, onToast }) {
             value={post.html}
             onChange={(html) => change({ html })}
             onDirty={() => setDirty(true)}
+            onEditor={(e) => (editorRef.current = e)}
+            onSelectImage={setSelectedImage}
           />
         </div>
 
         <aside className="editor-side">
+          {selectedImage && (
+            <ImagePanel
+              image={selectedImage}
+              onChange={updateImage}
+              onRemove={removeImage}
+            />
+          )}
+
           <section className="panel">
             <div className="panel-head static">Header image</div>
             <div className="panel-body">
@@ -381,9 +512,11 @@ export default function PostEditor({ slug, onDone, onToast }) {
 
           <SeoPanel post={post} onChange={touch} />
 
-          {!canPublish && (
+          {missing.length > 0 && (
             <p className="checklist">
-              Before this can go live it still needs: {missing.join(", ")}.
+              <strong>Worth adding before this goes live:</strong>{" "}
+              {missing.join(", ")}. You can publish without{" "}
+              {missing.length === 1 ? "it" : "them"} and come back later.
             </p>
           )}
         </aside>

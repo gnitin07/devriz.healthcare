@@ -61,6 +61,42 @@ const CtaButton = Node.create({
 });
 
 /* ---------------------------------------------------------------------------
+ * Pictures, with a size and an alignment the writer controls.
+ *
+ * Stored as data- attributes rather than inline styles so the site's own
+ * stylesheet decides what "small" means at each screen width — an inline pixel
+ * width chosen on a laptop would overflow a phone. blog-images.js preserves
+ * unknown attributes when it rewrites <img> tags for the srcset, so these
+ * survive to the published page.
+ * ------------------------------------------------------------------------- */
+export const IMAGE_SIZES = [
+  ["small", "Small"],
+  ["medium", "Medium"],
+  ["full", "Full width"],
+];
+export const IMAGE_ALIGNMENTS = [
+  ["left", "Left"],
+  ["center", "Centre"],
+  ["right", "Right"],
+];
+
+const dataAttr = (name, fallback) => ({
+  default: fallback,
+  parseHTML: (el) => el.getAttribute(`data-${name}`) || fallback,
+  renderHTML: (attrs) => ({ [`data-${name}`]: attrs[name] || fallback }),
+});
+
+const Picture = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      size: dataAttr("size", "full"),
+      align: dataAttr("align", "center"),
+    };
+  },
+});
+
+/* ---------------------------------------------------------------------------
  * Pasting
  * ------------------------------------------------------------------------- */
 
@@ -112,12 +148,22 @@ const Btn = ({ active, disabled, title, onClick, children }) => (
   </button>
 );
 
-export default function RichEditor({ value, onChange, onDirty }) {
+export default function RichEditor({ value, onChange, onDirty, onSelectImage, onEditor }) {
   const [linkDialog, setLinkDialog] = useState(null);
   const [buttonDialog, setButtonDialog] = useState(null);
   const [uploading, setUploading] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null);
   const fileInput = useRef(null);
+
+  /**
+   * Which picture is selected is reported UP to PostEditor, which owns the
+   * side panel. The controls used to sit under the article, where they were
+   * easy to miss entirely — the panel is where every other property of the
+   * post already lives, so that is where a picture's properties belong too.
+   */
+  const report = (e) => {
+    const node = e.state.selection.node;
+    onSelectImage?.(node?.type?.name === "image" ? node.attrs : null);
+  };
 
   const editor = useEditor({
     extensions: [
@@ -137,7 +183,7 @@ export default function RichEditor({ value, onChange, onDirty }) {
         // one more thing to explain.
         codeBlock: false,
       }),
-      Image.configure({ inline: false, allowBase64: false }),
+      Picture.configure({ inline: false, allowBase64: false }),
       Placeholder.configure({
         placeholder: "Write the article here — or paste it straight from ChatGPT.",
       }),
@@ -170,15 +216,21 @@ export default function RichEditor({ value, onChange, onDirty }) {
       onChange(e.getHTML());
       onDirty?.();
     },
-    onSelectionUpdate: ({ editor: e }) => {
-      const node = e.state.selection.node;
-      setSelectedImage(node?.type?.name === "image" ? node.attrs : null);
-    },
+    onSelectionUpdate: ({ editor: e }) => report(e),
+    // A click straight onto a picture changes the selection without always
+    // firing onSelectionUpdate, so the panel would not open on the very
+    // interaction most likely to be the writer asking for it.
+    onTransaction: ({ editor: e }) => report(e),
   });
 
   // handlePaste is captured when the editor is created, before `editor` exists.
   const editorRef = useRef(null);
   editorRef.current = editor;
+
+  // PostEditor owns the picture side panel, so it needs the instance to act on.
+  useEffect(() => {
+    onEditor?.(editor);
+  }, [editor, onEditor]);
 
   // The editor owns its content once mounted; this only syncs an outside
   // change, such as loading a different post into the same editor instance.
@@ -198,28 +250,20 @@ export default function RichEditor({ value, onChange, onDirty }) {
         const payload = await optimize(file, { onProgress: setUploading });
         setUploading("Uploading…");
         const saved = await api.upload(payload);
-        editor
-          .chain()
-          .focus()
-          .setImage({ src: saved.url, alt: "" })
-          .createParagraphNear()
-          .run();
-        // Nudges the writer straight into the field that Google and screen
-        // readers depend on, while they still remember what the photo shows.
-        setSelectedImage({ src: saved.url, alt: "" });
+        const attrs = { src: saved.url, alt: "", size: "full", align: "center" };
+        editor.chain().focus().setImage(attrs).createParagraphNear().run();
+        // Opens the side panel on the picture just inserted, so the writer is
+        // already looking at the description box while they still remember what
+        // the photo shows.
+        onSelectImage?.(attrs);
       } catch (err) {
         alert(err.message);
       } finally {
         setUploading(null);
       }
     },
-    [editor]
+    [editor, onSelectImage]
   );
-
-  const updateImage = (attrs) => {
-    editor?.chain().focus().updateAttributes("image", attrs).run();
-    setSelectedImage((prev) => ({ ...prev, ...attrs }));
-  };
 
   /* ---- links ---- */
 
@@ -436,42 +480,8 @@ export default function RichEditor({ value, onChange, onDirty }) {
 
       {uploading && <div className="editor-uploading">{uploading}</div>}
 
-      {selectedImage && (
-        <div className="image-panel">
-          <div className="image-panel-preview">
-            <img src={selectedImage.src} alt="" />
-          </div>
-          <div className="image-panel-fields">
-            <label>
-              Image description (alt text)
-              <input
-                type="text"
-                value={selectedImage.alt || ""}
-                placeholder="e.g. close-up of dark patches on a woman’s cheek"
-                onChange={(e) => updateImage({ alt: e.target.value })}
-              />
-            </label>
-            <p className="hint">
-              Say what is actually in the photo, not “pigmentation image”. Google
-              reads this to understand the picture, screen readers read it aloud,
-              and it is the text shown if the image fails to load.{" "}
-              {!String(selectedImage.alt || "").trim() && (
-                <strong className="warn">This one is still empty.</strong>
-              )}
-            </p>
-            <button
-              type="button"
-              className="btn-quiet"
-              onClick={() => {
-                editor.chain().focus().deleteSelection().run();
-                setSelectedImage(null);
-              }}
-            >
-              Remove this image
-            </button>
-          </div>
-        </div>
-      )}
+      {/* A picture's properties are edited in the right-hand panel, not here —
+          PostEditor renders them from the selection reported by report(). */}
 
       {linkDialog && (
         <Dialog title="Link" onClose={() => setLinkDialog(null)}>

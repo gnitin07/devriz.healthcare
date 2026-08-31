@@ -115,7 +115,8 @@ export default function App() {
 
   useEffect(() => {
     if (!toast) return;
-    const t = setTimeout(() => setToast(null), 6000);
+    // A publish that carried warnings has a lot more to read than "Saved".
+    const t = setTimeout(() => setToast(null), Math.min(24000, 5000 + toast.length * 45));
     return () => clearTimeout(t);
   }, [toast]);
 

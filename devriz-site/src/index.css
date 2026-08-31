@@ -24,7 +24,16 @@ body {
   background-color: #fffdf0;
   color: #46390f;
   font-family: "Poppins", sans-serif;
+  /* Two declarations on purpose. `overflow-x: hidden` stops the decorative
+     off-canvas elements causing a horizontal scrollbar, but it also makes html
+     and body scroll containers — and a `position: sticky` element measures
+     itself against its nearest scrolling ancestor, so the blog's sticky rail
+     would scroll away with the page instead of staying put.
+     `overflow-x: clip` clips identically WITHOUT creating a scroll container.
+     Browsers too old to know `clip` ignore the second line and keep the first,
+     so nothing regresses for them. */
   overflow-x: hidden;
+  overflow-x: clip;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -855,9 +864,85 @@ body::-webkit-scrollbar {
       }
     }
 
+    /* ---------- single article: content left, sticky rail right ----------
+       Below 1024px this is a plain single column and behaves exactly as it
+       always did. From 1024px up the article stops being centred — a centred
+       max-w-3xl column on a wide monitor wastes both margins — and moves to the
+       left edge, with the reclaimed space on the right carrying a consultation
+       card and links to other articles that stay in view while reading. */
+    .blog-layout {
+      @apply w-full mx-auto max-w-[1500px];
+      @apply lg:grid lg:grid-cols-[minmax(0,1fr)_19rem] lg:gap-10 lg:items-start lg:px-5;
+    }
+
+    .blog-rail {
+      /* Hidden below lg: on a phone a sidebar is just more scrolling, and the
+         article already ends with "Keep reading". */
+      @apply hidden lg:flex lg:flex-col gap-5 lg:sticky lg:top-24;
+
+      .rail-consult {
+        @apply rounded-[1.25rem] overflow-hidden bg-teal-dark card-shadow;
+
+        img {
+          @apply w-full aspect-[4/3] object-cover object-top;
+        }
+
+        .rail-consult-body {
+          @apply p-5;
+
+          h3 {
+            @apply font-paragraph font-bold text-cream text-[15px] leading-snug;
+          }
+          p {
+            @apply font-paragraph text-cream/75 text-[13px] leading-relaxed mt-2;
+          }
+          button {
+            @apply w-full mt-4 bg-amber text-teal-dark font-paragraph font-bold rounded-full py-2.5 text-[13px] hover:bg-amber-light transition-colors cursor-pointer;
+          }
+        }
+      }
+
+      .rail-recent {
+        @apply rounded-[1.25rem] bg-white card-shadow p-5;
+
+        h3 {
+          @apply font-paragraph font-bold text-teal-dark text-[13px] uppercase tracking-[.12em] mb-3;
+        }
+
+        a {
+          @apply flex items-start gap-3 py-2.5 border-t border-teal-dark/10 first-of-type:border-t-0;
+
+          img,
+          .rail-recent-ph {
+            @apply w-14 h-14 shrink-0 rounded-lg object-cover bg-mint;
+          }
+
+          .rail-recent-text {
+            @apply flex flex-col gap-0.5 min-w-0;
+
+            span {
+              @apply font-paragraph font-semibold text-teal-dark text-[13px] leading-snug transition-colors;
+            }
+            em {
+              @apply font-paragraph not-italic text-[11px] text-ink/55;
+            }
+          }
+
+          /* Plain nested hover rather than Tailwind's `group`: that is a marker
+             class for markup and cannot be @applied. */
+          &:hover .rail-recent-text span {
+            @apply text-teal;
+          }
+        }
+      }
+    }
+
     /* single article */
     .blog-article {
       @apply mx-auto max-w-3xl md:px-8 px-5;
+      /* Inside the grid the column already positions it, and the 20px gutter
+         comes from .blog-layout's lg:px-5. */
+      @apply lg:mx-0 lg:px-0 lg:max-w-3xl;
 
       .blog-article-head {
         @apply md:mb-8 mb-6;
@@ -937,6 +1022,22 @@ body::-webkit-scrollbar {
         img {
           @apply block mx-auto max-w-full w-auto h-auto max-h-[32rem] rounded-2xl my-7;
         }
+        /* Size and position chosen per-picture in the editor. Written as
+           data- attributes rather than inline widths so the choice adapts:
+           "small" is a third of a desktop column but still full width on a
+           phone, where a 18rem image beside nothing would just look broken. */
+        img[data-size="small"] {
+          @apply md:max-w-[16rem] max-w-full;
+        }
+        img[data-size="medium"] {
+          @apply md:max-w-[28rem] max-w-full;
+        }
+        img[data-align="left"] {
+          @apply md:ml-0 md:mr-auto;
+        }
+        img[data-align="right"] {
+          @apply md:mr-0 md:ml-auto;
+        }
       }
 
       .blog-body-img {
@@ -965,9 +1066,10 @@ body::-webkit-scrollbar {
       }
 
       /* internal links between articles — keeps readers on site and spreads
-         link equity across the blog */
+         link equity across the blog. Hidden from lg up, where the rail already
+         carries the same links and duplicating them helps nobody. */
       .blog-more {
-        @apply mt-12 pt-8 border-t border-teal-dark/12;
+        @apply mt-12 pt-8 border-t border-teal-dark/12 lg:hidden;
 
         h3 {
           @apply font-paragraph font-bold text-teal-dark text-lg mb-4;

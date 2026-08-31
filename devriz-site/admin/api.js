@@ -21,17 +21,20 @@ const request = async (method, path, body) => {
     );
   }
 
-  if (res.status === 401) {
-    const err = new Error("Your session expired. Please sign in again.");
-    err.signedOut = true;
-    throw err;
-  }
-
   let data = null;
   try {
     data = await res.json();
   } catch {
     /* an empty or non-JSON body is handled by the status check below */
+  }
+
+  // A 401 anywhere else means the session ran out. On /login it means the
+  // password was wrong — and reporting that as "your session expired" to
+  // someone who has just typed a password is both untrue and baffling.
+  if (res.status === 401 && !path.startsWith("/login")) {
+    const err = new Error("Your session expired. Please sign in again.");
+    err.signedOut = true;
+    throw err;
   }
 
   if (!res.ok) throw new Error(data?.error || "Something went wrong. Please try again.");

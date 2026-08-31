@@ -2,7 +2,7 @@
 
 The editor lives at **https://devrizhealthcare.com/admin**.
 
-Sign in with the password Nitin gave you. That is all — no GitHub account, no
+Sign in with the password i gave you on whataspp. That is all — no GitHub account, no
 pull request, no approval step. When you press **Publish**, the article is on
 the website by the time the button finishes.
 
@@ -72,17 +72,28 @@ produced — it is shrunk and compressed inside your browser before it is even
 sent, so a 6 MB photo becomes about 10 KB and the visitor never downloads the
 big one.
 
-**Every picture needs a description.** After inserting one, a panel opens under
-the article with an *Image description* box. Write what is actually in the
-photo:
+**Click any picture** and its settings appear at the top of the right-hand
+column, under *Selected picture*:
+
+| Setting | What it does |
+|---|---|
+| Image description | See below — please fill this in |
+| Size | Small, Medium, or Full width |
+| Position | Left, Centre, or Right |
+| Remove this picture | Deletes it from the article |
+
+**Give every picture a description.** Write what is actually in the photo:
 
 - ✅ "close-up of dark patches on a woman's cheek"
 - ❌ "pigmentation image"
 
 That text is what Google Images reads, what a blind visitor's screen reader
-reads aloud, and what is shown if the picture fails to load. **A post will not
-publish while any picture is missing one.** Click a picture at any time to edit
-its description.
+reads aloud, and what is shown if the picture fails to load.
+
+This will not stop you publishing — nothing does except a missing title. But a
+picture without a description is invisible to Google Images, so the post is
+quietly worth less traffic than it should be. The editor reminds you after
+publishing if any are still empty; you can go back and add them any time.
 
 The **header image** is separate, in the right-hand column. It appears at the
 top of the article, on the blog list, and — most importantly — as the picture in
@@ -139,8 +150,10 @@ it.
   Switch between Desktop and Phone at the top.
 - **Publish** — puts it live. Immediately.
 
-Publish stays greyed out until the post has everything it needs; hover over it
-and it tells you what is missing.
+**Nothing stops you publishing except a missing title.** The right-hand column
+notes anything worth adding first — a summary, a header image, a picture
+description — but that is advice, not a gate. Publish now and tidy later if you
+want to; the same reminder appears again after publishing.
 
 Editing a live post works the same way — the button reads **Update**, and the
 change is live as soon as you press it.
@@ -180,30 +193,7 @@ locks you out for fifteen minutes.
 left-hand menu, then reload. If it still does not appear, the app needs a
 restart from hPanel.
 
-**Publish is greyed out** — hover over it, or read the amber box at the bottom
-of the right-hand column. It lists exactly what is missing.
+**Publish is greyed out** — the post has no title. That is the only thing that
+blocks publishing.
 
 ---
-
-## For Nitin — setting it up
-
-The editor needs one environment variable on the server:
-
-```
-ADMIN_PASSWORD=<a long password you share with the writer>
-```
-
-hPanel → the app → **Environment variables** → add it → **restart the app**.
-Until it is set, `/admin` shows a message saying so and nobody can sign in.
-Changing the password signs everyone out immediately.
-
-If you would rather the plain password not sit in hPanel, generate a hash and
-set `ADMIN_PASSWORD_HASH` instead:
-
-```bash
-node server/auth.mjs "the password"
-```
-
-Articles and pictures are stored in `devriz-content/`, a folder one level ABOVE
-the application root, so that uploading a new build can never overwrite them.
-Full deployment details are in [HOSTING.md](HOSTING.md).
