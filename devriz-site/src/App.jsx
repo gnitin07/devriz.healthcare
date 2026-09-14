@@ -5,6 +5,7 @@ import { ContentProvider } from "./lib/ContentContext";
 import { HeaderThemeProvider } from "./lib/HeaderTheme";
 import { BookingProvider } from "./lib/BookingContext";
 import ConsultModal from "./components/ConsultModal";
+import FloatingStartButtons from "./components/FloatingStartButtons";
 import NavBar from "./components/NavBar";
 import StatsStrip from "./components/StatsStrip";
 import HeroSection from "./sections/HeroSection";
@@ -49,6 +50,7 @@ const App = () => {
             <FAQSection />
             <FooterSection />
           </main>
+          <FloatingStartButtons />
           <ConsultModal />
         </BookingProvider>
       </HeaderThemeProvider>
