@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useContent } from "../lib/ContentContext";
 
 // A static merchant QR carries the payee, not an amount — and the amount is
@@ -42,7 +43,16 @@ const UPI_APPS = [
 
 const PaymentSection = () => {
   const { settings } = useContent();
+  // Read from settings rather than hardcoded, so this page and the "Consult @
+  // ₹49" buttons across the site can never quote two different prices.
+  const price = Number(settings.consultPrice) || 49;
   const whatsappDigits = (settings.whatsapp || "").replace(/\D/g, "");
+
+  // Set here rather than in PaymentApp because the price is only known once
+  // settings have resolved — the amount belongs in the tab title too.
+  useEffect(() => {
+    document.title = `Pay ₹${price} | Devriz Healthcare`;
+  }, [price]);
 
   return (
     <div className="pay-page">
@@ -65,14 +75,23 @@ const PaymentSection = () => {
         </span>
       </header>
 
+      {/* The amount rides along at the top of the screen the whole way down —
+          the one number the visitor has to carry into their UPI app should
+          never be scrolled off. */}
+      <div className="pay-ticker">
+        <span>Online Consultation</span>
+        <b>₹{price}</b>
+      </div>
+
       <main className="pay-shell">
         <div className="pay-card">
           <div className="pay-card-top">
             <p className="pay-eyebrow">Payment Gateway</p>
             <h1>Devriz Healthcare</h1>
+            {/* No ₹ figure here on purpose — it would sit directly above the
+                amount band and say the same thing twice. */}
             <p className="pay-card-sub">
-              Scan the QR below with any UPI app to complete your payment
-              securely.
+              Scan the QR below with any UPI app to confirm your consultation.
             </p>
           </div>
 
@@ -97,6 +116,9 @@ const PaymentSection = () => {
                 decoding="async"
               />
             </div>
+            <p className="pay-qr-cta">
+              Scan &amp; pay <b>₹{price}</b>
+            </p>
             <p className="pay-payee">{PAYEE_NAME}</p>
             <p className="pay-payee-note">
               Verified UPI merchant QR · this is the name your app will show
@@ -119,7 +141,27 @@ const PaymentSection = () => {
             </a>
             <p className="pay-save-note">
               On a phone? Save the QR, then choose “Scan from gallery” in your
-              UPI app.
+              UPI app and pay ₹{price}.
+            </p>
+          </section>
+
+          {/* Sits below the QR, not above it: the QR is what the visitor came
+              for and it has to stay in the first screenful on a phone. Read as
+              a summary line rather than a stacked block so it reinforces the
+              figure without competing with the code above it. */}
+          <section className="pay-amount" aria-label="Amount to pay">
+            <div>
+              <p className="pay-amount-label">Amount to pay</p>
+              <p className="pay-amount-note">
+                One-time consultation fee · nothing recurring
+              </p>
+            </div>
+            <p className="pay-amount-value">
+              <span className="pay-rupee" aria-hidden>
+                ₹
+              </span>
+              <span className="sr-only">Rupees </span>
+              {price}
             </p>
           </section>
 
@@ -130,8 +172,8 @@ const PaymentSection = () => {
                 <b>Open any UPI app</b> and scan the QR code above.
               </li>
               <li>
-                <b>Enter the amount</b> your Devriz consultant confirmed with
-                you on the call.
+                <b>Enter ₹{price}</b> — a UPI merchant QR carries the payee, not
+                the amount, so type it in yourself.
               </li>
               <li>
                 <b>Confirm with your UPI PIN</b>, then send us the payment
@@ -141,10 +183,10 @@ const PaymentSection = () => {
           </section>
 
           <section className="pay-support" aria-label="After payment">
-            <h2>Sent the payment?</h2>
+            <h2>Paid ₹{price}?</h2>
             <p>
-              Share the screenshot with your consultant so we can confirm it
-              against your consultation.
+              Share the payment screenshot with your consultant so we can
+              confirm it and lock in your consultation slot.
             </p>
             <div className="pay-support-row">
               {whatsappDigits && (

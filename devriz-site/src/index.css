@@ -1563,6 +1563,23 @@ body::-webkit-scrollbar {
     }
   }
 
+  /* Sticks directly under the header, so the amount stays on screen while the
+     visitor is in their UPI app keypad. */
+  .pay-ticker {
+    @apply sticky top-[3.4rem] z-30 flex items-center justify-center gap-2 px-4 py-2 text-[12px] font-semibold md:top-[4.2rem];
+    background: var(--color-teal-dark);
+    color: var(--color-cream);
+
+    span {
+      @apply opacity-70;
+    }
+
+    b {
+      @apply font-bold text-amber;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
   .pay-shell {
     @apply mx-auto w-full max-w-lg px-4 pt-6 pb-10 md:pt-10 md:pb-16;
   }
@@ -1608,8 +1625,46 @@ body::-webkit-scrollbar {
     }
   }
 
+  /* A summary line, not a hero block: label and terms on the left, the figure
+     on the right, with an amber edge doing the work the old filled box did.
+     It is display only — a fixed consultation fee, nothing to choose. */
+  .pay-amount {
+    @apply mt-7 flex items-center justify-between gap-4 rounded-2xl px-4 py-3.5 text-left;
+    background: color-mix(in srgb, var(--color-cream) 70%, #fff);
+    border: 1px solid color-mix(in srgb, var(--color-teal-dark) 10%, transparent);
+    border-left: 4px solid var(--color-amber);
+
+    .pay-amount-label {
+      @apply text-[10.5px] font-semibold uppercase tracking-[.18em] text-teal-dark/50;
+    }
+
+    .pay-amount-note {
+      @apply mt-1 text-[11.5px] leading-snug text-teal-dark/55;
+    }
+
+    .pay-amount-value {
+      @apply shrink-0 font-display font-bold leading-none text-teal-dark;
+      font-size: clamp(2rem, 9vw, 2.5rem);
+      font-variant-numeric: tabular-nums;
+
+      .pay-rupee {
+        @apply mr-0.5 text-teal-light;
+        font-size: 0.58em;
+      }
+    }
+  }
+
   .pay-qr {
     @apply mt-7 text-center;
+
+    .pay-qr-cta {
+      @apply mt-4 font-display text-[15px] font-semibold text-teal-dark/70;
+
+      b {
+        @apply font-bold text-teal-dark;
+        font-variant-numeric: tabular-nums;
+      }
+    }
 
     /* The tile is dark because the merchant QR itself is white-on-black — the
        exact artwork the payment app issued. Re-colouring it is how a QR stops
@@ -1627,7 +1682,7 @@ body::-webkit-scrollbar {
     }
 
     .pay-payee {
-      @apply mt-4 font-display font-bold text-teal-dark text-[15px] tracking-wide;
+      @apply mt-3 font-display font-bold text-teal-dark text-[14px] tracking-wide;
     }
 
     .pay-payee-note {
