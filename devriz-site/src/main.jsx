@@ -8,6 +8,7 @@ import "./index.css";
 import App from "./App.jsx";
 import LandingApp from "./LandingApp.jsx";
 import PrivacyApp from "./PrivacyApp.jsx";
+import PaymentApp from "./PaymentApp.jsx";
 
 // The AI face-scan page is lazy-loaded so face-api + its model code land in a
 // SEPARATE chunk — the main site and /consult never download any of it.
@@ -18,7 +19,8 @@ const FaceScanApp = lazy(() => import("./facescan/FaceScanApp.jsx"));
 const BlogApp = lazy(() => import("./blog/BlogApp.jsx"));
 
 // Simple path-based switch (no router dependency).
-// /consult → Meta-ads landing page; /ai-scan → AI face-scan; else → main site.
+// /consult → Meta-ads landing page; /ai-scan → AI face-scan;
+// /payment → UPI checkout; else → main site.
 const path = window.location.pathname.replace(/\/+$/, "");
 
 let root;
@@ -26,6 +28,8 @@ if (path === "/consult") {
   root = <LandingApp />;
 } else if (path === "/privacy-policy") {
   root = <PrivacyApp />;
+} else if (path === "/payment") {
+  root = <PaymentApp />;
 } else if (path === "/blogs" || path.startsWith("/blogs/")) {
   root = (
     <Suspense

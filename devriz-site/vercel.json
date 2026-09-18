@@ -254,6 +254,16 @@
       "source": "/ai-scan/",
       "destination": "/ai-scan",
       "permanent": true
+    },
+    {
+      "source": "/payment/",
+      "destination": "/payment",
+      "permanent": true
+    },
+    {
+      "source": "/pay(/)?",
+      "destination": "/payment",
+      "permanent": false
     }
   ],
   "rewrites": [
@@ -267,6 +277,10 @@
     },
     {
       "source": "/privacy-policy",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/payment",
       "destination": "/index.html"
     },
     {

@@ -4,4 +4,8 @@ Allow: /
 # the blog editor is a private tool, not a page for search results
 Disallow: /admin
 
+# the payment page is reached from a consultation, never from search — an
+# indexed checkout is an invitation to clone it
+Disallow: /payment
+
 Sitemap: https://devrizhealthcare.com/sitemap.xml

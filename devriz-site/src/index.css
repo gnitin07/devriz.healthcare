@@ -1527,6 +1527,211 @@ body::-webkit-scrollbar {
       }
     }
   }
+
+  /* ---------- /payment — UPI checkout ---------- */
+  /* Deliberately narrower and calmer than the marketing pages: one column, one
+     card, nothing to scroll past. Every size below is fluid because this page
+     is opened on a phone far more often than on a desktop. */
+  .pay-page {
+    @apply min-h-dvh font-paragraph text-teal-dark;
+    background: radial-gradient(
+        70rem 34rem at 50% -8rem,
+        var(--color-mint) 0%,
+        transparent 62%
+      ),
+      var(--color-cream);
+  }
+
+  .pay-header {
+    @apply sticky top-0 z-40 flex items-center justify-between gap-3 px-4 py-3 md:px-8;
+    background: color-mix(in srgb, var(--color-cream) 82%, transparent);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-teal-dark) 10%, transparent);
+
+    .pay-brand img {
+      @apply h-8 w-auto md:h-10;
+    }
+
+    .pay-header-secure {
+      @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[.12em] text-teal;
+      background: color-mix(in srgb, var(--color-amber) 15%, transparent);
+
+      svg {
+        @apply size-3.5;
+      }
+    }
+  }
+
+  .pay-shell {
+    @apply mx-auto w-full max-w-lg px-4 pt-6 pb-10 md:pt-10 md:pb-16;
+  }
+
+  .pay-card {
+    @apply rounded-[28px] bg-white px-5 py-7 md:px-8 md:py-9;
+    border: 1px solid color-mix(in srgb, var(--color-teal-dark) 8%, transparent);
+    box-shadow: 0 24px 60px -24px rgba(70, 57, 15, 0.28),
+      0 2px 8px rgba(70, 57, 15, 0.05);
+  }
+
+  .pay-card-top {
+    @apply text-center;
+
+    .pay-eyebrow {
+      @apply section-eyebrow text-amber;
+    }
+
+    h1 {
+      @apply font-display font-bold text-teal-dark mt-2;
+      font-size: clamp(1.6rem, 6vw, 2.1rem);
+    }
+
+    .pay-card-sub {
+      @apply mt-2 text-[14px] leading-relaxed text-teal-dark/65;
+    }
+  }
+
+  /* A 2×2 grid rather than a wrapping row: the card is a fixed, narrow column,
+     so flex-wrap always left one pill stranded on its own line. */
+  .pay-pills {
+    @apply mt-5 grid grid-cols-2 gap-2 list-none p-0;
+
+    li {
+      @apply flex items-center justify-center gap-1.5 rounded-full px-2.5 py-1.5 text-center text-[11.5px] font-semibold text-teal-dark/80;
+      background: color-mix(in srgb, var(--color-mint) 55%, transparent);
+      border: 1px solid
+        color-mix(in srgb, var(--color-teal-light) 30%, transparent);
+
+      svg {
+        @apply size-3.5 shrink-0 text-teal;
+      }
+    }
+  }
+
+  .pay-qr {
+    @apply mt-7 text-center;
+
+    /* The tile is dark because the merchant QR itself is white-on-black — the
+       exact artwork the payment app issued. Re-colouring it is how a QR stops
+       scanning, so it is placed, never repainted. */
+    .pay-qr-tile {
+      @apply mx-auto rounded-[26px] p-4 sm:p-5;
+      width: clamp(15rem, 74vw, 20rem);
+      background: #101010;
+      box-shadow: 0 18px 40px -18px rgba(16, 16, 16, 0.55);
+
+      img {
+        @apply block w-full h-auto rounded-lg;
+        aspect-ratio: 1 / 1;
+      }
+    }
+
+    .pay-payee {
+      @apply mt-4 font-display font-bold text-teal-dark text-[15px] tracking-wide;
+    }
+
+    .pay-payee-note {
+      @apply mt-1 text-[11.5px] text-teal-dark/50;
+    }
+
+    .pay-apps {
+      @apply mt-4 flex flex-wrap justify-center gap-1.5;
+
+      span {
+        @apply rounded-md px-2 py-1 text-[11px] font-medium text-teal-dark/60;
+        background: color-mix(in srgb, var(--color-teal-dark) 6%, transparent);
+      }
+    }
+
+    .pay-save {
+      @apply mt-5 inline-flex items-center justify-center rounded-full px-6 py-3 text-[14px] font-semibold text-cream transition-transform;
+      background: var(--color-teal-dark);
+
+      &:hover {
+        @apply -translate-y-0.5;
+      }
+    }
+
+    .pay-save-note {
+      @apply mt-2 mx-auto max-w-xs text-[11.5px] leading-relaxed text-teal-dark/45;
+    }
+  }
+
+  .pay-steps {
+    @apply mt-8;
+
+    h2 {
+      @apply mb-3 text-[11px] font-semibold uppercase tracking-[.16em] text-teal-dark/45;
+    }
+
+    ol {
+      @apply list-none p-0 m-0 space-y-3;
+      counter-reset: paystep;
+    }
+
+    li {
+      @apply relative pl-10 text-[14px] leading-relaxed text-teal-dark/75;
+      counter-increment: paystep;
+
+      &::before {
+        content: counter(paystep);
+        @apply absolute left-0 top-0 size-7 flex-center rounded-full text-[12px] font-bold text-teal-dark;
+        background: color-mix(in srgb, var(--color-amber) 24%, transparent);
+      }
+
+      b {
+        @apply font-semibold text-teal-dark;
+      }
+    }
+  }
+
+  .pay-support {
+    @apply mt-8 rounded-2xl px-4 py-5 text-center;
+    background: color-mix(in srgb, var(--color-mint) 45%, transparent);
+
+    h2 {
+      @apply font-display font-bold text-teal-dark text-[17px];
+    }
+
+    p {
+      @apply mt-1.5 text-[13px] leading-relaxed text-teal-dark/65;
+    }
+
+    .pay-support-row {
+      @apply mt-4 flex flex-col justify-center gap-2 sm:flex-row;
+    }
+
+    .pay-support-btn {
+      @apply inline-flex items-center justify-center rounded-full px-5 py-2.5 text-[13px] font-semibold text-teal-dark break-all transition-colors;
+      background: #fff;
+      border: 1px solid
+        color-mix(in srgb, var(--color-teal-dark) 12%, transparent);
+
+      &.is-primary {
+        @apply text-cream;
+        background: var(--color-teal);
+        border-color: var(--color-teal);
+      }
+    }
+  }
+
+  .pay-warning {
+    @apply mt-6 rounded-xl px-4 py-3 text-[12px] leading-relaxed text-teal-dark/70;
+    background: color-mix(in srgb, var(--color-amber) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-amber) 30%, transparent);
+
+    b {
+      @apply font-semibold text-teal-dark;
+    }
+  }
+
+  .pay-foot {
+    @apply mt-6 space-y-1.5 text-center text-[11.5px] leading-relaxed text-teal-dark/45;
+
+    a {
+      @apply underline underline-offset-2 hover:text-teal-dark transition-colors;
+    }
+  }
 }
 
 @keyframes consultFade {
