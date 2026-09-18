@@ -196,16 +196,21 @@ const PaymentSection = () => {
                   rel="noreferrer"
                   className="pay-support-btn is-primary"
                 >
-                  WhatsApp the screenshot
+                  <span className="pay-support-label">WhatsApp</span>
+                  <span className="pay-support-value">Send the screenshot</span>
                 </a>
               )}
+              {/* Channel and address on separate lines. As one run of text the
+                  address had no room left beside the "Email" prefix on a
+                  375px screen and broke mid-word, ending a line on "co". */}
               <a
                 href={`mailto:${settings.email}?subject=${encodeURIComponent(
                   "Payment confirmation"
                 )}`}
                 className="pay-support-btn"
               >
-                Email {settings.email}
+                <span className="pay-support-label">Email</span>
+                <span className="pay-support-value">{settings.email}</span>
               </a>
             </div>
           </section>

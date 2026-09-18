@@ -1769,11 +1769,25 @@ body::-webkit-scrollbar {
       @apply mt-4 flex flex-col justify-center gap-2 sm:flex-row;
     }
 
+    /* break-words, never break-all: it only splits a word that genuinely
+       cannot fit, so an address wraps at its own edge instead of leaving a
+       stray "co" / "m" across two lines. */
     .pay-support-btn {
-      @apply inline-flex items-center justify-center rounded-full px-5 py-2.5 text-[13px] font-semibold text-teal-dark break-all transition-colors;
+      @apply inline-flex flex-col items-center justify-center gap-0.5 rounded-2xl px-4 py-2.5 text-center text-teal-dark break-words transition-colors;
       background: #fff;
       border: 1px solid
         color-mix(in srgb, var(--color-teal-dark) 12%, transparent);
+
+      .pay-support-label {
+        @apply text-[9.5px] font-semibold uppercase tracking-[.16em] opacity-55;
+      }
+
+      /* Eases down on the narrowest phones so the address keeps clear headroom
+         on its line rather than sitting a pixel or two from wrapping. */
+      .pay-support-value {
+        @apply font-semibold leading-tight;
+        font-size: clamp(12px, 3.4vw, 13px);
+      }
 
       &.is-primary {
         @apply text-cream;
