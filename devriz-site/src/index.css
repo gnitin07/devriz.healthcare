@@ -1634,12 +1634,25 @@ body::-webkit-scrollbar {
       @apply mt-1 text-[11.5px] text-teal-dark/50;
     }
 
+    .pay-apps-label {
+      @apply mt-5 text-[10.5px] font-semibold uppercase tracking-[.16em] text-teal-dark/40;
+    }
+
+    /* 2×2 on a phone, one row once there is width for it. Four logos never fit
+       across 375px at a size anyone could recognise, and left to wrap they put
+       three up top and BHIM alone underneath. */
     .pay-apps {
-      @apply mt-4 flex flex-wrap justify-center gap-1.5;
+      @apply mt-2 grid grid-cols-2 items-center justify-center gap-2 sm:flex sm:flex-wrap;
 
       span {
-        @apply rounded-md px-2 py-1 text-[11px] font-medium text-teal-dark/60;
-        background: color-mix(in srgb, var(--color-teal-dark) 6%, transparent);
+        @apply inline-flex items-center justify-center rounded-lg px-2.5 py-2;
+        background: #fff;
+        border: 1px solid
+          color-mix(in srgb, var(--color-teal-dark) 11%, transparent);
+      }
+
+      img {
+        @apply block w-auto;
       }
     }
 

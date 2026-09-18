@@ -28,7 +28,17 @@ const TRUST_PILLS = [
   { icon: "card", label: "No Card Details" },
 ];
 
-const UPI_APPS = ["PhonePe", "Google Pay", "Paytm", "BHIM", "Amazon Pay"];
+// Each brand's own lockup already contains its name, so the row carries no
+// separate text label — a wordmark with the word repeated beside it is the
+// giveaway of a page that assembled its trust marks by hand. The per-logo
+// height is tuned rather than uniform: BHIM's mark includes a tagline line and
+// Paytm's glyphs run tall, so equal box heights would NOT read as equal.
+const UPI_APPS = [
+  { name: "PhonePe", src: "/images/upi/phonepe.svg", height: 18 },
+  { name: "Google Pay", src: "/images/upi/google-pay.svg", height: 18 },
+  { name: "Paytm", src: "/images/upi/paytm.svg", height: 16 },
+  { name: "BHIM", src: "/images/upi/bhim.svg", height: 20 },
+];
 
 const PaymentSection = () => {
   const { settings } = useContent();
@@ -91,9 +101,17 @@ const PaymentSection = () => {
             <p className="pay-payee-note">
               Verified UPI merchant QR · this is the name your app will show
             </p>
+            <p className="pay-apps-label">Pay using</p>
             <div className="pay-apps">
               {UPI_APPS.map((app) => (
-                <span key={app}>{app}</span>
+                <span key={app.name}>
+                  <img
+                    src={app.src}
+                    alt={app.name}
+                    style={{ height: `${app.height}px` }}
+                    decoding="async"
+                  />
+                </span>
               ))}
             </div>
             <a className="pay-save" href={QR_SRC} download="devriz-healthcare-upi-qr.png">
