@@ -89,21 +89,14 @@ body::-webkit-scrollbar {
         transition-colors;
     }
 
-    /* mobile "Get Started" dropdown */
-    .nav-cta-menu {
-      @apply absolute right-0 mt-2 w-56 rounded-2xl overflow-hidden z-50
-        bg-cream border border-[#0e3b3a1f]
-        shadow-[0_16px_40px_rgba(70,57,15,0.18)];
-
-      a,
-      button {
-        @apply block w-full text-left px-4 py-3.5 text-sm font-semibold text-teal-dark
-          cursor-pointer hover:bg-mint transition-colors;
-      }
-      button + a,
-      a + button {
-        @apply border-t border-[#0e3b3a12];
-      }
+    /* Link to /payment. Quietest of the three right-hand actions — it is for
+       people a telecaller has already sent there, not a thing to talk someone
+       into, so it must not outrank Consult. lg: only, because at md the five
+       nav links plus three buttons do not fit on one line. */
+    .nav-secure {
+      @apply items-center gap-1.5 cursor-pointer font-paragraph font-semibold
+        text-teal-dark/70 rounded-full px-4 py-3 text-sm
+        hover:text-teal-dark hover:bg-mint transition-colors;
     }
   }
 
@@ -124,6 +117,9 @@ body::-webkit-scrollbar {
     }
     .nav-aiscan {
       @apply text-cream border-cream/60 hover:bg-[#ffffff1f] hover:border-cream;
+    }
+    .nav-secure {
+      @apply text-cream/75 hover:text-cream hover:bg-[#ffffff1f];
     }
   }
 
@@ -1553,6 +1549,27 @@ body::-webkit-scrollbar {
       @apply h-8 w-auto md:h-10;
     }
 
+    .pay-header-right {
+      @apply flex items-center gap-1.5 sm:gap-2;
+    }
+
+    .pay-home {
+      @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[12px] font-semibold text-teal-dark/70 transition-colors sm:px-3;
+
+      &:hover {
+        @apply text-teal-dark;
+        background: color-mix(in srgb, var(--color-mint) 55%, transparent);
+      }
+
+      svg {
+        @apply size-4 shrink-0;
+      }
+
+      span {
+        @apply hidden min-[400px]:inline;
+      }
+    }
+
     .pay-header-secure {
       @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[.12em] text-teal;
       background: color-mix(in srgb, var(--color-amber) 15%, transparent);
@@ -1560,23 +1577,6 @@ body::-webkit-scrollbar {
       svg {
         @apply size-3.5;
       }
-    }
-  }
-
-  /* Sticks directly under the header, so the amount stays on screen while the
-     visitor is in their UPI app keypad. */
-  .pay-ticker {
-    @apply sticky top-[3.4rem] z-30 flex items-center justify-center gap-2 px-4 py-2 text-[12px] font-semibold md:top-[4.2rem];
-    background: var(--color-teal-dark);
-    color: var(--color-cream);
-
-    span {
-      @apply opacity-70;
-    }
-
-    b {
-      @apply font-bold text-amber;
-      font-variant-numeric: tabular-nums;
     }
   }
 
@@ -1625,58 +1625,20 @@ body::-webkit-scrollbar {
     }
   }
 
-  /* A summary line, not a hero block: label and terms on the left, the figure
-     on the right, with an amber edge doing the work the old filled box did.
-     It is display only — a fixed consultation fee, nothing to choose. */
-  .pay-amount {
-    @apply mt-7 flex items-center justify-between gap-4 rounded-2xl px-4 py-3.5 text-left;
-    background: color-mix(in srgb, var(--color-cream) 70%, #fff);
-    border: 1px solid color-mix(in srgb, var(--color-teal-dark) 10%, transparent);
-    border-left: 4px solid var(--color-amber);
-
-    .pay-amount-label {
-      @apply text-[10.5px] font-semibold uppercase tracking-[.18em] text-teal-dark/50;
-    }
-
-    .pay-amount-note {
-      @apply mt-1 text-[11.5px] leading-snug text-teal-dark/55;
-    }
-
-    .pay-amount-value {
-      @apply shrink-0 font-display font-bold leading-none text-teal-dark;
-      font-size: clamp(2rem, 9vw, 2.5rem);
-      font-variant-numeric: tabular-nums;
-
-      .pay-rupee {
-        @apply mr-0.5 text-teal-light;
-        font-size: 0.58em;
-      }
-    }
-  }
-
   .pay-qr {
     @apply mt-7 text-center;
 
-    .pay-qr-cta {
-      @apply mt-4 font-display text-[15px] font-semibold text-teal-dark/70;
-
-      b {
-        @apply font-bold text-teal-dark;
-        font-variant-numeric: tabular-nums;
-      }
-    }
-
-    /* The tile is dark because the merchant QR itself is white-on-black — the
-       exact artwork the payment app issued. Re-colouring it is how a QR stops
-       scanning, so it is placed, never repainted. */
+    /* White tile, because the bank issues this QR as dark modules on white and
+       a scanner expects that polarity. The code itself is placed, never
+       repainted — recolouring a QR is how it stops scanning. */
     .pay-qr-tile {
-      @apply mx-auto rounded-[26px] p-4 sm:p-5;
+      @apply mx-auto rounded-[26px] bg-white p-4 sm:p-5;
       width: clamp(15rem, 74vw, 20rem);
-      background: #101010;
-      box-shadow: 0 18px 40px -18px rgba(16, 16, 16, 0.55);
+      border: 1px solid color-mix(in srgb, var(--color-teal-dark) 12%, transparent);
+      box-shadow: 0 18px 40px -20px rgba(70, 57, 15, 0.35);
 
       img {
-        @apply block w-full h-auto rounded-lg;
+        @apply block w-full h-auto;
         aspect-ratio: 1 / 1;
       }
     }
@@ -1687,6 +1649,43 @@ body::-webkit-scrollbar {
 
     .pay-payee-note {
       @apply mt-1 text-[11.5px] text-teal-dark/50;
+    }
+
+    /* The address and its Copy button share one line down to 320px — measured,
+       not assumed, because a UPI handle that wraps mid-string is one a visitor
+       will mistype. */
+    .pay-upi {
+      @apply mt-4 flex items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left;
+      background: color-mix(in srgb, var(--color-cream) 70%, #fff);
+      border: 1px solid
+        color-mix(in srgb, var(--color-teal-dark) 10%, transparent);
+
+      .pay-upi-text {
+        @apply min-w-0;
+      }
+
+      .pay-upi-label {
+        @apply text-[9.5px] font-semibold uppercase tracking-[.16em] text-teal-dark/45;
+      }
+
+      .pay-upi-value {
+        @apply mt-0.5 font-semibold text-teal-dark;
+        font-size: clamp(12px, 3.4vw, 13.5px);
+        overflow-wrap: anywhere;
+      }
+
+      .pay-upi-copy {
+        @apply shrink-0 cursor-pointer rounded-lg px-3 py-1.5 text-[11.5px] font-semibold text-cream transition-colors;
+        background: var(--color-teal);
+
+        &:hover {
+          background: var(--color-teal-dark);
+        }
+
+        &.is-done {
+          background: #1f7a42;
+        }
+      }
     }
 
     .pay-apps-label {

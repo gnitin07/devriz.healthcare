@@ -1,15 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useContent } from "../lib/ContentContext";
 
 // A static merchant QR carries the payee, not an amount — and the amount is
 // something a Devriz telecaller confirms on the call. So this page deliberately
-// does NOT ask for one: the visitor scans, types the figure they were quoted,
+// does NOT quote one: the visitor scans, types the figure they were quoted,
 // and pays. One decision less on the screen.
 const QR_SRC = "/images/payment-qr.png";
 
-// What the visitor's UPI app will show them at confirmation time. Printing it
-// here first means the unfamiliar name isn't a surprise mid-payment.
-const PAYEE_NAME = "DEVRIZ FASHION LIFESTYLE";
+// Read straight off the QR itself (upi://pay?pa=…&pn=…), not off the printed
+// poster, which abbreviates the handle to "devrizfas" and would have had people
+// typing an address that does not resolve.
+const UPI_ID = "devrizfas.09@idfcbank";
+const PAYEE_NAME = "Devriz Fashion Lifestyle";
 
 // Drawn rather than emoji: emoji render as a different picture on every phone,
 // and a checkout is the one page where the padlock should look the same to
@@ -43,16 +45,47 @@ const UPI_APPS = [
 
 const PaymentSection = () => {
   const { settings } = useContent();
-  // Read from settings rather than hardcoded, so this page and the "Consult @
-  // ₹49" buttons across the site can never quote two different prices.
-  const price = Number(settings.consultPrice) || 49;
   const whatsappDigits = (settings.whatsapp || "").replace(/\D/g, "");
+  const [copied, setCopied] = useState(false);
 
-  // Set here rather than in PaymentApp because the price is only known once
-  // settings have resolved — the amount belongs in the tab title too.
   useEffect(() => {
-    document.title = `Pay ₹${price} | Devriz Healthcare`;
-  }, [price]);
+    if (!copied) return;
+    const t = setTimeout(() => setCopied(false), 2000);
+    return () => clearTimeout(t);
+  }, [copied]);
+
+  // Three routes, because the async Clipboard API is refused more often than
+  // it looks: it needs a secure origin, and the in-app browsers inside
+  // Instagram and Facebook block it — which is where a good share of this
+  // site's traffic arrives from. execCommand is deprecated but still the thing
+  // that works there, and if even that is gone the ID is left selected so it
+  // can be copied by hand rather than the button appearing to do nothing.
+  const copyUpiId = async () => {
+    try {
+      await navigator.clipboard.writeText(UPI_ID);
+      setCopied(true);
+      return;
+    } catch {
+      /* fall through */
+    }
+
+    const node = document.getElementById("pay-upi-value");
+    if (!node) return;
+    const range = document.createRange();
+    range.selectNodeContents(node);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    try {
+      if (document.execCommand("copy")) {
+        sel.removeAllRanges();
+        setCopied(true);
+      }
+    } catch {
+      /* leave it selected for a manual copy */
+    }
+  };
 
   return (
     <div className="pay-page">
@@ -60,36 +93,44 @@ const PaymentSection = () => {
         <a href="/" className="pay-brand" aria-label="Devriz Healthcare home">
           <img src="/images/logo-r.webp" alt="Devriz Healthcare" />
         </a>
-        <span className="pay-header-secure">
-          <svg viewBox="0 0 24 24" aria-hidden>
-            <path
-              fill="currentColor"
-              d="M12 1.5 4.5 4.8v5.5c0 4.7 3.2 9.1 7.5 10.2 4.3-1.1 7.5-5.5 7.5-10.2V4.8L12 1.5Zm0 2.2 5.5 2.4v4.2c0 3.7-2.3 7.1-5.5 8.1-3.2-1-5.5-4.4-5.5-8.1V6.1L12 3.7Z"
-            />
-            <path
-              fill="currentColor"
-              d="M12 7.6a2.4 2.4 0 0 0-1 4.6v1.9a1 1 0 0 0 2 0v-1.9a2.4 2.4 0 0 0-1-4.6Z"
-            />
-          </svg>
-          Secure Payment
-        </span>
-      </header>
 
-      {/* The amount rides along at the top of the screen the whole way down —
-          the one number the visitor has to carry into their UPI app should
-          never be scrolled off. */}
-      <div className="pay-ticker">
-        <span>Online Consultation</span>
-        <b>₹{price}</b>
-      </div>
+        <div className="pay-header-right">
+          {/* The logo links home too, but not everyone knows that — this page
+              carries no navigation, so the way out is spelled out. The word
+              drops below 400px, where the three items stop fitting on a line;
+              the house on its own still reads as home, and the footer keeps a
+              worded link either way. */}
+          <a href="/" className="pay-home">
+            <svg viewBox="0 0 24 24" aria-hidden>
+              <path
+                fill="currentColor"
+                d="M11.36 2.72a1 1 0 0 1 1.28 0l8 6.7A1 1 0 0 1 21 10.2V20a1.6 1.6 0 0 1-1.6 1.6h-4.2a.9.9 0 0 1-.9-.9v-4.6h-4.6v4.6a.9.9 0 0 1-.9.9H4.6A1.6 1.6 0 0 1 3 20v-9.8a1 1 0 0 1 .36-.77l8-6.71Z"
+              />
+            </svg>
+            <span>Home</span>
+          </a>
+
+          <span className="pay-header-secure">
+            <svg viewBox="0 0 24 24" aria-hidden>
+              <path
+                fill="currentColor"
+                d="M12 1.5 4.5 4.8v5.5c0 4.7 3.2 9.1 7.5 10.2 4.3-1.1 7.5-5.5 7.5-10.2V4.8L12 1.5Zm0 2.2 5.5 2.4v4.2c0 3.7-2.3 7.1-5.5 8.1-3.2-1-5.5-4.4-5.5-8.1V6.1L12 3.7Z"
+              />
+              <path
+                fill="currentColor"
+                d="M12 7.6a2.4 2.4 0 0 0-1 4.6v1.9a1 1 0 0 0 2 0v-1.9a2.4 2.4 0 0 0-1-4.6Z"
+              />
+            </svg>
+            Secure Payment
+          </span>
+        </div>
+      </header>
 
       <main className="pay-shell">
         <div className="pay-card">
           <div className="pay-card-top">
             <p className="pay-eyebrow">Payment Gateway</p>
             <h1>Devriz Healthcare</h1>
-            {/* No ₹ figure here on purpose — it would sit directly above the
-                amount band and say the same thing twice. */}
             <p className="pay-card-sub">
               Scan the QR below with any UPI app to confirm your consultation.
             </p>
@@ -111,18 +152,38 @@ const PaymentSection = () => {
               <img
                 src={QR_SRC}
                 alt={`UPI payment QR code for ${PAYEE_NAME}`}
-                width="549"
-                height="549"
+                width="408"
+                height="408"
                 decoding="async"
               />
             </div>
-            <p className="pay-qr-cta">
-              Scan &amp; pay <b>₹{price}</b>
-            </p>
             <p className="pay-payee">{PAYEE_NAME}</p>
             <p className="pay-payee-note">
-              Verified UPI merchant QR · this is the name your app will show
+              Verified UPI merchant · this is the name your app will show
             </p>
+
+            {/* Scanning fails often enough — cracked screens, a phone with no
+                camera permission, paying from a desktop — that the address has
+                to be reachable without the code. */}
+            <div className="pay-upi">
+              <div className="pay-upi-text">
+                <p className="pay-upi-label">Or pay to this UPI ID</p>
+                <p className="pay-upi-value" id="pay-upi-value">
+                  {UPI_ID}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={copyUpiId}
+                className={`pay-upi-copy ${copied ? "is-done" : ""}`}
+              >
+                {copied ? "Copied" : "Copy"}
+              </button>
+            </div>
+            <p className="sr-only" role="status" aria-live="polite">
+              {copied ? "UPI ID copied to clipboard" : ""}
+            </p>
+
             <p className="pay-apps-label">Pay using</p>
             <div className="pay-apps">
               {UPI_APPS.map((app) => (
@@ -141,27 +202,7 @@ const PaymentSection = () => {
             </a>
             <p className="pay-save-note">
               On a phone? Save the QR, then choose “Scan from gallery” in your
-              UPI app and pay ₹{price}.
-            </p>
-          </section>
-
-          {/* Sits below the QR, not above it: the QR is what the visitor came
-              for and it has to stay in the first screenful on a phone. Read as
-              a summary line rather than a stacked block so it reinforces the
-              figure without competing with the code above it. */}
-          <section className="pay-amount" aria-label="Amount to pay">
-            <div>
-              <p className="pay-amount-label">Amount to pay</p>
-              <p className="pay-amount-note">
-                One-time consultation fee · nothing recurring
-              </p>
-            </div>
-            <p className="pay-amount-value">
-              <span className="pay-rupee" aria-hidden>
-                ₹
-              </span>
-              <span className="sr-only">Rupees </span>
-              {price}
+              UPI app.
             </p>
           </section>
 
@@ -169,11 +210,12 @@ const PaymentSection = () => {
             <h2>How to pay</h2>
             <ol>
               <li>
-                <b>Open any UPI app</b> and scan the QR code above.
+                <b>Open any UPI app</b> and scan the QR, or pay to the UPI ID
+                above.
               </li>
               <li>
-                <b>Enter ₹{price}</b> — a UPI merchant QR carries the payee, not
-                the amount, so type it in yourself.
+                <b>Enter the amount</b> your Devriz consultant confirmed with
+                you on the call.
               </li>
               <li>
                 <b>Confirm with your UPI PIN</b>, then send us the payment
@@ -183,10 +225,10 @@ const PaymentSection = () => {
           </section>
 
           <section className="pay-support" aria-label="After payment">
-            <h2>Paid ₹{price}?</h2>
+            <h2>Sent the payment?</h2>
             <p>
-              Share the payment screenshot with your consultant so we can
-              confirm it and lock in your consultation slot.
+              Share the screenshot with your consultant so we can confirm it
+              against your consultation.
             </p>
             <div className="pay-support-row">
               {whatsappDigits && (

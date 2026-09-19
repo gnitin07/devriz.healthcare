@@ -32,10 +32,16 @@ const FloatingStartButtons = () => {
     return () => ro.disconnect();
   }, []);
 
-  // py-3 keeps each pill at a 44px+ tap target; below 360px (small Androids,
-  // iPhone SE 1st gen) the padding and text shrink so the two never touch
+  // py-3.5 + 14px text puts each pill at 52px tall — a comfortable thumb
+  // target rather than the 44px minimum.
+  //
+  // Padding steps down twice on the way to narrow phones. At 360px — the most
+  // common Android width there is — full px-5 pills come to exactly the 328px
+  // available, and "exactly" is not a margin worth shipping when a device's
+  // font rendering can differ by a pixel. px-4 there keeps the 14px text and
+  // buys 24px of slack. Below 360px both padding and text step back.
   const base =
-    "pointer-events-auto inline-flex items-center gap-1.5 max-[359px]:gap-1 rounded-full font-paragraph font-semibold text-[13px] max-[359px]:text-[12px] px-4 max-[359px]:px-3 py-3 cursor-pointer whitespace-nowrap shadow-[0_12px_30px_-8px_rgba(70,57,15,0.45)] transition-colors";
+    "pointer-events-auto inline-flex items-center gap-1.5 max-[359px]:gap-1 rounded-full font-paragraph font-semibold text-[14px] max-[359px]:text-[12.5px] px-5 max-[374px]:px-4 max-[359px]:px-3 py-3.5 max-[359px]:py-3 cursor-pointer whitespace-nowrap shadow-[0_12px_30px_-8px_rgba(70,57,15,0.45)] transition-colors";
 
   return (
     <div

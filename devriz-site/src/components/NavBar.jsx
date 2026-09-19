@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useContent } from "../lib/ContentContext";
 import { useHeaderTheme } from "../lib/HeaderTheme";
 import { useBooking } from "../lib/BookingContext";
@@ -19,14 +19,21 @@ const TITLES = {
   concern: "How Devriz Works — 3 Step Process | Devriz Healthcare",
 };
 
+const LockIcon = () => (
+  <svg viewBox="0 0 24 24" className="size-3.5 shrink-0" aria-hidden>
+    <path
+      fill="currentColor"
+      d="M12 2a4.5 4.5 0 0 0-4.5 4.5V9H6.8A1.8 1.8 0 0 0 5 10.8v8.4A1.8 1.8 0 0 0 6.8 21h10.4a1.8 1.8 0 0 0 1.8-1.8v-8.4A1.8 1.8 0 0 0 17.2 9h-.7V6.5A4.5 4.5 0 0 0 12 2Zm0 2a2.5 2.5 0 0 1 2.5 2.5V9h-5V6.5A2.5 2.5 0 0 1 12 4Z"
+    />
+  </svg>
+);
+
 const NavBar = ({ landing = false }) => {
   const { settings } = useContent();
   const { dark } = useHeaderTheme();
   const { openBooking } = useBooking();
   const [open, setOpen] = useState(false);
-  const [ctaOpen, setCtaOpen] = useState(false); // mobile "Get Started" dropdown
   const [scrolled, setScrolled] = useState(false);
-  const ctaRef = useRef(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -34,20 +41,6 @@ const NavBar = ({ landing = false }) => {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  // close the CTA dropdown when tapping outside it
-  useEffect(() => {
-    if (!ctaOpen) return;
-    const onDoc = (e) => {
-      if (ctaRef.current && !ctaRef.current.contains(e.target)) setCtaOpen(false);
-    };
-    document.addEventListener("mousedown", onDoc);
-    document.addEventListener("touchstart", onDoc);
-    return () => {
-      document.removeEventListener("mousedown", onDoc);
-      document.removeEventListener("touchstart", onDoc);
-    };
-  }, [ctaOpen]);
 
   // light treatment only while over a dark slide AND not scrolled
   // (once scrolled the navbar gets its cream background, so use dark ink).
@@ -115,7 +108,11 @@ const NavBar = ({ landing = false }) => {
         </div>
 
         <div className="flex items-center gap-3">
-          {/* desktop: AI-scan (secondary) + Consult (primary), grouped on the right */}
+          {/* desktop: pay (tertiary) + AI-scan (secondary) + Consult (primary) */}
+          <a href="/payment" className="nav-secure hidden lg:inline-flex">
+            <LockIcon />
+            Secure Payment
+          </a>
           <a href="/ai-scan" className="nav-aiscan hidden md:inline-flex">
             ✨ Free AI Scan
           </a>
@@ -129,45 +126,20 @@ const NavBar = ({ landing = false }) => {
             </button>
           )}
 
-          {/* mobile: one "Get Started" button → dropdown with both choices */}
-          <div className="md:hidden relative" ref={ctaRef}>
-            <button
-              type="button"
-              onClick={() => {
-                setOpen(false);
-                setCtaOpen((v) => !v);
-              }}
-              className="nav-cta !py-2 !px-4 inline-flex items-center gap-1"
-              aria-haspopup="true"
-              aria-expanded={ctaOpen}
-            >
-              Get Started
-              <span aria-hidden className={`transition-transform ${ctaOpen ? "rotate-180" : ""}`}>
-                ▾
-              </span>
-            </button>
-            {ctaOpen && (
-              <div className="nav-cta-menu">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCtaOpen(false);
-                    openBooking();
-                  }}
-                >
-                  💬 Consult @ ₹{settings.consultPrice}
-                </button>
-                <a href="/ai-scan">✨ Free AI Scan report</a>
-              </div>
-            )}
-          </div>
+          {/* mobile: straight to the payment page. The consult and AI-scan
+              choices this button used to open as a dropdown are the two
+              floating pills sitting directly below this bar. */}
+          <a
+            href="/payment"
+            className="nav-cta md:hidden !py-2 !px-4 inline-flex items-center gap-1.5"
+          >
+            <LockIcon />
+            Secure Payment
+          </a>
 
           <button
             className="md:hidden flex flex-col gap-1.5 p-2 cursor-pointer"
-            onClick={() => {
-              setCtaOpen(false);
-              setOpen((v) => !v);
-            }}
+            onClick={() => setOpen((v) => !v)}
             aria-label="Menu"
           >
             <span className={`block w-6 h-0.5 ${light ? "bg-cream" : "bg-teal-dark"}`} />

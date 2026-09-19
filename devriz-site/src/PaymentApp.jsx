@@ -8,7 +8,7 @@ import PaymentSection from "./sections/PaymentSection";
 const PaymentApp = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
-    // The title itself is set in PaymentSection, where the ₹ amount is known.
+    document.title = "Secure Payment | Devriz Healthcare";
 
     // A payment page has no business in search results — it is reached from a
     // consultation, not from Google, and an indexed one invites impersonation.
