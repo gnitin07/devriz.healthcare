@@ -1317,8 +1317,12 @@ body::-webkit-scrollbar {
       }
     }
 
+    /* Extra room underneath on phones: the two floating start pills are fixed
+       to the bottom of the screen there, and without it they sit on top of the
+       copyright line — the one part of the page a visitor reaches by scrolling
+       all the way down, so it cannot be the part that is covered. */
     .copyright-box {
-      @apply w-full md:px-10 px-5 py-6 text-cream opacity-60 text-sm font-paragraph flex gap-4 md:flex-row flex-col-reverse md:justify-between justify-center items-center border-t border-[#f7f4ee1a];
+      @apply w-full md:px-10 px-5 py-6 max-md:pb-28 text-cream opacity-60 text-sm font-paragraph flex gap-4 md:flex-row flex-col-reverse md:justify-between justify-center items-center border-t border-[#f7f4ee1a];
     }
   }
 

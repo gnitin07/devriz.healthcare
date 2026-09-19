@@ -2,17 +2,17 @@ import { useEffect, useState } from "react";
 import { useContent } from "../lib/ContentContext";
 import { useBooking } from "../lib/BookingContext";
 
-// Two sticky pills — ₹49 consult (left) and free AI scan (right) — pinned
-// just below the navbar and visible from the moment the page opens. They step
-// aside while the "Two easy ways to start" cards (#get-started) are on screen,
-// since those cards already offer the same two choices, and come back once the
-// visitor scrolls past them in either direction. Phones only: on desktop the
-// navbar already shows both buttons at all times.
+// Two sticky pills — ₹49 consult (left) and free AI scan (right) — pinned to
+// the bottom of the screen, within thumb reach, and visible from the moment
+// the page opens. They step aside while the "Two easy ways to start" cards
+// (#get-started) are on screen, since those cards already offer the same two
+// choices, and come back once the visitor scrolls past them in either
+// direction. Phones only: from md up the navbar already shows both buttons at
+// all times, so a floating bar there would only repeat it.
 const FloatingStartButtons = () => {
   const { settings } = useContent();
   const { openBooking } = useBooking();
   const [hidden, setHidden] = useState(false);
-  const [navHeight, setNavHeight] = useState(60);
 
   useEffect(() => {
     const cards = document.querySelector("#get-started .start-grid");
@@ -20,16 +20,6 @@ const FloatingStartButtons = () => {
     const io = new IntersectionObserver(([entry]) => setHidden(entry.isIntersecting));
     io.observe(cards);
     return () => io.disconnect();
-  }, []);
-
-  // follow the navbar's real height (it changes when scrolled or when the
-  // mobile menu opens) so the pills always sit flush beneath it
-  useEffect(() => {
-    const nav = document.querySelector(".nav-bar");
-    if (!nav) return;
-    const ro = new ResizeObserver(() => setNavHeight(nav.offsetHeight));
-    ro.observe(nav);
-    return () => ro.disconnect();
   }, []);
 
   // py-3.5 + 14px text puts each pill at 52px tall — a comfortable thumb
@@ -45,20 +35,30 @@ const FloatingStartButtons = () => {
 
   return (
     <div
-      className={`md:hidden fixed left-0 right-0 z-40 flex justify-between gap-2 px-4 max-[359px]:px-3 pt-2 pointer-events-none transition-[opacity,transform,top] duration-300 ease-out ${
-        hidden ? "opacity-0 -translate-y-4" : "opacity-100 translate-y-0"
+      className={`md:hidden fixed left-0 right-0 bottom-0 z-40 flex justify-between gap-2 px-4 max-[359px]:px-3 pt-3 pointer-events-none transition-[opacity,transform] duration-300 ease-out ${
+        hidden ? "opacity-0 translate-y-6" : "opacity-100 translate-y-0"
       }`}
-      style={{ top: navHeight }}
+      // The gesture bar on a modern iPhone sits inside the viewport, so a flat
+      // bottom padding would put the pills underneath it.
+      style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)" }}
       aria-hidden={hidden}
       inert={hidden}
     >
+      {/* Gold, not the dark brand brown it used to be. Now that the bar sits
+          at the bottom of the screen it ends up over the footer, which is that
+          same dark brown — the pill disappeared into it. Gold reads against
+          both the footer and the cream sections above, and it is the treatment
+          the navbar CTA already switches to over a dark slide (.nav-light).
+          The deeper gold edge is what carries it on the light sections: gold
+          on cream is only 2.1:1, so the fill alone would have the same
+          problem in the other direction. #ad8726 clears 3:1 against both. */}
       <button
         type="button"
         onClick={openBooking}
-        className={`${base} bg-teal-dark text-cream hover:bg-teal`}
+        className={`${base} bg-amber text-teal-dark border-[1.5px] border-[#ad8726] hover:bg-amber-light`}
       >
         🩺 Consult
-        <span className="text-amber-light font-bold">@ ₹{settings.consultPrice}</span>
+        <span className="font-bold">@ ₹{settings.consultPrice}</span>
       </button>
 
       <a
