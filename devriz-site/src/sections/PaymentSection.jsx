@@ -5,7 +5,12 @@ import { useContent } from "../lib/ContentContext";
 // something a Devriz telecaller confirms on the call. So this page deliberately
 // does NOT quote one: the visitor scans, types the figure they were quoted,
 // and pays. One decision less on the screen.
-const QR_SRC = "/images/payment-qr.png";
+// The filename carries the bank, and changing the QR means changing this name.
+// /images/* is served immutable for a year, so replacing a QR in place leaves
+// every previous visitor scanning the old one — which is exactly what happened
+// when this moved off PhonePe: the stale copy still pointed at
+// devrizhealthcare@axl while the page printed the IDFC handle beside it.
+const QR_SRC = "/images/payment-qr-idfc.png";
 
 // Read straight off the QR itself (upi://pay?pa=…&pn=…), not off the printed
 // poster, which abbreviates the handle to "devrizfas" and would have had people

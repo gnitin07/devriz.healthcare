@@ -112,6 +112,12 @@ for (const rule of config.redirects ?? []) {
 //     group on the site, so every returning visitor re-downloaded all of it.
 //     Same stable-filename rule as the others: to change a transformation
 //     photo, give it a new filename rather than overwriting it.
+//   /images/payment-qr-* — a day, not a year. The filename carries the bank
+//     and a new QR is meant to get a new name, but this is the one asset where
+//     forgetting that sends money to the wrong account: the QR moved from
+//     PhonePe to IDFC and every visitor holding the immutable copy kept
+//     scanning devrizhealthcare@axl while the page printed the IDFC handle
+//     next to it. 1.2 KB revalidated daily is a cheap guard against a repeat.
 //   favicon-dh-*/site.webmanifest — small, but were refetched on every visit.
 //     A week, not a year, since these are not content-hashed and do get
 //     replaced in place.
